@@ -1,5 +1,5 @@
 #pragma once
-#include<string>
+#include <string>
 #include "freeglut.h"
 class Button
 {
@@ -19,6 +19,6 @@ public:
 	void setWidth(int _width);
 	void setHeight(int _height);
 	void setText(std::string& _text);
-	bool mouseOnButton(int x, int y);
+	bool mouseOnButton(int mX, int mY);
 	void draw();
 };

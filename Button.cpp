@@ -56,20 +56,34 @@ void Button::setText(std::string & _text)
 	text = _text;
 }
 
-bool Button::mouseOnButton(int x, int y)
+bool Button::mouseOnButton(int mX, int mY)
 {
-	//Нажал ли в кнопку
-	return false;
+	if((mX > x) && (mX < x + width) && (mY < y) && (mY > y + height))
+	{
+		return true;
+	}
+	else
+	{
+		return false;
+	}
 }
 
 void Button::draw()
 {
 	glLineWidth(3.0);
 	glBegin(GL_LINE_LOOP);
-	glColor3d(0.0, 0.56, 1.0);
+	glColor3d(0.0, 0.0, 1.0);
 	glVertex2d(x + width, y + height);
 	glVertex2d(x + width, y);
 	glVertex2d(x, y);
 	glVertex2d(x, y + height);
 	glEnd();
+
+	int space = 15;
+	for(int i = 0; i < text.size(); i++)
+	{
+		glColor3d(0.0, 0.0, 1.0);
+		glRasterPos2d(x + width/2 - text.size()*7 + i*space, y + height/2);
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
+	}
 }
