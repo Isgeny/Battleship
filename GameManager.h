@@ -24,5 +24,6 @@ public:
 	void drawGameTitle();
 	void drawButtons();
 	void drawFields();
+	MyPoint coordTranform(int mX, int mY);
 
 };

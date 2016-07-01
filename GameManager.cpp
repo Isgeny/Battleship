@@ -32,15 +32,27 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 {
 	switch(gameStatus)
 	{
-	case MENU:
-		switch(button)
+	case MENU: 
+		if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 		{
-		case GLUT_LEFT_BUTTON:
 			if(bVec[0]->mouseOnButton(x, y))
 				gameStatus = PLACING_SHIP;
+			else
+			if(bVec[1]->mouseOnButton(x, y))
+				gameStatus = RECORDS;
+			else
+			if(bVec[2]->mouseOnButton(x, y))
+				gameStatus = ABOUT;
+			else
+			if(bVec[3]->mouseOnButton(x, y))
+				exit(0);
 		}
 		break;
 	case PLACING_SHIP:
+		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && playerField->mouseClicked(x, y))
+		{
+			playerField->setShip(this->coordTranform(x, y), PLACING_SHIP);
+		}
 		break;
 	case WAITING_PLAYER_STEP:
 		break;
@@ -91,4 +103,21 @@ void GameManager::drawFields()
 {
 	playerField->draw();
 	compField->draw();
+}
+
+MyPoint GameManager::coordTranform(int mX, int mY)
+{
+	MyPoint point;
+	if((gameStatus == PLACING_SHIP) && (playerField->mouseClicked(mX, mY)))
+	{
+		point.i = (mY - playerField->getY()) / CELL_SIZE;
+		point.j = (mX - playerField->getX()) / CELL_SIZE;
+		return point;
+	}
+	else if((gameStatus == WAITING_PLAYER_STEP) && (compField->mouseClicked(mX, mY)))
+	{
+		point.i = (mY - compField->getY()) / CELL_SIZE;
+		point.j = (mX - compField->getX()) / CELL_SIZE;
+		return point;
+	}
 }

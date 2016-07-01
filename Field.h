@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <string>
 #include "GraphicsItem.h"
 #include "enums.h"
 
@@ -15,4 +16,5 @@ public:
 	void setShip(MyPoint pos, GameStatus status);
 	void makeHit(MyPoint pos, GameStatus status);
 	void draw();
+	bool mouseClicked(int mX, int mY);
 };

@@ -28,14 +28,7 @@ void Button::setText(std::string & _text)
 
 bool Button::mouseOnButton(int mX, int mY)
 {
-	if((mX > x) && (mX < x + width) && (mY > y) && (mY < y + height))
-	{
-		return true;
-	}
-	else
-	{
-		return false;
-	}
+	return ((mX > x) && (mX < x + width) && (mY > y) && (mY < y + height));
 }
 
 void Button::draw()

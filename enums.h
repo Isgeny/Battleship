@@ -6,7 +6,11 @@
 
 struct MyPoint
 {
-	int x, y;
+	int i, j;
+	MyPoint()
+	{
+		i = 0; j = 0;
+	}
 };
 
 enum Cell
@@ -20,6 +24,8 @@ enum Cell
 enum GameStatus
 {
 	MENU,
+	RECORDS,
+	ABOUT,
 	PLACING_SHIP,
 	WAITING_PLAYER_STEP,
 	WAITING_COMP_STEP
