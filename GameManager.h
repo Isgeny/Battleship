@@ -1,28 +1,28 @@
 #pragma once
 #include <string>
+#include <vector>
+#include "Button.h"
+#include "Field.h"
 #include "freeglut.h"
-#define WIN_WIDTH 871
-#define WIN_HEIGHT 421
-#define CELL_SIZE 30
-
-enum GameStatus
-{
-	MENU,
-	PLACING_SHIP,
-	WAITING_PLAYER_STEP,
-	WAITING_COMP_STEP
-};
+#include "enums.h"
 
 class GameManager
 {
 private:
-	GameStatus status;
+	std::vector<Button* > bVec;
+	Field *playerField, *compField;
+	GameStatus gameStatus;
+	int mX, mY;
 
 public:
 	GameManager();
+	~GameManager();
 	GameStatus getGameStatus() const;
 	void setGameStatus(GameStatus status);
-	void drawGameTitle();
+	void mousePressed(int button, int state, int x, int y);
 	void drawCells();
+	void drawGameTitle();
+	void drawButtons();
+	void drawFields();
 
 };
