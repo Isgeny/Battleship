@@ -26,6 +26,7 @@ public:
 	void setGameStatus(GameStatus status);
 	void mousePressed(int button, int state, int x, int y);
 	void mouseMove(int x, int y);
+	void mouseWheel(int button, int dir, int x, int y);
 	void draw();
 	void drawCells();
 	void drawMainMenuItems();

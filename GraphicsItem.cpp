@@ -39,7 +39,7 @@ int GraphicsItem::getY() const
 	return y;
 }
 
-int GraphicsItem::getWith() const
+int GraphicsItem::getWidth() const
 {
 	return width;
 }

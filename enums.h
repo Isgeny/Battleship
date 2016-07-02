@@ -30,3 +30,9 @@ enum GameStatus
 	WAITING_PLAYER_STEP,
 	WAITING_COMP_STEP
 };
+
+enum ShipOrientation
+{
+	HORIZONTAL,
+	VERTICAL
+};

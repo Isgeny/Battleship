@@ -88,6 +88,11 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 					pShip[2]->setPressed(false); pShip[3]->setPressed(false);
 					pShip[i]->setPressed(true);
 					currPressShip = pShip[i];
+					mouseMovingShip->setX(-1000);
+					mouseMovingShip->setY(-1000);
+					mouseMovingShip->setWidth(currPressShip->getDeckCount()*CELL_SIZE);
+					mouseMovingShip->setHeight(CELL_SIZE);
+					mouseMovingShip->setOrientation(HORIZONTAL);
 				}
 		}
 		break;
@@ -102,12 +107,36 @@ void GameManager::mouseMove(int x, int y)
 {
 	if(gameStatus == PLACING_SHIP && currPressShip != NULL && playerField->mouseOnField(x, y))
 	{
-		MyPoint point;
-		point = coordTranform(x, y);
+		MyPoint point = coordTranform(x, y);
+		int countDeck = currPressShip->getDeckCount();
+		ShipOrientation orientat = mouseMovingShip->getOrientation();
+		if(orientat == HORIZONTAL && point.j > (FIELD_SZ - countDeck))
+			point.j = FIELD_SZ - countDeck;
+		if(orientat == VERTICAL && point.i > (FIELD_SZ - countDeck))
+			point.i = FIELD_SZ - countDeck;
 		mouseMovingShip->setX(point.j*CELL_SIZE + 60);
 		mouseMovingShip->setY(point.i*CELL_SIZE + 60);
-		mouseMovingShip->setWidth(currPressShip->getDeckCount()*CELL_SIZE);
-		mouseMovingShip->setHeight(CELL_SIZE);
+	}
+}
+
+void GameManager::mouseWheel(int button, int dir, int x, int y)
+{
+	if(gameStatus == PLACING_SHIP)
+	{
+		int w = mouseMovingShip->getWidth(), h = mouseMovingShip->getHeight(), countDeck = currPressShip->getDeckCount();
+		MyPoint point = coordTranform(x, y);
+		if(mouseMovingShip->getOrientation() == HORIZONTAL && point.i <= (FIELD_SZ - countDeck))
+		{
+			mouseMovingShip->setOrientation(VERTICAL);
+			mouseMovingShip->setWidth(h);
+			mouseMovingShip->setHeight(w);
+		} 
+		else if(mouseMovingShip->getOrientation() == VERTICAL && point.j <= (FIELD_SZ - countDeck))
+		{
+			mouseMovingShip->setOrientation(HORIZONTAL);
+			mouseMovingShip->setWidth(h);
+			mouseMovingShip->setHeight(w);
+		}
 	}
 }
 

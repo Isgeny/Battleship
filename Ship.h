@@ -5,6 +5,7 @@ class Ship : public GraphicsItem
 {
 protected:
 	int deck;
+	ShipOrientation orientation;
 
 public:
 	Ship();
@@ -12,4 +13,6 @@ public:
 	~Ship();
 	void draw();
 	int getDeckCount() const;
+	ShipOrientation getOrientation() const;
+	void setOrientation(ShipOrientation orient);
 };
