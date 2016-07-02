@@ -6,25 +6,24 @@ GameManager game;
 void display()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
-
-	switch(game.getGameStatus())
-	{
-	case MENU:
-		game.drawCells();
-		game.drawGameTitle();
-		game.drawButtons();
-		break;
-	case PLACING_SHIP:
-		game.drawCells();
-		game.drawFields();
-	}
-	
+	game.draw();
 	glutSwapBuffers();
 }
 
 void mousePressed(int button, int state, int x, int y)
 {
 	game.mousePressed(button, state, x, y);
+}
+
+void mouseMove(int x, int y)
+{
+	game.mouseMove(x, y);
+}
+
+void timer(int)
+{
+	glutPostRedisplay();
+	glutTimerFunc(50, timer, 0);
 }
 
 int main(int argc, char** argv)
@@ -43,6 +42,8 @@ int main(int argc, char** argv)
 
 	glutDisplayFunc(display);
 	glutMouseFunc(mousePressed);
+	glutPassiveMotionFunc(mouseMove);
+	glutTimerFunc(50, timer, 0);
 	glutMainLoop();
 	return 0;
 }

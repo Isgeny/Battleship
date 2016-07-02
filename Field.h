@@ -16,5 +16,5 @@ public:
 	void setShip(MyPoint pos, GameStatus status);
 	void makeHit(MyPoint pos, GameStatus status);
 	void draw();
-	bool mouseClicked(int mX, int mY);
+	bool mouseOnField(int mX, int mY);
 };

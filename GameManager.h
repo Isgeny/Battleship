@@ -3,16 +3,21 @@
 #include <vector>
 #include "Button.h"
 #include "Field.h"
+#include "Ship.h"
+#include "PlacingShip.h"
 #include "freeglut.h"
 #include "enums.h"
 
 class GameManager
 {
 private:
-	std::vector<Button* > bVec;
+	Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnAuto, *btnClean, *btnFight;
 	Field *playerField, *compField;
+	std::vector<GraphicsItem* > mainMenuItems, menuPlacingShipItems;
+	std::vector<PlacingShip* > pShip;
+	PlacingShip *currPressShip;
+	Ship *mouseMovingShip;
 	GameStatus gameStatus;
-	int mX, mY;
 
 public:
 	GameManager();
@@ -20,10 +25,12 @@ public:
 	GameStatus getGameStatus() const;
 	void setGameStatus(GameStatus status);
 	void mousePressed(int button, int state, int x, int y);
+	void mouseMove(int x, int y);
+	void draw();
 	void drawCells();
-	void drawGameTitle();
-	void drawButtons();
-	void drawFields();
+	void drawMainMenuItems();
+	void drawPlacingShipMenuItems();
+	void drawGameProcessItems();
 	MyPoint coordTranform(int mX, int mY);
 
 };

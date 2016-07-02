@@ -4,7 +4,7 @@
 #include "GraphicsItem.h"
 #include "enums.h"
 
-class Button : GraphicsItem
+class Button : public GraphicsItem
 {
 private:
 	std::string text;

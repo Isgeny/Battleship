@@ -2,20 +2,52 @@
 
 GameManager::GameManager() : gameStatus(MENU)
 {
-	bVec.push_back(new Button(300, 60, 240, 60, "New game"));
-	bVec.push_back(new Button(300, 150, 240, 60, "Records"));
-	bVec.push_back(new Button(300, 240, 240, 60, "About"));
-	bVec.push_back(new Button(300, 330, 240, 60, "Exit"));
+	btnNewGame = new Button(300, 60, 240, 60, "New game");
+	btnRecords = new Button(300, 150, 240, 60, "Records");
+	btnAbout = new Button(300, 240, 240, 60, "About");
+	btnExit = new Button(300, 330, 240, 60, "Exit");
+	btnFight = new Button(690, 300, 120, 60, "FIGHT!");
+	btnAuto = new Button(390, 300, 120, 60, "AUTO");
+	btnClean = new Button(540, 300, 120, 60, "CLEAN");
+
 	playerField = new Field(60, 60, 300, 300);
-	compField   = new Field(510, 60, 300, 300);
+	compField = new Field(510, 60, 300, 300);
+
+	pShip.push_back(new PlacingShip(540, 240, 30, 30, 1));
+	pShip.push_back(new PlacingShip(540, 180, 60, 30, 2));
+	pShip.push_back(new PlacingShip(540, 120, 90, 30, 3));
+	pShip.push_back(new PlacingShip(540, 60, 120, 30, 4));
+
+	mouseMovingShip = new Ship();
+
+	mainMenuItems.push_back(btnNewGame);
+	mainMenuItems.push_back(btnRecords);
+	mainMenuItems.push_back(btnAbout);
+	mainMenuItems.push_back(btnExit);
+
+	menuPlacingShipItems.push_back(playerField);
+	menuPlacingShipItems.push_back(btnFight);
+	menuPlacingShipItems.push_back(btnAuto);
+	menuPlacingShipItems.push_back(btnClean);
+	menuPlacingShipItems.push_back(pShip[0]);
+	menuPlacingShipItems.push_back(pShip[1]);
+	menuPlacingShipItems.push_back(pShip[2]);
+	menuPlacingShipItems.push_back(pShip[3]);
 }
 
 GameManager::~GameManager()
 {
-	for(int i = 0; i < bVec.size(); i++)
-		delete bVec[i];
+	delete btnNewGame;
+	delete btnRecords;
+	delete btnAbout;
+	delete btnExit;
+	delete btnAuto;
+	delete btnClean;
 	delete playerField;
 	delete compField;
+	for(int i = 0; i < pShip.size(); i++)
+		delete pShip[i];
+	delete mouseMovingShip;
 }
 
 GameStatus GameManager::getGameStatus() const
@@ -30,28 +62,33 @@ void GameManager::setGameStatus(GameStatus st)
 
 void GameManager::mousePressed(int button, int state, int x, int y)
 {
+	//Обработка нажатий мыши
 	switch(gameStatus)
 	{
-	case MENU: 
+	case MENU:
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 		{
-			if(bVec[0]->mouseOnButton(x, y))
-				gameStatus = PLACING_SHIP;
-			else
-			if(bVec[1]->mouseOnButton(x, y))
-				gameStatus = RECORDS;
-			else
-			if(bVec[2]->mouseOnButton(x, y))
-				gameStatus = ABOUT;
-			else
-			if(bVec[3]->mouseOnButton(x, y))
+			if(btnNewGame->mouseOnButton(x, y))
+				gameStatus = PLACING_SHIP; else
+			if(btnRecords->mouseOnButton(x, y))
+				gameStatus = RECORDS; else
+			if(btnAbout->mouseOnButton(x, y))
+				gameStatus = ABOUT; else
+			if(btnExit->mouseOnButton(x, y))
 				exit(0);
 		}
 		break;
 	case PLACING_SHIP:
-		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && playerField->mouseClicked(x, y))
+		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 		{
-			playerField->setShip(this->coordTranform(x, y), PLACING_SHIP);
+			for(int i = 0; i < pShip.size(); i++)
+				if(pShip[i]->mouseOnPlacingShip(x, y))
+				{
+					pShip[0]->setPressed(false); pShip[1]->setPressed(false);
+					pShip[2]->setPressed(false); pShip[3]->setPressed(false);
+					pShip[i]->setPressed(true);
+					currPressShip = pShip[i];
+				}
 		}
 		break;
 	case WAITING_PLAYER_STEP:
@@ -61,8 +98,36 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 	}
 }
 
+void GameManager::mouseMove(int x, int y)
+{
+	if(gameStatus == PLACING_SHIP && currPressShip != NULL && playerField->mouseOnField(x, y))
+	{
+		MyPoint point;
+		point = coordTranform(x, y);
+		mouseMovingShip->setX(point.j*CELL_SIZE + 60);
+		mouseMovingShip->setY(point.i*CELL_SIZE + 60);
+		mouseMovingShip->setWidth(currPressShip->getDeckCount()*CELL_SIZE);
+		mouseMovingShip->setHeight(CELL_SIZE);
+	}
+}
+
+void GameManager::draw()
+{
+	//Рисование игры
+	switch(gameStatus)
+	{
+	case MENU:
+		drawMainMenuItems();
+		break;
+	case PLACING_SHIP:
+		drawPlacingShipMenuItems();
+		break;
+	}
+}
+
 void GameManager::drawCells()
 {
+	//Рисование клеточек
 	glLineWidth(2.0);
 	glBegin(GL_LINES);
 	glColor3d(0.5, 0.75, 0.95);
@@ -79,8 +144,10 @@ void GameManager::drawCells()
 	glEnd();
 }
 
-void GameManager::drawGameTitle()
+void GameManager::drawMainMenuItems()
 {
+	//Рисование элементов главного меню
+	drawCells();
 	std::string title = "BATTLESHIP";
 	int space = 20;
 	for(int i = 0; i < title.size(); i++)
@@ -89,32 +156,34 @@ void GameManager::drawGameTitle()
 		glRasterPos2d(325 + i*space, 40);
 		glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, title[i]);
 	}
+	for(int i = 0; i < mainMenuItems.size(); i++)
+		mainMenuItems[i]->draw();
 }
 
-void GameManager::drawButtons()
+void GameManager::drawPlacingShipMenuItems()
 {
-	for(int i = 0; i < bVec.size(); i++)
-	{
-		bVec[i]->draw();
-	}
+	//Рисование элементов меню расстановки кораблей
+	drawCells();
+	mouseMovingShip->draw();
+	for(int i = 0; i < menuPlacingShipItems.size(); i++)
+		menuPlacingShipItems[i]->draw();
 }
 
-void GameManager::drawFields()
+void GameManager::drawGameProcessItems()
 {
-	playerField->draw();
-	compField->draw();
 }
 
 MyPoint GameManager::coordTranform(int mX, int mY)
 {
+	//Перевод координат формы в координаты игрового поля
 	MyPoint point;
-	if((gameStatus == PLACING_SHIP) && (playerField->mouseClicked(mX, mY)))
+	if((gameStatus == PLACING_SHIP) && (playerField->mouseOnField(mX, mY)))
 	{
 		point.i = (mY - playerField->getY()) / CELL_SIZE;
 		point.j = (mX - playerField->getX()) / CELL_SIZE;
 		return point;
 	}
-	else if((gameStatus == WAITING_PLAYER_STEP) && (compField->mouseClicked(mX, mY)))
+	else if((gameStatus == WAITING_PLAYER_STEP) && (compField->mouseOnField(mX, mY)))
 	{
 		point.i = (mY - compField->getY()) / CELL_SIZE;
 		point.j = (mX - compField->getX()) / CELL_SIZE;

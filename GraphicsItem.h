@@ -1,5 +1,7 @@
 #pragma once
 #include "freeglut.h"
+#include "enums.h"
+
 class GraphicsItem
 {
 protected:

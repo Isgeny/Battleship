@@ -38,7 +38,7 @@ void Button::draw()
 	for(int i = 0; i < text.size(); i++)
 	{
 		glColor3d(0.0, 0.0, 1.0);
-		glRasterPos2d(x + width/2 - text.size()*7 + i*space, y + height/2);
+		glRasterPos2d(x + width / 2 - text.size()*space/2.15 + i*space, y+height/1.75);
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 	}
 }
