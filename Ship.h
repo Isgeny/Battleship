@@ -5,14 +5,16 @@ class Ship : public GraphicsItem
 {
 protected:
 	int deck;
-	ShipOrientation orientation;
+	MyPoint pos;
 
 public:
 	Ship();
-	Ship(int x, int y, int width, int height, int countDeck);
+	Ship(int x, int y, int width, int height, int countDeck, MyPoint pos = MyPoint());
 	~Ship();
 	void draw();
 	int getDeckCount() const;
-	ShipOrientation getOrientation() const;
-	void setOrientation(ShipOrientation orient);
+	void setDeckCount(int deckCount);
+	MyPoint getPos() const;
+	void setPos(MyPoint position);
+
 };

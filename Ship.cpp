@@ -1,13 +1,13 @@
 #include "Ship.h"
 
-Ship::Ship() : GraphicsItem(), deck(0), orientation(HORIZONTAL)
+Ship::Ship() : GraphicsItem(), deck(0)
 {
 	x = -1000;
 	y = -1000;
 }
 
-Ship::Ship(int x, int y, int width, int height, int countDeck) :
-	GraphicsItem(x, y , width, height), deck(countDeck), orientation(HORIZONTAL)
+Ship::Ship(int x, int y, int width, int height, int countDeck, MyPoint pos) :
+	GraphicsItem(x, y , width, height), deck(countDeck), pos(pos)
 {
 
 }
@@ -27,12 +27,17 @@ int Ship::getDeckCount() const
 	return deck;
 }
 
-ShipOrientation Ship::getOrientation() const
+void Ship::setDeckCount(int deckCount)
 {
-	return orientation;
+	deck = deckCount;
 }
 
-void Ship::setOrientation(ShipOrientation orient)
+MyPoint Ship::getPos() const
 {
-	orientation = orient;
+	return pos;
+}
+
+void Ship::setPos(MyPoint position)
+{
+	pos = position;
 }

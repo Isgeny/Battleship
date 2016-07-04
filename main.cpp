@@ -1,6 +1,5 @@
 #include "freeglut.h"
 #include "GameManager.h"
-
 GameManager game;
 
 void display()

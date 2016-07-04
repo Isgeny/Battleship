@@ -13,10 +13,10 @@ GameManager::GameManager() : gameStatus(MENU)
 	playerField = new Field(60, 60, 300, 300);
 	compField = new Field(510, 60, 300, 300);
 
-	pShip.push_back(new PlacingShip(540, 240, 30, 30, 1));
-	pShip.push_back(new PlacingShip(540, 180, 60, 30, 2));
-	pShip.push_back(new PlacingShip(540, 120, 90, 30, 3));
-	pShip.push_back(new PlacingShip(540, 60, 120, 30, 4));
+	pShip.push_back(new PlacingShip(540, 240, 30, 30, 1, 4));
+	pShip.push_back(new PlacingShip(540, 180, 60, 30, 2, 3));
+	pShip.push_back(new PlacingShip(540, 120, 90, 30, 3, 2));
+	pShip.push_back(new PlacingShip(540, 60, 120, 30, 4, 1));
 
 	mouseMovingShip = new Ship();
 
@@ -68,13 +68,13 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 	case MENU:
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 		{
-			if(btnNewGame->mouseOnButton(x, y))
+			if(btnNewGame->mouseOnItem(x, y))
 				gameStatus = PLACING_SHIP; else
-			if(btnRecords->mouseOnButton(x, y))
+			if(btnRecords->mouseOnItem(x, y))
 				gameStatus = RECORDS; else
-			if(btnAbout->mouseOnButton(x, y))
+			if(btnAbout->mouseOnItem(x, y))
 				gameStatus = ABOUT; else
-			if(btnExit->mouseOnButton(x, y))
+			if(btnExit->mouseOnItem(x, y))
 				exit(0);
 		}
 		break;
@@ -82,7 +82,7 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 		{
 			for(int i = 0; i < pShip.size(); i++)
-				if(pShip[i]->mouseOnPlacingShip(x, y))
+				if(pShip[i]->mouseOnItem(x, y))
 				{
 					pShip[0]->setPressed(false); pShip[1]->setPressed(false);
 					pShip[2]->setPressed(false); pShip[3]->setPressed(false);
@@ -92,8 +92,27 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 					mouseMovingShip->setY(-1000);
 					mouseMovingShip->setWidth(currPressShip->getDeckCount()*CELL_SIZE);
 					mouseMovingShip->setHeight(CELL_SIZE);
-					mouseMovingShip->setOrientation(HORIZONTAL);
+					mouseMovingShip->setDeckCount(currPressShip->getDeckCount());
 				}
+			if(playerField->mouseOnItem(x, y) && currPressShip->getAvailableShipPlaceCount())
+			{
+				int x = mouseMovingShip->getX(), y = mouseMovingShip->getY(), w = mouseMovingShip->getWidth(), h = mouseMovingShip->getHeight(), deck = mouseMovingShip->getDeckCount();
+				MyPoint point = mouseMovingShip->getPos();
+				playerField->setShip(PLACING_SHIP, x, y , w, h, deck, point);
+				currPressShip->decShipCount();
+			}
+		}
+		if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
+		{
+			//Удалить корабль
+			std::vector<Ship* > ships = playerField->getAllShips();
+			for(int i = 0; i < ships.size(); i++)
+			{
+				if(ships[i]->mouseOnItem(x, y))
+				{
+					delete playerField->getAllShips()[i];
+				}
+			}
 		}
 		break;
 	case WAITING_PLAYER_STEP:
@@ -105,17 +124,17 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 
 void GameManager::mouseMove(int x, int y)
 {
-	if(gameStatus == PLACING_SHIP && currPressShip != NULL && playerField->mouseOnField(x, y))
+	if(gameStatus == PLACING_SHIP && currPressShip != NULL && playerField->mouseOnItem(x, y))
 	{
 		MyPoint point = coordTranform(x, y);
-		int countDeck = currPressShip->getDeckCount();
-		ShipOrientation orientat = mouseMovingShip->getOrientation();
-		if(orientat == HORIZONTAL && point.j > (FIELD_SZ - countDeck))
+		int countDeck = mouseMovingShip->getDeckCount(), w = mouseMovingShip->getWidth(), h = mouseMovingShip->getHeight();
+		if(w > h && point.j > (FIELD_SZ - countDeck))
 			point.j = FIELD_SZ - countDeck;
-		if(orientat == VERTICAL && point.i > (FIELD_SZ - countDeck))
+		if(w < h && point.i > (FIELD_SZ - countDeck))
 			point.i = FIELD_SZ - countDeck;
 		mouseMovingShip->setX(point.j*CELL_SIZE + 60);
 		mouseMovingShip->setY(point.i*CELL_SIZE + 60);
+		mouseMovingShip->setPos(point);
 	}
 }
 
@@ -125,15 +144,13 @@ void GameManager::mouseWheel(int button, int dir, int x, int y)
 	{
 		int w = mouseMovingShip->getWidth(), h = mouseMovingShip->getHeight(), countDeck = currPressShip->getDeckCount();
 		MyPoint point = coordTranform(x, y);
-		if(mouseMovingShip->getOrientation() == HORIZONTAL && point.i <= (FIELD_SZ - countDeck))
+		if(w > h && point.i <= (FIELD_SZ - countDeck))
 		{
-			mouseMovingShip->setOrientation(VERTICAL);
 			mouseMovingShip->setWidth(h);
 			mouseMovingShip->setHeight(w);
 		} 
-		else if(mouseMovingShip->getOrientation() == VERTICAL && point.j <= (FIELD_SZ - countDeck))
+		else if(w < h && point.j <= (FIELD_SZ - countDeck))
 		{
-			mouseMovingShip->setOrientation(HORIZONTAL);
 			mouseMovingShip->setWidth(h);
 			mouseMovingShip->setHeight(w);
 		}
@@ -200,19 +217,20 @@ void GameManager::drawPlacingShipMenuItems()
 
 void GameManager::drawGameProcessItems()
 {
+
 }
 
 MyPoint GameManager::coordTranform(int mX, int mY)
 {
 	//Перевод координат формы в координаты игрового поля
 	MyPoint point;
-	if((gameStatus == PLACING_SHIP) && (playerField->mouseOnField(mX, mY)))
+	if((gameStatus == PLACING_SHIP) && (playerField->mouseOnItem(mX, mY)))
 	{
 		point.i = (mY - playerField->getY()) / CELL_SIZE;
 		point.j = (mX - playerField->getX()) / CELL_SIZE;
 		return point;
 	}
-	else if((gameStatus == WAITING_PLAYER_STEP) && (compField->mouseOnField(mX, mY)))
+	else if((gameStatus == WAITING_PLAYER_STEP) && (compField->mouseOnItem(mX, mY)))
 	{
 		point.i = (mY - compField->getY()) / CELL_SIZE;
 		point.j = (mX - compField->getX()) / CELL_SIZE;

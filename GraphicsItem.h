@@ -20,5 +20,6 @@ public:
 	void setY(int _y);
 	void setWidth(int _width);
 	void setHeight(int _height);
+	bool mouseOnItem(int mX, int mY);
 
 };

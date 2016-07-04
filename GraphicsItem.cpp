@@ -68,3 +68,8 @@ void GraphicsItem::setHeight(int _height)
 {
 	height = _height;
 }
+
+bool GraphicsItem::mouseOnItem(int mX, int mY)
+{
+	return (mX > x && mX < x + width && mY > y && mY < y + height);
+}

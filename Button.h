@@ -15,6 +15,5 @@ public:
 	~Button();
 	std::string getText() const;
 	void setText(std::string& _text);
-	bool mouseOnButton(int mX, int mY);
 	void draw();
 };

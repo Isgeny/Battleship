@@ -1,4 +1,5 @@
 #pragma once
+#pragma warning (disable: C4018)
 #define WIN_WIDTH 841
 #define WIN_HEIGHT 421
 #define CELL_SIZE 30
@@ -29,10 +30,4 @@ enum GameStatus
 	PLACING_SHIP,
 	WAITING_PLAYER_STEP,
 	WAITING_COMP_STEP
-};
-
-enum ShipOrientation
-{
-	HORIZONTAL,
-	VERTICAL
 };
