@@ -1,4 +1,5 @@
 #include "GameManager.h"
+#include <iterator>
 
 GameManager::GameManager() : gameStatus(MENU)
 {
@@ -82,6 +83,7 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 		{
 			for(int i = 0; i < pShip.size(); i++)
+			{
 				if(pShip[i]->mouseOnItem(x, y))
 				{
 					pShip[0]->setPressed(false); pShip[1]->setPressed(false);
@@ -93,24 +95,37 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 					mouseMovingShip->setWidth(currPressShip->getDeckCount()*CELL_SIZE);
 					mouseMovingShip->setHeight(CELL_SIZE);
 					mouseMovingShip->setDeckCount(currPressShip->getDeckCount());
+					mouseMovingShip->setVisiable(true);
+					break;
 				}
-			if(playerField->mouseOnItem(x, y) && currPressShip->getAvailableShipPlaceCount())
+			}
+			if(playerField->mouseOnItem(x, y) && currPressShip->getAvailableShipPlaceCount() && currPressShip->isPressed())
 			{
 				int x = mouseMovingShip->getX(), y = mouseMovingShip->getY(), w = mouseMovingShip->getWidth(), h = mouseMovingShip->getHeight(), deck = mouseMovingShip->getDeckCount();
 				MyPoint point = mouseMovingShip->getPos();
 				playerField->setShip(PLACING_SHIP, x, y , w, h, deck, point);
 				currPressShip->decShipCount();
 			}
+			if(currPressShip->getAvailableShipPlaceCount() == 0)
+			{
+				currPressShip->setPressed(false);
+				mouseMovingShip->setVisiable(false);
+			}
 		}
 		if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 		{
-			//Удалить корабль
-			std::vector<Ship* > ships = playerField->getAllShips();
-			for(int i = 0; i < ships.size(); i++)
+			//Удаление корабля с поля по нажатию ПКМ
+			std::vector<Ship* >::iterator it;
+			for(it = playerField->getAllShips().begin(); it != playerField->getAllShips().end(); it++)
 			{
-				if(ships[i]->mouseOnItem(x, y))
+				if((*it)->mouseOnItem(x, y))
 				{
-					delete playerField->getAllShips()[i];
+					Ship *s = (*it);
+					int deckCount = (*it)->getDeckCount();
+					pShip[deckCount - 1]->incShipCount();
+					playerField->getAllShips().erase(it);
+					delete s;
+					break;
 				}
 			}
 		}
@@ -148,7 +163,7 @@ void GameManager::mouseWheel(int button, int dir, int x, int y)
 		{
 			mouseMovingShip->setWidth(h);
 			mouseMovingShip->setHeight(w);
-		} 
+		}
 		else if(w < h && point.j <= (FIELD_SZ - countDeck))
 		{
 			mouseMovingShip->setWidth(h);
