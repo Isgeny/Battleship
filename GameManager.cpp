@@ -82,6 +82,7 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 	case PLACING_SHIP:
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 		{
+			//ѕровер€ем какой корабль выбрали дл€ установки
 			for(int i = 0; i < pShip.size(); i++)
 			{
 				if(pShip[i]->mouseOnItem(x, y))
@@ -99,14 +100,16 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 					break;
 				}
 			}
-			if(playerField->mouseOnItem(x, y) && currPressShip->getAvailableShipPlaceCount() && currPressShip->isPressed())
+			//”станавливаем корабль
+			if((playerField->mouseOnItem(x, y)) && (!playerField->mouseOnShipArea(x, y)) && (currPressShip != NULL) && (currPressShip->getAvailableShipPlaceCount()) && (currPressShip->isPressed()))
 			{
 				int x = mouseMovingShip->getX(), y = mouseMovingShip->getY(), w = mouseMovingShip->getWidth(), h = mouseMovingShip->getHeight(), deck = mouseMovingShip->getDeckCount();
 				MyPoint point = mouseMovingShip->getPos();
 				playerField->setShip(PLACING_SHIP, x, y , w, h, deck, point);
 				currPressShip->decShipCount();
-			}
-			if(currPressShip->getAvailableShipPlaceCount() == 0)
+			}  
+			//—крываем выбранный корабль и отрисовку при перемещении мыши
+			if(currPressShip != NULL && currPressShip->getAvailableShipPlaceCount() == 0)
 			{
 				currPressShip->setPressed(false);
 				mouseMovingShip->setVisiable(false);
@@ -139,6 +142,7 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 
 void GameManager::mouseMove(int x, int y)
 {
+	//ѕеремещение корабл€ по полю при перемещении мыши
 	if(gameStatus == PLACING_SHIP && currPressShip != NULL && playerField->mouseOnItem(x, y))
 	{
 		MyPoint point = coordTranform(x, y);
@@ -155,6 +159,7 @@ void GameManager::mouseMove(int x, int y)
 
 void GameManager::mouseWheel(int button, int dir, int x, int y)
 {
+	//ѕоворот корабл€ при прокрутке колесика мыши
 	if(gameStatus == PLACING_SHIP)
 	{
 		int w = mouseMovingShip->getWidth(), h = mouseMovingShip->getHeight(), countDeck = currPressShip->getDeckCount();

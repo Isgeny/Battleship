@@ -2,13 +2,23 @@
 
 Field::Field() : GraphicsItem()
 {
-
+	field.resize(FIELD_SZ);
+	for(int i = 0; i < FIELD_SZ; i++)
+		field[i].resize(FIELD_SZ);
+	for(int i = 0; i < FIELD_SZ; i++)
+		for(int j = 0; j < FIELD_SZ; j++)
+			field[i][j] = EMPTY;
 }
 
 Field::Field(int x, int y, int weight, int height) : 
 	GraphicsItem(x, y, weight, height)
 {
-
+	field.resize(FIELD_SZ);
+	for(int i = 0; i < FIELD_SZ; i++)
+		field[i].resize(FIELD_SZ);
+	for(int i = 0; i < FIELD_SZ; i++)
+		for(int j = 0; j < FIELD_SZ; j++)
+			field[i][j] = EMPTY;
 }
 
 Field::~Field()
@@ -23,7 +33,7 @@ void Field::setShip(GameStatus status, int x, int y, int weight, int height, int
 
 void Field::makeHit(MyPoint pos, GameStatus status)
 {
-	//Удар по кораблям противника
+	//Удар по кораблям компьютера
 }
 
 std::vector<Ship*>& Field::getAllShips()
@@ -60,4 +70,17 @@ void Field::draw()
 	{
 		ships[i]->draw();
 	}
+}
+
+bool Field::mouseOnShipArea(int mX, int mY)
+{
+	std::vector<Ship* >::iterator it;
+	for(it = ships.begin(); it != ships.end(); it++)
+	{
+		if((mX > (*it)->getX() - CELL_SIZE) && (mX < (*it)->getX() + (*it)->getWidth() + CELL_SIZE) && (mY >(*it)->getY() - CELL_SIZE) && (mY < (*it)->getY() + (*it)->getHeight() + CELL_SIZE))
+		{
+			return true;
+		}
+	}
+	return false;
 }

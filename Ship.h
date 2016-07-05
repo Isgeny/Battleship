@@ -20,5 +20,6 @@ public:
 	void setPos(MyPoint position);
 	bool isVisiable() const;
 	void setVisiable(bool state);
+	
 
 };

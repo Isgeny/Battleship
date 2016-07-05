@@ -18,7 +18,7 @@ enum Cell
 {
 	EMPTY,
 	SHIP,
-	KILLED_SHIP,
+	SHIP_AREA,
 	DOT
 };
 

@@ -9,7 +9,7 @@ class Field : public GraphicsItem
 {
 private:
 	std::vector<Ship* > ships;
-	int sShips = 4, dShips = 3, tShips = 2, qShips = 1;
+	std::vector<std::vector<Cell>> field;
 
 public:
 	Field();
@@ -19,4 +19,5 @@ public:
 	void makeHit(MyPoint pos, GameStatus status);
 	std::vector<Ship* >& getAllShips();
 	void draw();
+	bool mouseOnShipArea(int mX, int mY);
 };
