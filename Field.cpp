@@ -1,24 +1,14 @@
 #include "Field.h"
 
-Field::Field() : GraphicsItem()
+Field::Field() : GraphicsItem(), countOfPlacedShips(0)
 {
-	field.resize(FIELD_SZ);
-	for(int i = 0; i < FIELD_SZ; i++)
-		field[i].resize(FIELD_SZ);
-	for(int i = 0; i < FIELD_SZ; i++)
-		for(int j = 0; j < FIELD_SZ; j++)
-			field[i][j] = EMPTY;
+
 }
 
-Field::Field(int x, int y, int weight, int height) : 
-	GraphicsItem(x, y, weight, height)
+Field::Field(int x, int y, int weight, int height, int countPl) : 
+	GraphicsItem(x, y, weight, height), countOfPlacedShips(countPl)
 {
-	field.resize(FIELD_SZ);
-	for(int i = 0; i < FIELD_SZ; i++)
-		field[i].resize(FIELD_SZ);
-	for(int i = 0; i < FIELD_SZ; i++)
-		for(int j = 0; j < FIELD_SZ; j++)
-			field[i][j] = EMPTY;
+
 }
 
 Field::~Field()
@@ -29,6 +19,71 @@ Field::~Field()
 void Field::setShip(GameStatus status, int x, int y, int weight, int height, int deck, MyPoint pos)
 {
 	ships.push_back(new Ship(x, y, weight, height, deck, pos));
+}
+
+void Field::setRandomShips()
+{
+	srand(time(NULL));
+	int i = 0;
+	while(i < 4)
+	{
+		int mX = rand() % width + x, mY = rand() % height + y, mW = 30, mH = 30, mDeck = 1;
+		if(availableToPlaceShip(mX, mY, mW, mH, mDeck))
+		{
+			MyPoint temp = coordTransform(mX, mY);
+			if(mW > mH && temp.j > (FIELD_SZ - mDeck))
+				temp.j = FIELD_SZ - mDeck;
+			if(mW < mH && temp.i >(FIELD_SZ - mDeck))
+				temp.i = FIELD_SZ - mDeck;
+			ships.push_back(new Ship(temp.j*CELL_SIZE + x, temp.i*CELL_SIZE + y, mW, mH, mDeck, temp));
+			i++;
+		}
+	}
+	i = 0;
+	while(i < 3)
+	{
+		int mX = rand() % width + x, mY = rand() % height + y, mW = 60, mH = 30, mDeck = 2;
+		if(availableToPlaceShip(mX, mY, mW, mH, mDeck))
+		{
+			MyPoint temp = coordTransform(mX, mY);
+			if(mW > mH && temp.j > (FIELD_SZ - mDeck))
+				temp.j = FIELD_SZ - mDeck;
+			if(mW < mH && temp.i >(FIELD_SZ - mDeck))
+				temp.i = FIELD_SZ - mDeck;
+			ships.push_back(new Ship(temp.j*CELL_SIZE + x, temp.i*CELL_SIZE + y, mW, mH, mDeck, temp));
+			i++;
+		}
+	}
+	i = 0;
+	while(i < 2)
+	{
+		int mX = rand() % width + x, mY = rand() % height + y, mW = 30, mH = 90, mDeck = 3;
+		if(availableToPlaceShip(mX, mY, mW, mH, mDeck))
+		{
+			MyPoint temp = coordTransform(mX, mY);
+			if(mW > mH && temp.j > (FIELD_SZ - mDeck))
+				temp.j = FIELD_SZ - mDeck;
+			if(mW < mH && temp.i >(FIELD_SZ - mDeck))
+				temp.i = FIELD_SZ - mDeck;
+			ships.push_back(new Ship(temp.j*CELL_SIZE + x, temp.i*CELL_SIZE + y, mW, mH, mDeck, temp));
+			i++;
+		}
+	}
+	i = 0;
+	while(i < 1)
+	{
+		int mX = rand() % width + x, mY = rand() % height + y, mW = 30, mH = 120, mDeck = 4;
+		if(availableToPlaceShip(mX, mY, mW, mH, mDeck))
+		{
+			MyPoint temp = coordTransform(mX, mY);
+			if(mW > mH && temp.j > (FIELD_SZ - mDeck))
+				temp.j = FIELD_SZ - mDeck;
+			if(mW < mH && temp.i >(FIELD_SZ - mDeck))
+				temp.i = FIELD_SZ - mDeck;
+			ships.push_back(new Ship(temp.j*CELL_SIZE + x, temp.i*CELL_SIZE + y, mW, mH, mDeck, temp));
+			i++;
+		}
+	}
 }
 
 void Field::makeHit(MyPoint pos, GameStatus status)
@@ -72,15 +127,67 @@ void Field::draw()
 	}
 }
 
-bool Field::mouseOnShipArea(int mX, int mY)
+bool Field::availableToPlaceShip(int mX, int mY, int mW, int mH, int mDeck)
 {
 	std::vector<Ship* >::iterator it;
 	for(it = ships.begin(); it != ships.end(); it++)
 	{
-		if((mX > (*it)->getX() - CELL_SIZE) && (mX < (*it)->getX() + (*it)->getWidth() + CELL_SIZE) && (mY >(*it)->getY() - CELL_SIZE) && (mY < (*it)->getY() + (*it)->getHeight() + CELL_SIZE))
+		for(int i = 0; i < mDeck; i++)
 		{
-			return true;
+			if((mW >= mH) && (mX + CELL_SIZE*i >= (*it)->getX() - CELL_SIZE) && (mX + CELL_SIZE*i <= (*it)->getX() + (*it)->getWidth() + CELL_SIZE) && (mY >= (*it)->getY() - CELL_SIZE) && (mY <= (*it)->getY() + (*it)->getHeight() + CELL_SIZE))
+			{
+				return false;
+			}
+			else if((mW <= mH) && (mX >= (*it)->getX() - CELL_SIZE) && (mX <= (*it)->getX() + (*it)->getWidth() + CELL_SIZE) && (mY + CELL_SIZE*i >= (*it)->getY() - CELL_SIZE) && (mY + CELL_SIZE*i <= (*it)->getY() + (*it)->getHeight() + CELL_SIZE))
+			{
+				return false;
+			}
 		}
 	}
-	return false;
+	return true;
+}
+
+void Field::cleanField()
+{
+	std::vector<Ship* > t = ships;
+	std::vector<Ship* >::iterator it;
+	ships.erase(ships.begin(), ships.end());
+	for(it = t.begin(); it != t.end(); it++)
+	{
+		delete (*it);
+	}
+}
+
+int Field::getCountOfPlacedShips() const
+{
+	return countOfPlacedShips;
+}
+
+void Field::setCountOfPlacedShips(int count)
+{
+	countOfPlacedShips = count;
+}
+
+void Field::incCountOfPlacedShips()
+{
+	countOfPlacedShips++;
+}
+
+void Field::decCountOfPlacedShips()
+{
+	countOfPlacedShips--;
+}
+
+MyPoint Field::coordTransform(int mX, int mY)
+{
+	//Перевод координат формы в координаты игрового поля
+	MyPoint temp;
+	if(mouseOnItem(mX, mY))
+	{
+		temp.i = (mY - y) / CELL_SIZE;
+		temp.j = (mX - x) / CELL_SIZE;
+		return temp;
+	} 
+	else
+		return MyPoint();
 }

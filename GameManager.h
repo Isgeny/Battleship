@@ -13,7 +13,7 @@ class GameManager
 private:
 	Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnAuto, *btnClean, *btnFight;
 	Field *playerField, *compField;
-	std::vector<GraphicsItem* > mainMenuItems, menuPlacingShipItems;
+	std::vector<GraphicsItem* > mainMenuItems, menuPlacingShipItems, gameProcess;
 	std::vector<PlacingShip* > pShip;
 	PlacingShip *currPressShip;
 	Ship *mouseMovingShip;
@@ -31,7 +31,5 @@ public:
 	void drawCells();
 	void drawMainMenuItems();
 	void drawPlacingShipMenuItems();
-	void drawGameProcessItems();
-	MyPoint coordTranform(int mX, int mY);
 
 };

@@ -8,10 +8,17 @@
 struct MyPoint
 {
 	int i, j;
-	MyPoint()
+
+	MyPoint() : i(0), j(0)
 	{
-		i = 0; j = 0;
+
 	}
+
+	MyPoint(int posI, int posJ) : i(posI), j(posJ)
+	{
+
+	}
+
 };
 
 enum Cell
