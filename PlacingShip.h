@@ -1,7 +1,7 @@
 #pragma once
-#include "Ship.h"
-#include "freeglut.h"
 #include <string>
+#include "freeglut.h"
+#include "Ship.h"
 #include "enums.h"
 
 class PlacingShip : public Ship
@@ -12,15 +12,15 @@ private:
 
 public:
 	PlacingShip();
-	PlacingShip(int x, int y, int weight, int height, int deck, int count);
+	PlacingShip(int x, int y, int weight, int height, int deckCount, const Orientation& orientation, bool visiable, int shipPlaceCount);
 	~PlacingShip();
 	void draw();
-	bool isPressed() const;
 	void setPressed(bool state);
-	int getAvailableShipPlaceCount() const;
 	void setShipPlaceCount(int count);
-	void incShipCount();
-	void decShipCount();
+	bool isPressed() const;
+	int getShipPlaceCount() const;
+	void operator ++ (int);
+	void operator -- (int);
 
 };
 

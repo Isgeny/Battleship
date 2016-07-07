@@ -1,19 +1,20 @@
 #pragma once
 #include <string>
 #include "freeglut.h"
-#include "GraphicsItem.h"
+#include "GraphicsRectItem.h"
 #include "enums.h"
 
-class Button : public GraphicsItem
+class Button : public GraphicsRectItem
 {
 private:
 	std::string text;
 
 public:
 	Button();
-	Button(int _x, int _y , int _width, int _height, const std::string& _text);
+	Button(int x, int y , int width, int height, const std::string& text);
 	~Button();
-	std::string getText() const;
-	void setText(std::string& _text);
 	void draw();
+	void setText(std::string& text);
+	const std::string& getText() const;
+
 };

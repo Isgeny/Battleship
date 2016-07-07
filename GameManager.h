@@ -1,35 +1,35 @@
 #pragma once
 #include <string>
 #include <vector>
+#include <map>
+#include "freeglut.h"
 #include "Button.h"
 #include "Field.h"
 #include "Ship.h"
 #include "PlacingShip.h"
-#include "freeglut.h"
 #include "enums.h"
 
 class GameManager
 {
 private:
-	Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnAuto, *btnClean, *btnFight;
-	Field *playerField, *compField;
-	std::vector<GraphicsItem* > mainMenuItems, menuPlacingShipItems, gameProcess;
-	std::vector<PlacingShip* > pShip;
-	PlacingShip *currPressShip;
-	Ship *mouseMovingShip;
 	GameStatus gameStatus;
-
+	const std::string title = "BATTLESHIP";
+	std::map<ObjName, Button*> btn;
+	std::map<ObjName, PlacingShip*> plShip;
+	Field *playerField, *compField;
+	Ship *mouseShip;
+	PlacingShip *currPressShip;
+	std::map<ObjName, GraphicsRectItem*> item;
+	
 public:
 	GameManager();
 	~GameManager();
-	GameStatus getGameStatus() const;
-	void setGameStatus(GameStatus status);
+	void draw();
+	void drawCells();
 	void mousePressed(int button, int state, int x, int y);
 	void mouseMove(int x, int y);
 	void mouseWheel(int button, int dir, int x, int y);
-	void draw();
-	void drawCells();
-	void drawMainMenuItems();
-	void drawPlacingShipMenuItems();
-
+	void setGameStatus(const GameStatus& status);
+	const GameStatus& getGameStatus() const;
+	
 };

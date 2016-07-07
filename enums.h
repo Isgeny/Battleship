@@ -1,8 +1,9 @@
 #pragma once
 #pragma warning (disable: 4018)
+#pragma warning (disable: 4305)
 #define WIN_WIDTH 841
 #define WIN_HEIGHT 421
-#define CELL_SIZE 30
+#define CELL_SZ 30
 #define FIELD_SZ 10
 
 struct MyPoint
@@ -19,6 +20,30 @@ struct MyPoint
 
 	}
 
+};
+
+enum ObjName
+{
+	SingleShip = 1,
+	DoubleShip,
+	TripleShip,
+	QuadShip,
+	BtnNewGame,
+	BtnRecords,
+	BtnAbout,
+	BtnExit,
+	BtnFight,
+	BtnAuto,
+	BtnClean,
+	PlayerField,
+	CompField,
+	MouseShip,
+};
+
+enum Orientation
+{
+	HORIZONTAL,
+	VERTICAL
 };
 
 enum Cell

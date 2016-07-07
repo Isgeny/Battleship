@@ -1,15 +1,27 @@
 #include "Ship.h"
 
-Ship::Ship() : GraphicsItem(), deck(0), visiable(true)
+Ship::Ship() : GraphicsRectItem(), deckCount(0), orientation(HORIZONTAL), visiable(true), areaX(0), areaY(0), areaWidth(0), areaHeight(0)
 {
 	x = -1000;
 	y = -1000;
 }
 
-Ship::Ship(int x, int y, int width, int height, int countDeck, MyPoint pos, bool vis) :
-	GraphicsItem(x, y , width, height), deck(countDeck), pos(pos), visiable(vis)
+Ship::Ship(int aX, int aY, int aWidth, int aHeight, int aCountDeck, const Orientation& aOrientation, bool aVisiable) :
+	GraphicsRectItem(aX, aY, aWidth, aHeight), deckCount(aCountDeck), orientation(aOrientation), visiable(aVisiable)
 {
+	areaX = aX - CELL_SZ;
+	areaY = aY - CELL_SZ;
+	areaWidth = aWidth + 2 * CELL_SZ;
+	areaHeight = aHeight + 2 * CELL_SZ;
+}
 
+Ship::Ship(Ship* obj)
+{
+	x = obj->x; y = obj->y; width = obj->width; height = obj->height;
+	deckCount = obj->deckCount;
+	visiable = obj->visiable;
+	orientation = obj->orientation;
+	areaX = obj->areaX; areaY = obj->areaY; areaWidth = obj->areaWidth; areaHeight = obj->areaHeight;
 }
 
 Ship::~Ship()
@@ -21,28 +33,41 @@ void Ship::draw()
 {
 	if(visiable)
 	{
-		GraphicsItem::draw();
+		GraphicsRectItem::draw();
 	}
+}
+
+void Ship::setDeckCount(int aDeckCount)
+{
+	deckCount = aDeckCount;
+}
+
+void Ship::setOrientation(const Orientation & aOrientation)
+{
+	orientation = aOrientation;
+}
+
+void Ship::setVisiable(bool aVisiable)
+{
+	visiable = aVisiable;
+}
+
+void Ship::setArea(int aX, int aY)
+{
+	areaX = aX - CELL_SZ;
+	areaY = aY - CELL_SZ;
+	areaWidth = width + 2 * CELL_SZ;
+	areaHeight = height + 2 * CELL_SZ;
 }
 
 int Ship::getDeckCount() const
 {
-	return deck;
+	return deckCount;
 }
 
-void Ship::setDeckCount(int deckCount)
+const Orientation & Ship::getOrientation() const
 {
-	deck = deckCount;
-}
-
-MyPoint Ship::getPos() const
-{
-	return pos;
-}
-
-void Ship::setPos(MyPoint position)
-{
-	pos = position;
+	return orientation;
 }
 
 bool Ship::isVisiable() const
@@ -50,7 +75,27 @@ bool Ship::isVisiable() const
 	return visiable;
 }
 
-void Ship::setVisiable(bool state)
+int Ship::getAreaX() const
 {
-	visiable = state;
+	return areaX;
+}
+
+int Ship::getAreaY() const
+{
+	return areaY;
+}
+
+int Ship::getAreaWidth() const
+{
+	return areaWidth;
+}
+
+int Ship::getAreaHeight() const
+{
+	return areaHeight;
+}
+
+bool Ship::mouseOnShipArea(int mX, int mY)
+{
+	return (mX > areaX && mX < areaX + areaWidth && mY > areaY && mY < areaY + areaHeight);
 }
