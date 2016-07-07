@@ -1,6 +1,7 @@
 #include "freeglut.h"
 #include <time.h>
 #include "GameManager.h"
+
 GameManager game;
 
 

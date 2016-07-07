@@ -1,24 +1,22 @@
 #include "Field.h"
 
-Field::Field() : GraphicsRectItem(), placedShipsCount(0)
-{
-
-}
-
-Field::Field(int aX, int aY, int aWeight, int aHeight, int aPlacedShipsCount) :
-	GraphicsRectItem(aX, aY, aWeight, aHeight), placedShipsCount(aPlacedShipsCount)
+Field::Field(int x, int y, int width, int height, int aPlacedShipsCount) :
+	GraphicsRectItem(x, y, width, height), placedShipsCount(aPlacedShipsCount)
 {
 
 }
 
 Field::~Field()
 {
-
+	for(auto it = ships.begin(); it != ships.end(); it++)
+		delete (*it);
+	for(auto it = dots.begin(); it != dots.end(); it++)
+		delete (*it);
 }
 
 void Field::draw()
 {
-	//Рисование поля
+	//Рисование квадрата
 	GraphicsRectItem::draw();
 	//Рисование цифр
 	for(int i = 1; i <= 9; i++)
@@ -43,6 +41,7 @@ void Field::draw()
 	//Рисование кораблей
 	for(auto it = ships.begin(); it != ships.end(); it++)
 		(*it)->draw();
+	//Рисование точек
 	for(auto it = dots.begin(); it != dots.end(); it++)
 		(*it)->draw();
 }
@@ -78,16 +77,15 @@ void Field::operator--(int)
 		placedShipsCount--;
 }
 
-bool Field::availableToPlaceShip(Ship* mouseShip)
+bool Field::availableToPlaceShip(int x, int y, int deckCount, const Orientation& orientation)
 {
 	//Проверка возможности установки корабля
-	int beginX = mouseShip->getX() + CELL_SZ / 2, beginY = mouseShip->getY() + CELL_SZ / 2, mDeck = mouseShip->getDeckCount();
-	Orientation orient = mouseShip->getOrientation();
+	x += CELL_SZ / 2; y += CELL_SZ / 2;
 	for(auto it = ships.begin(); it != ships.end(); it++)
 	{
-		for(int i = 0; i < mDeck; i++)
+		for(int i = 0; i < deckCount; i++)
 		{
-			if(orient == HORIZONTAL && (*it)->mouseOnShipArea(beginX + i*CELL_SZ, beginY) || orient == VERTICAL && (*it)->mouseOnShipArea(beginX, beginY + i*CELL_SZ))
+			if(orientation == HORIZONTAL && (*it)->mouseOnShipArea(x + i*CELL_SZ, y) || orientation == VERTICAL && (*it)->mouseOnShipArea(x, y + i*CELL_SZ))
 			{
 				return false;
 			}
@@ -98,98 +96,108 @@ bool Field::availableToPlaceShip(Ship* mouseShip)
 
 bool Field::availableToMakeHit(int mX, int mY)
 {
-	bool flag = true;
+	//Проверка наличия уничтоженного корабля по координатам мыши
 	for(auto it = ships.begin(); it != ships.end(); it++)
 	{
-		if((*it)->mouseOnItem(mX, mY))
+		for(auto itPart = (*it)->getParts().begin(); itPart != (*it)->getParts().end(); itPart++)
 		{
-			flag = false;
-			break;
+			if((*itPart)->mouseOnItem(mX, mY) && !(*itPart)->getAlive())
+			{
+				return false;
+			}
 		}
 	}
+	//Проверка наличия точки по координатам мыши
 	for(auto it = dots.begin(); it != dots.end(); it++)
 	{
 		if((*it)->mouseOnItem(mX, mY))
 		{
-			flag = false;
-			break;
+			return false;
 		}
 	}
-	return flag;
+	return true;
 }
 
-void Field::setShip(Ship* mouseShip)
+void Field::setShip(int x, int y, int width, int height, int deckCount, const Orientation& orientation, int areaX, int areaY, int areaWidth, int areaHeight)
 {
-	//Установка корабля на поле
-	ships.push_back(new Ship(mouseShip));
+	ships.push_back(new Ship(x, y, width, height, deckCount, orientation, true, true, areaX, areaY, areaWidth, areaHeight));
 }
 
-void Field::cleanField()
+void Field::cleanField() //Удаление кораблей и точек с поля
 {
-	//Очистка поля
 	for(auto it = ships.begin(); it != ships.end(); it++)
-		delete *it;
+		delete (*it);
+	for(auto it = dots.begin(); it != dots.end(); it++)
+		delete (*it);
 	ships.erase(ships.begin(), ships.end());
+	dots.erase(dots.begin(), dots.end());
 	placedShipsCount = 0;
 }
 
-void Field::setRandomShips()
+void Field::setRandomShips() //Рандомная расстановка кораблей
 {
-	//Рандомная расстановка кораблей
-	Ship* compMouseShip = new Ship;
 	while(placedShipsCount < 10)
 	{
-		int rX = (rand() % width) + x, rY = (rand() % height) + y, deck;
-		int newX = rX / CELL_SZ * CELL_SZ, newY = rY / CELL_SZ * CELL_SZ;
+		int rX = rand() % width + x, rY = rand() % height + y, x = rX / CELL_SZ * CELL_SZ, y = rY / CELL_SZ * CELL_SZ, width, height, deckCount;
 		if(placedShipsCount < 4)
-			deck = 1;
+			deckCount = 1;
 		else if(placedShipsCount >= 4 && placedShipsCount < 7)
-			deck = 2;
+			deckCount = 2;
 		else if(placedShipsCount >= 7 && placedShipsCount < 9)
-			deck = 3;
+			deckCount = 3;
 		else if(placedShipsCount == 9)
-			deck = 4;
-		int boolOrient = rand() % 2; Orientation orient;
-		if(boolOrient)
+			deckCount = 4;
+		int or = rand() % 2; Orientation orientation;
+		if(or)
 		{
-			orient = HORIZONTAL;
-			compMouseShip->setWidth(CELL_SZ*deck);
-			compMouseShip->setHeight(CELL_SZ);
+			orientation = HORIZONTAL;
+			width = deckCount * CELL_SZ;
+			height = CELL_SZ;
+			if(rX > this->x + FIELD_SZ*CELL_SZ - deckCount*CELL_SZ)
+			{
+				x = this->x + FIELD_SZ*CELL_SZ - deckCount*CELL_SZ;
+			}	
 		}
 		else
 		{
-			orient = VERTICAL;
-			compMouseShip->setWidth(CELL_SZ);
-			compMouseShip->setHeight(CELL_SZ*deck);
+			orientation = VERTICAL;
+			width = CELL_SZ;
+			height = deckCount * CELL_SZ;
+			if(rY > this->y + FIELD_SZ*CELL_SZ - deckCount*CELL_SZ)
+			{
+				y = this->y + FIELD_SZ*CELL_SZ - deckCount*CELL_SZ;
+			}
 		}
-		compMouseShip->setOrientation(orient);
-		compMouseShip->setVisiable(true);
-		compMouseShip->setDeckCount(deck);
-		if(orient == HORIZONTAL && rX > x + FIELD_SZ*CELL_SZ - deck*CELL_SZ)
-			newX = x + FIELD_SZ*CELL_SZ - deck*CELL_SZ;
-		else if(orient == VERTICAL && rY > y + FIELD_SZ*CELL_SZ - deck*CELL_SZ)
-			newY = y + FIELD_SZ*CELL_SZ - deck*CELL_SZ;
-		compMouseShip->setX(newX);
-		compMouseShip->setY(newY);
-		compMouseShip->setArea(newX, newY);
-		if(this->availableToPlaceShip(compMouseShip))
+		int areaX = x - CELL_SZ, areaY = y - CELL_SZ, areaWidth = width + 2*CELL_SZ, areaHeight = height + 2*CELL_SZ;
+		if(this->availableToPlaceShip(x, y, deckCount, orientation))
 		{
-			this->setShip(compMouseShip);
-			placedShipsCount++;
+			this->setShip(x, y, width, height, deckCount, orientation, areaX, areaY, areaWidth, areaHeight);
+			this->placedShipsCount++;
 		}
 	}
-	delete compMouseShip;
 }
 
 void Field::hideShips()
 {
 	for(auto it = ships.begin(); it != ships.end(); it++)
-	{
 		(*it)->setVisiable(false);
-	}
 }
 
 void Field::makeHit(int mX, int mY)
 {
+	for(auto itShip = ships.begin(); itShip != ships.end(); itShip++)
+	{
+		if((*itShip)->mouseOnItem(mX, mY))
+		{
+			for(auto itPart = (*itShip)->getParts().begin(); itPart != (*itShip)->getParts().end(); itPart++)
+			{
+				if((*itPart)->mouseOnItem(mX, mY))
+				{
+					(*itPart)->setAlive(false);
+					return;
+				}
+			}
+		}
+	}
 	dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ));
 }

@@ -1,36 +1,31 @@
 #include "Ship.h"
 
-Ship::Ship() : GraphicsRectItem(), deckCount(0), orientation(HORIZONTAL), visiable(true), areaX(0), areaY(0), areaWidth(0), areaHeight(0)
+Ship::Ship(int x, int y, int width, int height, int aDeckCount, const Orientation& aOrientation, bool aVisiable, bool aAlive, int aAreaX, int aAreaY, int aAreaWidth, int aAreaHeight) :
+	GraphicsRectItem(x, y, width, height), deckCount(aDeckCount), orientation(aOrientation), visiable(aVisiable), alive(aAlive), areaX(aAreaX), areaY(aAreaY), areaWidth(aAreaWidth), areaHeight(aAreaHeight)
 {
-	x = -1000;
-	y = -1000;
-}
-
-Ship::Ship(int aX, int aY, int aWidth, int aHeight, int aCountDeck, const Orientation& aOrientation, bool aVisiable, bool aAlive) :
-	GraphicsRectItem(aX, aY, aWidth, aHeight), deckCount(aCountDeck), orientation(aOrientation), visiable(aVisiable), alive(aAlive)
-{
-	areaX = x - CELL_SZ;
-	areaY = y - CELL_SZ;
-	areaWidth = width + 2 * CELL_SZ;
-	areaHeight = height + 2 * CELL_SZ;
 	for(int i = 0; i < deckCount; i++)
 	{
-
+		parts.push_back(new ShipPart(0, 0, 0, 0, true));
+		if(orientation == HORIZONTAL)
+		{
+			parts[i]->setX(x + i*CELL_SZ);
+			parts[i]->setY(y);
+		}
+		else
+		{
+			parts[i]->setX(x);
+			parts[i]->setY(y + i*CELL_SZ);
+		}
+		parts[i]->setWidth(CELL_SZ);
+		parts[i]->setHeight(CELL_SZ);
 	}
-}
-
-Ship::Ship(Ship* obj)
-{
-	x = obj->x; y = obj->y; width = obj->width; height = obj->height;
-	deckCount = obj->deckCount;
-	visiable = obj->visiable;
-	orientation = obj->orientation;
-	areaX = obj->areaX; areaY = obj->areaY; areaWidth = obj->areaWidth; areaHeight = obj->areaHeight;
 }
 
 Ship::~Ship()
 {
-
+	for(auto it = parts.begin(); it != parts.end(); it++)
+		delete (*it);
+	parts.erase(parts.begin(), parts.end());
 }
 
 void Ship::draw()
@@ -38,6 +33,8 @@ void Ship::draw()
 	if(visiable)
 	{
 		GraphicsRectItem::draw();
+		for(int i = 0; i < parts.size(); i++)
+			parts[i]->draw();
 	}
 }
 
@@ -46,7 +43,7 @@ void Ship::setDeckCount(int aDeckCount)
 	deckCount = aDeckCount;
 }
 
-void Ship::setOrientation(const Orientation & aOrientation)
+void Ship::setOrientation(const Orientation& aOrientation)
 {
 	orientation = aOrientation;
 }
@@ -56,12 +53,9 @@ void Ship::setVisiable(bool aVisiable)
 	visiable = aVisiable;
 }
 
-void Ship::setArea(int aX, int aY)
+void Ship::setArea(int aAreaX, int aAreaY, int aAreaWidth, int aAreaHeight)
 {
-	areaX = aX - CELL_SZ;
-	areaY = aY - CELL_SZ;
-	areaWidth = width + 2 * CELL_SZ;
-	areaHeight = height + 2 * CELL_SZ;
+	areaX = aAreaX; areaY = aAreaY; areaWidth = aAreaWidth; areaHeight = aAreaHeight;
 }
 
 void Ship::setAlive(bool aAlive)
@@ -109,7 +103,7 @@ bool Ship::getAlive() const
 	return alive;
 }
 
-std::vector<GraphicsRectItem*>& Ship::getParts()
+std::vector<ShipPart*>& Ship::getParts()
 {
 	return parts;
 }

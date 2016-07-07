@@ -1,12 +1,7 @@
 #include "Button.h"
 
-Button::Button() : GraphicsRectItem(), text("untitled")
-{
-
-}
-
-Button::Button(int aX, int aY, int aWidth, int aHeight, const std::string& aText) :
-	GraphicsRectItem(aX, aY, aWidth, aHeight), text(aText)
+Button::Button(int x, int y, int width, int height, const std::string& aText) :
+	GraphicsRectItem(x, y, width, height), text(aText)
 {
 
 }
@@ -28,9 +23,9 @@ void Button::draw()
 	}
 }
 
-void Button::setText(std::string & _text)
+void Button::setText(std::string& aText)
 {
-	text = _text;
+	text = aText;
 }
 
 const std::string& Button::getText() const

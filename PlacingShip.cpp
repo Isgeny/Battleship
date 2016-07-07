@@ -1,12 +1,7 @@
 #include "PlacingShip.h"
 
-PlacingShip::PlacingShip() : Ship(), pressed(false), shipPlaceCount(0)
-{
-
-}
-
-PlacingShip::PlacingShip(int aX, int aY, int aWeight, int aHeight, int aDeckCount, const Orientation& aOrientation, bool aVisiable, int aShipPlaceCount) :
-	Ship(aX, aY, aWeight, aHeight, aDeckCount, aOrientation, aVisiable), pressed(false), shipPlaceCount(aShipPlaceCount)
+PlacingShip::PlacingShip(int x, int y, int width, int height, int deckCount, const Orientation& orientation, bool visiable, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, bool aPressed, int aShipPlaceCount) :
+	Ship(x, y, width, height, deckCount, orientation, visiable, alive, areaX, areaY, areaWidth, areaHeight), pressed(aPressed), shipPlaceCount(aShipPlaceCount)
 {
 
 }

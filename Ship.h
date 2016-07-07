@@ -1,28 +1,28 @@
 #pragma once
 #include <vector>
 #include "GraphicsRectItem.h"
-#include "enums.h"
+#include "ShipPart.h"
 
 class Ship : public GraphicsRectItem
 {
 protected:
 	int deckCount;
-	bool visiable;
 	Orientation orientation;
-	int areaX, areaY, areaWidth, areaHeight;
+	bool visiable;
 	bool alive;
-	std::vector<GraphicsRectItem*> parts;
+
+private:
+	int areaX, areaY, areaWidth, areaHeight;
+	std::vector<ShipPart*> parts;
 
 public:
-	Ship();
-	Ship(int x, int y, int width, int height, int countDeck, const Orientation& orientation, bool visiable, bool alive = true);
-	Ship(Ship* obj);
+	Ship(int x, int y, int width, int height, int deckCount, const Orientation& orientation, bool visiable, bool alive, int areaX, int areaY, int areaWidth, int areaHeight);
 	~Ship();
 	void draw();
 	void setDeckCount(int deckCount);
 	void setOrientation(const Orientation& orientation);
 	void setVisiable(bool visiable);
-	void setArea(int areaX, int areaY);
+	void setArea(int areaX, int areaY, int areaWidth, int areaHeight);
 	void setAlive(bool alive);
 	int getDeckCount() const;
 	const Orientation& getOrientation() const;
@@ -32,7 +32,7 @@ public:
 	int getAreaWidth() const;
 	int getAreaHeight() const;
 	bool getAlive() const;
-	std::vector<GraphicsRectItem*>& getParts();
+	std::vector<ShipPart*>& getParts();
 	bool mouseOnShipArea(int mX, int mY);
 	
 };

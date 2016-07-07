@@ -10,17 +10,10 @@
 struct MyPoint
 {
 	int i, j;
-
-	MyPoint() : i(0), j(0)
+	MyPoint(int aI, int aJ) : i(aI), j(aJ)
 	{
 
 	}
-
-	MyPoint(int posI, int posJ) : i(posI), j(posJ)
-	{
-
-	}
-
 };
 
 enum ObjName

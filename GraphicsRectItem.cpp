@@ -1,12 +1,7 @@
 #include "GraphicsRectItem.h"
 
-GraphicsRectItem::GraphicsRectItem() : x(0), y(0), width(0), height(0)
-{
-
-}
-
-GraphicsRectItem::GraphicsRectItem(int _x, int _y, int _width, int _height) :
-	x(_x), y(_y), width(_width), height(_height)
+GraphicsRectItem::GraphicsRectItem(int aX, int aY, int aWidth, int aHeight) :
+	x(aX), y(aY), width(aWidth), height(aHeight)
 {
 
 }

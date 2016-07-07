@@ -17,7 +17,7 @@ private:
 	std::map<ObjName, Button*> btn;
 	std::map<ObjName, PlacingShip*> plShip;
 	Field *playerField, *compField;
-	Ship *mouseShip;
+	Ship *mShip;
 	PlacingShip *currPressShip;
 	std::map<ObjName, GraphicsRectItem*> item;
 	

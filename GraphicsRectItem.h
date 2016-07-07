@@ -8,7 +8,6 @@ protected:
 	int x, y, width, height;
 
 public:
-	GraphicsRectItem();
 	GraphicsRectItem(int x, int y, int width, int height);
 	virtual ~GraphicsRectItem();
 	virtual void draw();

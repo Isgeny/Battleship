@@ -17,18 +17,18 @@ GameManager::GameManager() : gameStatus(MENU)
 	item[BtnClean]		= btn[BtnClean];
 	item[BtnAuto]		= btn[BtnAuto];
 
-	playerField			= new Field(60,  60, 300, 300);
-	compField			= new Field(510, 60, 300, 300);
+	playerField			= new Field(60, 60, 300, 300, 0);
+	compField			= new Field(510, 60, 300, 300, 0);
 	item[PlayerField]	= playerField;
 	item[CompField]		= compField;
 
-	mouseShip			= new Ship;
-	item[MouseShip]		= mouseShip;
+	mShip				= new Ship(0, 0, 0, 0, 0, HORIZONTAL, false, true, 0, 0, 0, 0);
+	item[MouseShip]		= mShip;
 
-	plShip[SingleShip]	= new PlacingShip(540, 240, 30, 30, 1, HORIZONTAL, true, 4);
-	plShip[DoubleShip]	= new PlacingShip(540, 180, 60, 30, 2, HORIZONTAL, true, 3);
-	plShip[TripleShip]	= new PlacingShip(540, 120, 90, 30, 3, HORIZONTAL, true, 2);
-	plShip[QuadShip]	= new PlacingShip(540, 60, 120, 30, 4, HORIZONTAL, true, 1);
+	plShip[SingleShip]	= new PlacingShip(540, 240, 30, 30, 1, HORIZONTAL, true, true, 0, 0, 0, 0, false, 4);
+	plShip[DoubleShip]	= new PlacingShip(540, 180, 60, 30, 2, HORIZONTAL, true, true, 0, 0, 0, 0, false, 3);
+	plShip[TripleShip]	= new PlacingShip(540, 120, 90, 30, 3, HORIZONTAL, true, true, 0, 0, 0, 0, false, 2);
+	plShip[QuadShip]	= new PlacingShip(540, 60, 120, 30, 4, HORIZONTAL, true, true, 0, 0, 0, 0, false, 1);
 	item[SingleShip]	= plShip[SingleShip];
 	item[DoubleShip]	= plShip[DoubleShip];
 	item[TripleShip]	= plShip[TripleShip];
@@ -126,28 +126,30 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 		{
 			//Проверяем какой корабль выбрали для установки
-			auto it = plShip.begin();
-			for(it; it != plShip.end(); it++)
+			for(auto it = plShip.begin(); it != plShip.end(); it++)
 			{
 				if(it->second->mouseOnItem(x, y))
 				{
 					plShip[SingleShip]->setPressed(false); plShip[DoubleShip]->setPressed(false); plShip[TripleShip]->setPressed(false); plShip[QuadShip]->setPressed(false);
 					it->second->setPressed(true);
 					currPressShip = it->second;
-					mouseShip->setWidth(it->second->getWidth());
-					mouseShip->setHeight(it->second->getHeight());
-					mouseShip->setDeckCount(it->second->getDeckCount());
-					mouseShip->setOrientation(it->second->getOrientation());
-					mouseShip->setVisiable(true);
-					mouseShip->setX(-1000);
-					mouseShip->setY(-1000);
+					mShip->setWidth(it->second->getWidth());
+					mShip->setHeight(it->second->getHeight());
+					mShip->setDeckCount(it->second->getDeckCount());
+					mShip->setOrientation(it->second->getOrientation());
+					mShip->setX(-100);
+					mShip->setY(-100);
+					mShip->setVisiable(true);
 					break;
 				}
 			}
 			//Устанавливаем корабль
-			if(currPressShip != NULL && currPressShip->isPressed() && playerField->mouseOnItem(x, y) && playerField->availableToPlaceShip(mouseShip))
+			if(currPressShip != NULL && currPressShip->isPressed() && playerField->mouseOnItem(x, y) && 
+				playerField->availableToPlaceShip(mShip->getX(), mShip->getY(), mShip->getDeckCount(), mShip->getOrientation()))
 			{
-				playerField->setShip(mouseShip);
+				int x = mShip->getX(), y = mShip->getY(), w = mShip->getWidth(), h = mShip->getHeight(), deck = mShip->getDeckCount(); Orientation or = mShip->getOrientation();
+				int areaX = x - CELL_SZ, areaY = y - CELL_SZ, areaW = w + 2 * CELL_SZ, areaH = h + 2 * CELL_SZ;
+				playerField->setShip(x, y, w, h, deck, or, areaX, areaY, areaW, areaH);
 				(*playerField)++;
 				(*currPressShip)--;
 			}
@@ -155,7 +157,7 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 			if(currPressShip != NULL && currPressShip->getShipPlaceCount() == 0)
 			{
 				currPressShip->setPressed(false);
-				mouseShip->setVisiable(false);
+				mShip->setVisiable(false);
 			}
 		}
 		//Удаление корабля с поля по нажатию ПКМ
@@ -180,7 +182,7 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 			playerField->cleanField();
 			if(currPressShip != NULL) 
 				currPressShip->setPressed(false);
-			mouseShip->setVisiable(false);
+			mShip->setVisiable(false);
 			plShip[SingleShip]->setShipPlaceCount(4);
 			plShip[DoubleShip]->setShipPlaceCount(3);
 			plShip[TripleShip]->setShipPlaceCount(2);
@@ -216,31 +218,28 @@ void GameManager::mouseMove(int x, int y)
 	//Перемещение корабля по полю при перемещении мыши
 	if(gameStatus == PLACING_SHIP && playerField->mouseOnItem(x, y))
 	{
-		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ;
-		int mDeck = mouseShip->getDeckCount();
-		if(mouseShip->getOrientation() == HORIZONTAL && x > playerField->getX() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ)
+		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, mDeck = mShip->getDeckCount();
+		if(mShip->getOrientation() == HORIZONTAL && x > playerField->getX() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ)
 			newX = playerField->getX() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ;
-		else if(mouseShip->getOrientation() == VERTICAL && y > playerField->getY() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ)
+		else if(mShip->getOrientation() == VERTICAL && y > playerField->getY() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ)
 			newY = playerField->getY() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ;
-		mouseShip->setX(newX);
-		mouseShip->setY(newY);
-		mouseShip->setArea(newX, newY);
+		mShip->setX(newX);
+		mShip->setY(newY);
 	}
 }
 
 void GameManager::mouseWheel(int button, int dir, int x, int y)
 {
 	//Поворот корабля при прокрутке колесика мыши
-	if(gameStatus == PLACING_SHIP && x <= playerField->getX() + FIELD_SZ*CELL_SZ - mouseShip->getDeckCount()*CELL_SZ + CELL_SZ && y <= playerField->getY() + FIELD_SZ*CELL_SZ - mouseShip->getDeckCount()*CELL_SZ + CELL_SZ)
+	if(gameStatus == PLACING_SHIP && x <= playerField->getX() + FIELD_SZ*CELL_SZ - mShip->getDeckCount()*CELL_SZ + CELL_SZ && y <= playerField->getY() + FIELD_SZ*CELL_SZ - mShip->getDeckCount()*CELL_SZ + CELL_SZ)
 	{
-		int mW = mouseShip->getWidth(), mH = mouseShip->getHeight(), areaW = mouseShip->getAreaWidth(), areaH = mouseShip->getAreaHeight();
-		mouseShip->setWidth(mH);
-		mouseShip->setHeight(mW);
-		mouseShip->setArea(areaH, areaW);
-		if(mouseShip->getOrientation() == HORIZONTAL)
-			mouseShip->setOrientation(VERTICAL);
+		int mW = mShip->getWidth(), mH = mShip->getHeight();
+		mShip->setWidth(mH);
+		mShip->setHeight(mW);
+		if(mShip->getOrientation() == HORIZONTAL)
+			mShip->setOrientation(VERTICAL);
 		else
-			mouseShip->setOrientation(HORIZONTAL);
+			mShip->setOrientation(HORIZONTAL);
 	}
 }
 

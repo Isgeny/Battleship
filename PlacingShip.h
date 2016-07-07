@@ -11,16 +11,14 @@ private:
 	int shipPlaceCount;
 
 public:
-	PlacingShip();
-	PlacingShip(int x, int y, int weight, int height, int deckCount, const Orientation& orientation, bool visiable, int shipPlaceCount);
+	PlacingShip(int x, int y, int weight, int height, int deckCount, const Orientation& orientation, bool visiable, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, bool pressed, int shipPlaceCount);
 	~PlacingShip();
 	void draw();
-	void setPressed(bool state);
-	void setShipPlaceCount(int count);
+	void setPressed(bool pressed);
+	void setShipPlaceCount(int shipPlaceCount);
 	bool isPressed() const;
 	int getShipPlaceCount() const;
 	void operator ++ (int);
 	void operator -- (int);
 
 };
-
