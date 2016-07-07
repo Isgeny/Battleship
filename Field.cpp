@@ -123,7 +123,7 @@ void Field::setRandomShips()
 			deck = 3;
 		else if(placedShipsCount == 9)
 			deck = 4;
-		bool boolOrient = rand() % 2; Orientation orient;
+		bool boolOrient = (bool)(rand() % 2); Orientation orient;
 		if(boolOrient)
 		{
 			orient = HORIZONTAL;
