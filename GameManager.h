@@ -31,5 +31,6 @@ public:
 	void mouseWheel(int button, int dir, int x, int y);
 	void setGameStatus(const GameStatus& status);
 	const GameStatus& getGameStatus() const;
+	void makeCompStep();
 	
 };

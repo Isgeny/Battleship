@@ -176,7 +176,15 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 				}
 			}
 		}
-		//По нажатию "Clean" очищаем поле
+		//По нажатию "AUTO" автоматическая расстановка кораблей
+		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && item[BtnAuto]->mouseOnItem(x, y))
+		{
+			playerField->cleanField();
+			playerField->setRandomShips();
+			for(int i = 1; i <= 4; i++)
+				plShip[(ObjName)i]->setShipPlaceCount(0);
+		}
+		//По нажатию "CLEAN" очищаем поле
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && item[BtnClean]->mouseOnItem(x, y))
 		{
 			playerField->cleanField();
@@ -195,20 +203,13 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 			compField->setRandomShips();
 			//compField->hideShips();	//Скрываем корабли компьютера
 		}
-		//По нажатию "AUTO" автоматическая расстановка кораблей
-		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && item[BtnAuto]->mouseOnItem(x, y))
-		{
-			playerField->cleanField();
-			playerField->setRandomShips();
-			for(int i = 1; i <= 4; i++)
-				plShip[(ObjName)i]->setShipPlaceCount(0);
-		}
 		break;
 	case WAITING_PLAYER_STEP:
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->mouseOnItem(x, y) && compField->availableToMakeHit(x, y))
+		{
 			compField->makeHit(x, y);
-		break;
-	case WAITING_COMP_STEP:
+			gameStatus = WAITING_COMP_STEP;
+		}
 		break;
 	}
 }
@@ -251,4 +252,18 @@ void GameManager::setGameStatus(const GameStatus& st)
 const GameStatus& GameManager::getGameStatus() const
 {
 	return gameStatus;
+}
+
+void GameManager::makeCompStep()
+{
+	if(gameStatus == WAITING_COMP_STEP)
+	{
+		int rX = rand() % playerField->getWidth() + playerField->getX();
+		int rY = rand() % playerField->getHeight() + playerField->getY();
+		if(playerField->availableToMakeHit(rX, rY))
+		{
+			playerField->makeHit(rX, rY);
+			gameStatus = WAITING_PLAYER_STEP;
+		}
+	}
 }

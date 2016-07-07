@@ -27,10 +27,16 @@ void mouseWheel(int button, int dir, int x, int y)
 	game.mouseWheel(button, dir, x, y);
 }
 
-void timer(int)
+void timerRedisplay(int)
 {
 	glutPostRedisplay();
-	glutTimerFunc(50, timer, 0);
+	glutTimerFunc(50, timerRedisplay, 0);
+}
+
+void timerCompStep(int)
+{
+	game.makeCompStep();
+	glutTimerFunc(1500, timerCompStep, 0);
 }
 
 int main(int argc, char** argv)
@@ -52,7 +58,8 @@ int main(int argc, char** argv)
 	glutMouseFunc(mousePressed);
 	glutPassiveMotionFunc(mouseMove);
 	glutMouseWheelFunc(mouseWheel);
-	glutTimerFunc(50, timer, 0);
+	glutTimerFunc(50, timerRedisplay, 0);
+	glutTimerFunc(1500, timerCompStep, 0);
 	glutMainLoop();
 	return 0;
 }
