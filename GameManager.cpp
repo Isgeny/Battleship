@@ -69,8 +69,12 @@ void GameManager::draw()
 			it->second->draw();
 		break;
 	case WAITING_PLAYER_STEP:
+		item[PlayerField]->draw();
+		item[CompField]->draw();
 		break;
 	case WAITING_COMP_STEP:
+		item[PlayerField]->draw();
+		item[CompField]->draw();
 		break;
 	}
 }
@@ -186,6 +190,8 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && item[BtnFight]->mouseOnItem(x, y) && playerField->getPlacedShipsCount() == 10)
 		{
 			gameStatus = WAITING_PLAYER_STEP;
+			compField->setRandomShips();
+			//compField->hideShips();	//Скрываем корабли компьютера
 		}
 		//По нажатию "AUTO" автоматическая расстановка кораблей
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && item[BtnAuto]->mouseOnItem(x, y))
@@ -197,6 +203,8 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 		}
 		break;
 	case WAITING_PLAYER_STEP:
+		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->mouseOnItem(x, y) && compField->availableToMakeHit(x, y))
+			compField->makeHit(x, y);
 		break;
 	case WAITING_COMP_STEP:
 		break;

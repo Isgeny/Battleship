@@ -1,6 +1,7 @@
 #pragma once
 #pragma warning (disable: 4018)
 #pragma warning (disable: 4305)
+#pragma warning (disable: 4244)
 #define WIN_WIDTH 841
 #define WIN_HEIGHT 421
 #define CELL_SZ 30

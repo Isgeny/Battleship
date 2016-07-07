@@ -41,10 +41,10 @@ void Field::draw()
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, alphabet[i]);
 	}
 	//Рисование кораблей
-	for(int i = 0; i < ships.size(); i++)
-	{
-		ships[i]->draw();
-	}
+	for(auto it = ships.begin(); it != ships.end(); it++)
+		(*it)->draw();
+	for(auto it = dots.begin(); it != dots.end(); it++)
+		(*it)->draw();
 }
 
 void Field::setPlacedShipsCount(int aPlacedShipsCount)
@@ -60,6 +60,11 @@ int Field::getPlacedShipsCount() const
 std::vector<Ship*>& Field::getShips()
 {
 	return ships;
+}
+
+std::vector<Dot*>& Field::getDots()
+{
+	return dots;
 }
 
 void Field::operator++(int)
@@ -91,6 +96,28 @@ bool Field::availableToPlaceShip(Ship* mouseShip)
 	return true;
 }
 
+bool Field::availableToMakeHit(int mX, int mY)
+{
+	bool flag = true;
+	for(auto it = ships.begin(); it != ships.end(); it++)
+	{
+		if((*it)->mouseOnItem(mX, mY))
+		{
+			flag = false;
+			break;
+		}
+	}
+	for(auto it = dots.begin(); it != dots.end(); it++)
+	{
+		if((*it)->mouseOnItem(mX, mY))
+		{
+			flag = false;
+			break;
+		}
+	}
+	return flag;
+}
+
 void Field::setShip(Ship* mouseShip)
 {
 	//Установка корабля на поле
@@ -109,7 +136,6 @@ void Field::cleanField()
 void Field::setRandomShips()
 {
 	//Рандомная расстановка кораблей
-	srand(time(NULL));
 	Ship* compMouseShip = new Ship;
 	while(placedShipsCount < 10)
 	{
@@ -123,7 +149,7 @@ void Field::setRandomShips()
 			deck = 3;
 		else if(placedShipsCount == 9)
 			deck = 4;
-		bool boolOrient = (bool)(rand() % 2); Orientation orient;
+		int boolOrient = rand() % 2; Orientation orient;
 		if(boolOrient)
 		{
 			orient = HORIZONTAL;
@@ -155,7 +181,15 @@ void Field::setRandomShips()
 	delete compMouseShip;
 }
 
+void Field::hideShips()
+{
+	for(auto it = ships.begin(); it != ships.end(); it++)
+	{
+		(*it)->setVisiable(false);
+	}
+}
+
 void Field::makeHit(int mX, int mY)
 {
-	//Удар по кораблям противника
+	dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ));
 }

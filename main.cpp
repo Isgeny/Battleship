@@ -1,6 +1,8 @@
 #include "freeglut.h"
+#include <time.h>
 #include "GameManager.h"
 GameManager game;
+
 
 void display()
 {
@@ -37,6 +39,7 @@ int main(int argc, char** argv)
 	glutInitWindowPosition(550, 300);
 	glutInitWindowSize(WIN_WIDTH, WIN_HEIGHT);
 	glutCreateWindow("Battleship");
+	srand(time(NULL));
 
 	glClearColor(0.95, 0.95, 0.95, 1.0);
 	glMatrixMode(GL_PROJECTION);

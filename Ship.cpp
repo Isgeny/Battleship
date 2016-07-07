@@ -6,13 +6,17 @@ Ship::Ship() : GraphicsRectItem(), deckCount(0), orientation(HORIZONTAL), visiab
 	y = -1000;
 }
 
-Ship::Ship(int aX, int aY, int aWidth, int aHeight, int aCountDeck, const Orientation& aOrientation, bool aVisiable) :
-	GraphicsRectItem(aX, aY, aWidth, aHeight), deckCount(aCountDeck), orientation(aOrientation), visiable(aVisiable)
+Ship::Ship(int aX, int aY, int aWidth, int aHeight, int aCountDeck, const Orientation& aOrientation, bool aVisiable, bool aAlive) :
+	GraphicsRectItem(aX, aY, aWidth, aHeight), deckCount(aCountDeck), orientation(aOrientation), visiable(aVisiable), alive(aAlive)
 {
-	areaX = aX - CELL_SZ;
-	areaY = aY - CELL_SZ;
-	areaWidth = aWidth + 2 * CELL_SZ;
-	areaHeight = aHeight + 2 * CELL_SZ;
+	areaX = x - CELL_SZ;
+	areaY = y - CELL_SZ;
+	areaWidth = width + 2 * CELL_SZ;
+	areaHeight = height + 2 * CELL_SZ;
+	for(int i = 0; i < deckCount; i++)
+	{
+
+	}
 }
 
 Ship::Ship(Ship* obj)
@@ -60,6 +64,11 @@ void Ship::setArea(int aX, int aY)
 	areaHeight = height + 2 * CELL_SZ;
 }
 
+void Ship::setAlive(bool aAlive)
+{
+	alive = aAlive;
+}
+
 int Ship::getDeckCount() const
 {
 	return deckCount;
@@ -93,6 +102,16 @@ int Ship::getAreaWidth() const
 int Ship::getAreaHeight() const
 {
 	return areaHeight;
+}
+
+bool Ship::getAlive() const
+{
+	return alive;
+}
+
+std::vector<GraphicsRectItem*>& Ship::getParts()
+{
+	return parts;
 }
 
 bool Ship::mouseOnShipArea(int mX, int mY)
