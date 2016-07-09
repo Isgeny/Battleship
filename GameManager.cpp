@@ -247,7 +247,7 @@ void GameManager::onButtonFightClicked(GraphicsRectItem* obj, int button, int st
 	{
 		gameStatus = WAITING_PLAYER_STEP;
 		compField->setRandomShips();
-		//compField->hideShips();	//Скрываем корабли компьютера
+		compField->hideShips();	//Скрываем корабли компьютера
 		hideAllItems();
 		items[PlayerField]->setVisiable(true);
 		items[CompField]->setVisiable(true);

@@ -201,10 +201,36 @@ void Field::makeHit(int mX, int mY)
 				if((*itPart)->mouseOnItem(mX, mY))
 				{
 					(*itPart)->setAlive(false);
+					if((*itShip)->allPartsKilled())
+					{
+						(*itShip)->setAlive(false);
+						(*itShip)->setVisiable(true);
+						this->placeDotsAroundShip((*itShip));
+					}
 					return;
 				}
 			}
 		}
+		
 	}
 	dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ, true, false, NULL));
+}
+
+void Field::placeDotsAroundShip(Ship* killedShip)
+{
+	int x = killedShip->getX() - CELL_SZ / 2, y = killedShip->getY() - CELL_SZ / 2;
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < killedShip->getDeckCount() + 2; j++)
+		{
+			if(killedShip->getOrientation() == HORIZONTAL && this->availableToMakeHit(x + j*CELL_SZ, y + i*CELL_SZ) && this->mouseOnItem(x + j*CELL_SZ, y + i*CELL_SZ))
+			{
+				dots.push_back(new Dot(x / CELL_SZ * CELL_SZ + j*CELL_SZ, y / CELL_SZ * CELL_SZ + i*CELL_SZ, CELL_SZ, CELL_SZ, true, false, NULL));
+			}
+			else if(killedShip->getOrientation() == VERTICAL && this->availableToMakeHit(x + i*CELL_SZ, y + j*CELL_SZ) && this->mouseOnItem(x + i*CELL_SZ, y + j*CELL_SZ))
+			{
+				dots.push_back(new Dot(x / CELL_SZ * CELL_SZ + i*CELL_SZ, y / CELL_SZ * CELL_SZ + j*CELL_SZ, CELL_SZ, CELL_SZ, true, false, NULL));
+			}
+		}
+	}
 }

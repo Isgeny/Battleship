@@ -52,9 +52,9 @@ void Ship::draw()
 	if(visiable)
 	{
 		GraphicsRectItem::draw();
-		for(int i = 0; i < parts.size(); i++)
-			parts[i]->draw();
 	}
+	for(int i = 0; i < parts.size(); i++)
+		parts[i]->draw();
 }
 
 void Ship::setDeckCount(int aDeckCount)
@@ -130,4 +130,14 @@ std::vector<ShipPart*>& Ship::getParts()
 bool Ship::mouseOnShipArea(int mX, int mY)
 {
 	return (mX > areaX && mX < areaX + areaWidth && mY > areaY && mY < areaY + areaHeight);
+}
+
+bool Ship::allPartsKilled() const
+{
+	for(auto it = parts.begin(); it != parts.end(); it++)
+	{
+		if((*it)->getAlive())
+			return false;
+	}
+	return true;
 }

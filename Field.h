@@ -29,5 +29,6 @@ public:
 	void setRandomShips();
 	void hideShips();
 	void makeHit(int mX, int mY);
+	void placeDotsAroundShip(Ship* killedShip);
 	
 };

@@ -34,5 +34,6 @@ public:
 	bool getAlive() const;
 	std::vector<ShipPart*>& getParts();
 	bool mouseOnShipArea(int mX, int mY);
+	bool allPartsKilled() const;
 	
 };
