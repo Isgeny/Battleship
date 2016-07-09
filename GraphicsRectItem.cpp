@@ -118,5 +118,5 @@ int GraphicsRectItem::getState() const
 
 bool GraphicsRectItem::mouseOnItem(int mX, int mY)
 {
-	return (mX > x && mX < x + width && mY > y && mY < y + height);
+	return (mX >= x && mX <= x + width && mY >= y && mY <= y + height);
 }
