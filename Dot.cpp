@@ -1,7 +1,7 @@
 #include "Dot.h"
 
-Dot::Dot(int x, int y, int width, int height, bool visiable, bool pressed, void (*callbackFunc)()) :
-	GraphicsRectItem(x, y, width, height, visiable, pressed, callbackFunc)
+Dot::Dot(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state)) :
+	GraphicsRectItem(x, y, width, height, visiable, clicked, callbackClickedFunc)
 {
 
 }

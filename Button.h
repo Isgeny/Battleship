@@ -8,7 +8,7 @@ protected:
 	std::string text;
 
 public:
-	Button(int x, int y , int width, int height, bool visiable, bool pressed, void (*callbackFunc)(), const std::string& text);
+	Button(int x, int y , int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), const std::string& text);
 	~Button();
 	void draw();
 	void setText(std::string& text);

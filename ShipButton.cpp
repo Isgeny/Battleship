@@ -1,7 +1,7 @@
 #include "ShipButton.h"
 
-ShipButton::ShipButton(int x, int y, int width, int height, bool visiable, bool pressed, void(*callbackFunc)(), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, int _shipPlaceCount) :
-	Ship(x, y, width, height, visiable, pressed, callbackFunc, deckCount, orientation, alive, areaX, areaY, areaWidth, areaHeight), shipPlaceCount(_shipPlaceCount)
+ShipButton::ShipButton(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, int _shipPlaceCount, bool _pressed) :
+	Ship(x, y, width, height, visiable, clicked, callbackClickedFunc, deckCount, orientation, alive, areaX, areaY, areaWidth, areaHeight), shipPlaceCount(_shipPlaceCount), pressed(_pressed)
 {
 
 }
@@ -15,7 +15,7 @@ void ShipButton::draw()
 {
 	if(visiable)
 	{
-		GraphicsRectItem::draw();
+		
 		int space = 15;
 		glColor3d(0.0, 0.0, 1.0);
 		glRasterPos2d(x - CELL_SZ, y + 22);
@@ -33,6 +33,7 @@ void ShipButton::draw()
 			glVertex2d(x - 3.0, y + height + 3.0);
 			glEnd();
 		}
+		GraphicsRectItem::draw();
 	}
 }
 
@@ -41,9 +42,19 @@ void ShipButton::setShipPlaceCount(int _shipPlaceCount)
 	shipPlaceCount = _shipPlaceCount;
 }
 
+void ShipButton::setPressed(bool _pressed)
+{
+	pressed = _pressed;
+}
+
 int ShipButton::getShipPlaceCount() const
 {
 	return shipPlaceCount;
+}
+
+bool ShipButton::isPressed() const
+{
+	return pressed;
 }
 
 void ShipButton::operator++(int)

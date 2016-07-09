@@ -1,11 +1,11 @@
 #include "Ship.h"
 
-Ship::Ship(int x, int y, int width, int height, bool visiable, bool pressed, void(*callbackFunc)(), int _deckCount, const Orientation& _orientation, bool _alive, int _areaX, int _areaY, int _areaWidth, int _areaHeight) :
-	GraphicsRectItem(x, y, width, height, visiable, pressed, callbackFunc), deckCount(_deckCount), orientation(_orientation), alive(_alive), areaX(_areaX), areaY(_areaY), areaWidth(_areaWidth), areaHeight(_areaHeight)
+Ship::Ship(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _deckCount, const Orientation& _orientation, bool _alive, int _areaX, int _areaY, int _areaWidth, int _areaHeight) :
+	GraphicsRectItem(x, y, width, height, visiable, clicked, callbackClickedFunc), deckCount(_deckCount), orientation(_orientation), alive(_alive), areaX(_areaX), areaY(_areaY), areaWidth(_areaWidth), areaHeight(_areaHeight)
 {
-	/*for(int i = 0; i < deckCount; i++)
+	for(int i = 0; i < deckCount; i++)
 	{
-		//parts.push_back(new ShipPart(0, 0, 0, 0, true));
+		parts.push_back(new ShipPart(0, 0, 0, 0, true, false, NULL, true));
 		if(orientation == HORIZONTAL)
 		{
 			parts[i]->setX(x + i*CELL_SZ);
@@ -18,7 +18,7 @@ Ship::Ship(int x, int y, int width, int height, bool visiable, bool pressed, voi
 		}
 		parts[i]->setWidth(CELL_SZ);
 		parts[i]->setHeight(CELL_SZ);
-	}*/
+	}
 }
 
 Ship::Ship(Ship* mouseShip)
@@ -28,8 +28,8 @@ Ship::Ship(Ship* mouseShip)
 	width = mouseShip->width;
 	height = mouseShip->height;
 	visiable = mouseShip->visiable;
-	pressed = mouseShip->pressed;
-	callbackFunc = mouseShip->callbackFunc;
+	clicked = mouseShip->clicked;
+	callbackClickedFunc = mouseShip->callbackClickedFunc;
 	deckCount = mouseShip->deckCount;
 	orientation = mouseShip->orientation;
 	alive = mouseShip->alive;

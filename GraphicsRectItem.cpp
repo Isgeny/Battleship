@@ -1,13 +1,13 @@
 #include "GraphicsRectItem.h"
 
 GraphicsRectItem::GraphicsRectItem() : 
-	x(0), y(0), width(0), height(0), visiable(false), pressed(false), callbackFunc(NULL)
+	x(0), y(0), width(0), height(0), visiable(false), clicked(false), callbackClickedFunc(NULL)
 {
 
 }
 
-GraphicsRectItem::GraphicsRectItem(int _x, int _y, int _width, int _height, bool _visiable, bool _pressed, void(*_callbackFunc)()) :
-	x(_x), y(_y), width(_width), height(_height), visiable(_visiable), pressed(_pressed), callbackFunc(_callbackFunc)
+GraphicsRectItem::GraphicsRectItem(int _x, int _y, int _width, int _height, bool _visiable, bool _clicked, void (*_callbackClickedFunc)(GraphicsRectItem*, int button, int state)) :
+	x(_x), y(_y), width(_width), height(_height), visiable(_visiable), clicked(_clicked), callbackClickedFunc(_callbackClickedFunc)
 {
 
 }
@@ -19,17 +19,14 @@ GraphicsRectItem::~GraphicsRectItem()
 
 void GraphicsRectItem::draw()
 {
-	if(visiable)
-	{
-		glLineWidth(3.0);
-		glBegin(GL_LINE_LOOP);
-		glColor3d(0.0, 0.0, 1.0);
-		glVertex2d(x + width, y + height);
-		glVertex2d(x + width, y);
-		glVertex2d(x, y);
-		glVertex2d(x, y + height);
-		glEnd();
-	}
+	glLineWidth(3.0);
+	glBegin(GL_LINE_LOOP);
+	glColor3d(0.0, 0.0, 1.0);
+	glVertex2d(x + width, y + height);
+	glVertex2d(x + width, y);
+	glVertex2d(x, y);
+	glVertex2d(x, y + height);
+	glEnd();
 }
 
 void GraphicsRectItem::setX(int aX)
@@ -57,11 +54,26 @@ void GraphicsRectItem::setVisiable(bool _visiable)
 	visiable = _visiable;
 }
 
-void GraphicsRectItem::setPressed(bool _pressed)
+void GraphicsRectItem::setClicked(bool _clicked)
 {
-	pressed = _pressed;
-	if(pressed)
-		callbackFunc();
+	clicked = _clicked;
+	if(clicked && callbackClickedFunc)
+		callbackClickedFunc(this, button, state);
+}
+
+void GraphicsRectItem::setButton(int _button)
+{
+	button = _button;
+}
+
+void GraphicsRectItem::setState(int _state)
+{
+	state = _state;
+}
+
+void GraphicsRectItem::setCallbackClickedFunc(void(*_callbackClickedFunc)(GraphicsRectItem *, int button, int state))
+{
+	callbackClickedFunc = _callbackClickedFunc;
 }
 
 int GraphicsRectItem::getX() const
@@ -89,9 +101,19 @@ bool GraphicsRectItem::isVisiable() const
 	return visiable;
 }
 
-bool GraphicsRectItem::isPressed() const
+bool GraphicsRectItem::isclicked() const
 {
-	return pressed;
+	return clicked;
+}
+
+int GraphicsRectItem::getButton() const
+{
+	return button;
+}
+
+int GraphicsRectItem::getState() const
+{
+	return state;
 }
 
 bool GraphicsRectItem::mouseOnItem(int mX, int mY)

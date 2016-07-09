@@ -12,18 +12,6 @@ Field* GameManager::playerField;
 Field* GameManager::compField;
 GameManager game;
 
-void timerRedisplay(int)
-{
-	glutPostRedisplay();
-	glutTimerFunc(50, timerRedisplay, 0);
-}
-
-void timerCompStep(int)
-{
-	//game.makeCompStep();
-	glutTimerFunc(1500, timerCompStep, 0);
-}
-
 int main(int argc, char** argv)
 {
 	srand(time(NULL));
@@ -40,12 +28,12 @@ int main(int argc, char** argv)
 	glMatrixMode(GL_MODELVIEW);
 
 	glutDisplayFunc(GameManager::draw);
-	glutMouseFunc(GameManager::mousePressed);
+	glutMouseFunc(GameManager::mouseclicked);
 	glutPassiveMotionFunc(GameManager::mouseMove);
 	glutMouseWheelFunc(GameManager::mouseWheel);
 
-	glutTimerFunc(50, timerRedisplay, 0);
-	glutTimerFunc(1500, timerCompStep, 0);
+	glutTimerFunc(50, GameManager::timerRedisplay, 0);
+	glutTimerFunc(1500, GameManager::timerCompStep, 0);
 
 	glutMainLoop();
 	return 0;

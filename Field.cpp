@@ -1,7 +1,8 @@
 #include "Field.h"
+#include "GameManager.h"
 
-Field::Field(int x, int y, int width, int height, bool visiable, bool pressed, void(*callbackFunc)(), int _placedShipsCount) :
-	GraphicsRectItem(x, y, width, height, visiable, pressed, callbackFunc), placedShipsCount(_placedShipsCount)
+Field::Field(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _placedShipsCount) :
+	GraphicsRectItem(x, y, width, height, visiable, clicked, callbackClickedFunc), placedShipsCount(_placedShipsCount)
 {
 
 }
@@ -123,6 +124,7 @@ bool Field::availableToMakeHit(int mX, int mY)
 void Field::setShip(Ship *mouseShip)
 {
 	ships.push_back(new Ship(mouseShip));
+	ships.back()->setCallbackClickedFunc(GameManager::onShipClicked);
 }
 
 void Field::cleanField() //Удаление кораблей и точек с поля
@@ -177,7 +179,8 @@ void Field::setRandomShips() //Рандомная расстановка кораблей
 			this->setShip(mShip);
 			this->placedShipsCount++;
 		}
-		delete mShip;
+		else
+			delete mShip;
 	}
 }
 
@@ -203,5 +206,5 @@ void Field::makeHit(int mX, int mY)
 			}
 		}
 	}
-	//dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ));
+	dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ, true, false, NULL));
 }

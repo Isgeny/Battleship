@@ -15,7 +15,7 @@ private:
 	std::vector<ShipPart*> parts;
 
 public:
-	Ship(int x, int y, int width, int height, bool visiable, bool pressed, void(*callbackFunc)(), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight);
+	Ship(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight);
 	Ship(Ship *mouseShip);
 	~Ship();
 	void draw();
