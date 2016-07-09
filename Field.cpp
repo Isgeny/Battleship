@@ -1,7 +1,7 @@
 #include "Field.h"
 
-Field::Field(int x, int y, int width, int height, int aPlacedShipsCount) :
-	GraphicsRectItem(x, y, width, height), placedShipsCount(aPlacedShipsCount)
+Field::Field(int x, int y, int width, int height, bool visiable, bool pressed, void(*callbackFunc)(), int _placedShipsCount) :
+	GraphicsRectItem(x, y, width, height, visiable, pressed, callbackFunc), placedShipsCount(_placedShipsCount)
 {
 
 }
@@ -16,34 +16,36 @@ Field::~Field()
 
 void Field::draw()
 {
-	//Рисование квадрата
-	GraphicsRectItem::draw();
-	//Рисование цифр
-	for(int i = 1; i <= 9; i++)
+	if(visiable)
 	{
-		glColor3d(0.0, 0.0, 1.0);
-		glRasterPos2d(x - CELL_SZ / 2 - 4, y + CELL_SZ*i - 7);
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, std::to_string(i)[0]);
+		GraphicsRectItem::draw();
+		//Рисование цифр
+		for(int i = 1; i <= 9; i++)
+		{
+			glColor3d(0.0, 0.0, 1.0);
+			glRasterPos2d(x - CELL_SZ / 2 - 4, y + CELL_SZ*i - 7);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, std::to_string(i)[0]);
+		}
+		//Рисование цифры 10
+		glRasterPos2d(x - CELL_SZ / 2 - 9, y + CELL_SZ * 10 - 7);
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '1');
+		glRasterPos2d(x - CELL_SZ / 2 - 2, y + CELL_SZ * 10 - 7);
+		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '0');
+		//Рисование букв
+		std::string alphabet = "ABCDEFGHKJ";
+		for(int i = 0; i < alphabet.size(); i++)
+		{
+			glColor3d(0.0, 0.0, 1.0);
+			glRasterPos2d(x + i*CELL_SZ + 10, y - 10);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, alphabet[i]);
+		}
+		//Рисование кораблей
+		for(auto it = ships.begin(); it != ships.end(); it++)
+			(*it)->draw();
+		//Рисование точек
+		for(auto it = dots.begin(); it != dots.end(); it++)
+			(*it)->draw();
 	}
-	//Рисование цифры 10
-	glRasterPos2d(x - CELL_SZ / 2 - 9, y + CELL_SZ * 10 - 7);
-	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '1');
-	glRasterPos2d(x - CELL_SZ / 2 - 2, y + CELL_SZ * 10 - 7);
-	glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '0');
-	//Рисование букв
-	std::string alphabet = "ABCDEFGHKJ";
-	for(int i = 0; i < alphabet.size(); i++)
-	{
-		glColor3d(0.0, 0.0, 1.0);
-		glRasterPos2d(x + i*CELL_SZ + 10, y - 10);
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, alphabet[i]);
-	}
-	//Рисование кораблей
-	for(auto it = ships.begin(); it != ships.end(); it++)
-		(*it)->draw();
-	//Рисование точек
-	for(auto it = dots.begin(); it != dots.end(); it++)
-		(*it)->draw();
 }
 
 void Field::setPlacedShipsCount(int aPlacedShipsCount)
@@ -77,15 +79,15 @@ void Field::operator--(int)
 		placedShipsCount--;
 }
 
-bool Field::availableToPlaceShip(int x, int y, int deckCount, const Orientation& orientation)
+bool Field::availableToPlaceShip(Ship* mShip)
 {
 	//Проверка возможности установки корабля
-	x += CELL_SZ / 2; y += CELL_SZ / 2;
+	int newX = mShip->getX() + CELL_SZ / 2, newY = mShip->getY() + CELL_SZ / 2;
 	for(auto it = ships.begin(); it != ships.end(); it++)
 	{
-		for(int i = 0; i < deckCount; i++)
+		for(int i = 0; i < mShip->getDeckCount(); i++)
 		{
-			if(orientation == HORIZONTAL && (*it)->mouseOnShipArea(x + i*CELL_SZ, y) || orientation == VERTICAL && (*it)->mouseOnShipArea(x, y + i*CELL_SZ))
+			if(mShip->getOrientation() == HORIZONTAL && (*it)->mouseOnShipArea(newX + i*CELL_SZ, newY) || mShip->getOrientation() == VERTICAL && (*it)->mouseOnShipArea(newX, newY + i*CELL_SZ))
 			{
 				return false;
 			}
@@ -118,9 +120,9 @@ bool Field::availableToMakeHit(int mX, int mY)
 	return true;
 }
 
-void Field::setShip(int x, int y, int width, int height, int deckCount, const Orientation& orientation, int areaX, int areaY, int areaWidth, int areaHeight)
+void Field::setShip(Ship *mouseShip)
 {
-	ships.push_back(new Ship(x, y, width, height, deckCount, orientation, true, true, areaX, areaY, areaWidth, areaHeight));
+	ships.push_back(new Ship(mouseShip));
 }
 
 void Field::cleanField() //Удаление кораблей и точек с поля
@@ -136,7 +138,7 @@ void Field::cleanField() //Удаление кораблей и точек с поля
 
 void Field::setRandomShips() //Рандомная расстановка кораблей
 {
-	while(placedShipsCount < 10)
+	/*while(placedShipsCount < 10)
 	{
 		int rX = rand() % width + x, rY = rand() % height + y, x = rX / CELL_SZ * CELL_SZ, y = rY / CELL_SZ * CELL_SZ, width, height, deckCount;
 		if(placedShipsCount < 4)
@@ -174,7 +176,7 @@ void Field::setRandomShips() //Рандомная расстановка кораблей
 			this->setShip(x, y, width, height, deckCount, orientation, areaX, areaY, areaWidth, areaHeight);
 			this->placedShipsCount++;
 		}
-	}
+	}*/
 }
 
 void Field::hideShips()
@@ -199,5 +201,5 @@ void Field::makeHit(int mX, int mY)
 			}
 		}
 	}
-	dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ));
+	//dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ));
 }

@@ -7,7 +7,7 @@ private:
 	bool alive;
 
 public:
-	ShipPart(int x, int y, int width, int height, bool alive);
+	ShipPart(int x, int y, int width, int height, bool visiable, bool pressed, void (*callbackFunc)(), bool alive);
 	~ShipPart();
 	void draw();
 	void setAlive(bool alive);

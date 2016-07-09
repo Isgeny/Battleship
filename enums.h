@@ -18,10 +18,10 @@ struct MyPoint
 
 enum ObjName
 {
-	SingleShip = 1,
-	DoubleShip,
-	TripleShip,
-	QuadShip,
+	SingleShipBtn = 1,
+	DoubleShipBtn,
+	TripleShipBtn,
+	QuadShipBtn,
 	BtnNewGame,
 	BtnRecords,
 	BtnAbout,

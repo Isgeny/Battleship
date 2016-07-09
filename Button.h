@@ -4,11 +4,11 @@
 
 class Button : public GraphicsRectItem
 {
-private:
+protected:
 	std::string text;
 
 public:
-	Button(int x, int y , int width, int height, const std::string& text);
+	Button(int x, int y , int width, int height, bool visiable, bool pressed, void (*callbackFunc)(), const std::string& text);
 	~Button();
 	void draw();
 	void setText(std::string& text);

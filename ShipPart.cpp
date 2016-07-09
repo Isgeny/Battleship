@@ -1,7 +1,7 @@
 #include "ShipPart.h"
 
-ShipPart::ShipPart(int x, int y, int width, int height, bool aAlive) :
-	GraphicsRectItem(x, y, width, height), alive(aAlive)
+ShipPart::ShipPart(int x, int y, int width, int height, bool visiable, bool pressed, void(*callbackFunc)(), bool _alive) :
+	GraphicsRectItem(x, y, width, height, visiable, pressed, callbackFunc), alive(_alive)
 {
 
 }
@@ -14,21 +14,21 @@ ShipPart::~ShipPart()
 void ShipPart::draw()
 {
 	//Отрисовка красных крестиков
-	if(!this->alive)
+	if(!alive)
 	{
 		glColor3d(1.0, 0.0, 0.0);
 		glBegin(GL_LINES);
-		glVertex2d(this->x, this->y);
-		glVertex2d(this->x + this->width, this->y + this->height);
-		glVertex2d(this->x + this->width, this->y);
-		glVertex2d(this->x, this->y + this->height);
+		glVertex2d(x, y);
+		glVertex2d(x + width, y + height);
+		glVertex2d(x + width, y);
+		glVertex2d(x, y + height);
 		glEnd();
 	}
 }
 
-void ShipPart::setAlive(bool aAlive)
+void ShipPart::setAlive(bool _alive)
 {
-	alive = aAlive;
+	alive = _alive;
 }
 
 bool ShipPart::getAlive() const

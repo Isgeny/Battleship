@@ -5,7 +5,7 @@
 class Dot : public GraphicsRectItem
 {
 public:
-	Dot(int x, int y, int width, int height);
+	Dot(int x, int y, int width, int height, bool visiable, bool pressed, void(*callbackFunc)());
 	~Dot();
 	void draw();
 

@@ -6,31 +6,45 @@
 #include "Button.h"
 #include "Field.h"
 #include "Ship.h"
-#include "PlacingShip.h"
+#include "ShipButton.h"
 #include "enums.h"
 
 class GameManager
 {
 private:
-	GameStatus gameStatus;
-	const std::string title = "BATTLESHIP";
-	std::map<ObjName, Button*> btn;
-	std::map<ObjName, PlacingShip*> plShip;
-	Field *playerField, *compField;
-	Ship *mShip;
-	PlacingShip *currPressShip;
-	std::map<ObjName, GraphicsRectItem*> item;
+	static GameStatus gameStatus;
+	static const std::string title;
+	static std::map<ObjName, GraphicsRectItem*> items;
+	static Ship *mShip;
+	static ShipButton *currPressShip;
+	static Field *playerField, *compField;
 	
 public:
 	GameManager();
 	~GameManager();
-	void draw();
-	void drawCells();
-	void mousePressed(int button, int state, int x, int y);
-	void mouseMove(int x, int y);
-	void mouseWheel(int button, int dir, int x, int y);
-	void setGameStatus(const GameStatus& status);
-	const GameStatus& getGameStatus() const;
-	void makeCompStep();
+	static void draw();
+	static void mousePressed(int button, int state, int x, int y);
+	static void mouseMove(int x, int y);
+	static void mouseWheel(int button, int dir, int x, int y);
+
+	static void setGameStatus(const GameStatus& status);
+	static const GameStatus& getGameStatus();
+	static void makeCompStep();
+
+	static void hideAllItems();
+	static void onButtonNewGameClicked();
+	static void onButtonRecordsClicked();
+	static void onButtonAbout();
+	static void onButtonExitClicked();
+	static void onButtonAutoClicked();
+	static void onButtonCleanClicked();
+	static void onButtonFightClicked();
+	static void onPlayerFieldClicked();
+	static void onCompFieldClicked();
+	static void onSingleShipBtnClicked();
+	static void onDoubleShipBtnClicked();
+	static void onTripleShipBtnClicked();
+	static void onQuadShipBtnClicked();
+	static void onMouseShipClicked();
 	
 };
