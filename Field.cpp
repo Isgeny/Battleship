@@ -138,7 +138,7 @@ void Field::cleanField() //Удаление кораблей и точек с поля
 
 void Field::setRandomShips() //Рандомная расстановка кораблей
 {
-	/*while(placedShipsCount < 10)
+	while(placedShipsCount < 10)
 	{
 		int rX = rand() % width + x, rY = rand() % height + y, x = rX / CELL_SZ * CELL_SZ, y = rY / CELL_SZ * CELL_SZ, width, height, deckCount;
 		if(placedShipsCount < 4)
@@ -171,12 +171,14 @@ void Field::setRandomShips() //Рандомная расстановка кораблей
 			}
 		}
 		int areaX = x - CELL_SZ, areaY = y - CELL_SZ, areaWidth = width + 2*CELL_SZ, areaHeight = height + 2*CELL_SZ;
-		if(this->availableToPlaceShip(x, y, deckCount, orientation))
+		Ship* mShip = new Ship(x, y, width, height, true, false, NULL, deckCount, orientation, true, areaX, areaY, areaWidth, areaHeight);
+		if(this->availableToPlaceShip(mShip))
 		{
-			this->setShip(x, y, width, height, deckCount, orientation, areaX, areaY, areaWidth, areaHeight);
+			this->setShip(mShip);
 			this->placedShipsCount++;
 		}
-	}*/
+		delete mShip;
+	}
 }
 
 void Field::hideShips()

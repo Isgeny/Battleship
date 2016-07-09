@@ -132,28 +132,8 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 					break;
 				}
 			}
-		}
-		/*//По нажатию "AUTO" автоматическая расстановка кораблей
-		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && item[BtnAuto]->mouseOnItem(x, y))
-		{
-			playerField->cleanField();
-			playerField->setRandomShips();
-			for(int i = 1; i <= 4; i++)
-				plShip[(ObjName)i]->setShipPlaceCount(0);
-		}
-		//По нажатию "CLEAN" очищаем поле
-		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && item[BtnClean]->mouseOnItem(x, y))
-		{
-			playerField->cleanField();
-			if(currPressShip != NULL)
-				currPressShip->setPressed(false);
-			mShip->setVisiable(false);
-			plShip[SingleShip]->setShipPlaceCount(4);
-			plShip[DoubleShip]->setShipPlaceCount(3);
-			plShip[TripleShip]->setShipPlaceCount(2);
-			plShip[QuadShip]->setShipPlaceCount(1);
-		}
-		//По нажатию "FIGHT" старт игры
+		}	
+		/*//По нажатию "FIGHT" старт игры
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && item[BtnFight]->mouseOnItem(x, y) && playerField->getPlacedShipsCount() == 10)
 		{
 			gameStatus = WAITING_PLAYER_STEP;
@@ -169,7 +149,7 @@ void GameManager::mousePressed(int button, int state, int x, int y)
 		}
 		break;
 	}*/
-		}
+	}
 }
 
 void GameManager::mouseMove(int x, int y)
@@ -265,17 +245,43 @@ void GameManager::onButtonExitClicked()
 
 void GameManager::onButtonAutoClicked()
 {
-
+	playerField->cleanField();
+	playerField->setRandomShips();
+	for(int i = 1; i <= 4; i++)
+		static_cast<ShipButton*>(items[(ObjName)i])->setShipPlaceCount(0);
+	items[BtnAuto]->setPressed(false);
 }
 
 void GameManager::onButtonCleanClicked()
 {
-
+	playerField->cleanField();
+	if(currPressShip)
+		currPressShip->setPressed(false);
+	mShip->setVisiable(false);
+	static_cast<ShipButton*>(items[SingleShipBtn])->setShipPlaceCount(4);
+	static_cast<ShipButton*>(items[DoubleShipBtn])->setShipPlaceCount(3);
+	static_cast<ShipButton*>(items[TripleShipBtn])->setShipPlaceCount(2);
+	static_cast<ShipButton*>(items[QuadShipBtn])->setShipPlaceCount(1);
+	items[BtnClean]->setPressed(false);
 }
 
 void GameManager::onButtonFightClicked()
 {
-
+	if(playerField->getPlacedShipsCount() == 10)
+	{
+		gameStatus = WAITING_PLAYER_STEP;
+		compField->setRandomShips();
+		//compField->hideShips();	//Скрываем корабли компьютера
+		items[BtnAuto]->setVisiable(false);
+		items[BtnClean]->setVisiable(false);
+		items[BtnFight]->setVisiable(false);
+		items[SingleShipBtn]->setVisiable(false);
+		items[DoubleShipBtn]->setVisiable(false);
+		items[TripleShipBtn]->setVisiable(false);
+		items[QuadShipBtn]->setVisiable(false);
+		items[CompField]->setVisiable(true);
+	}
+	items[BtnFight]->setPressed(false);
 }
 
 void GameManager::onPlayerFieldClicked()
