@@ -148,7 +148,7 @@ void GameManager::timerCompStep(int)
 			gameStatus = WAITING_PLAYER_STEP;
 		}
 	}
-	glutTimerFunc(50, timerCompStep, 0);
+	glutTimerFunc(1500, timerCompStep, 0);
 }
 
 void GameManager::setGameStatus(const GameStatus& st)
