@@ -124,6 +124,7 @@ bool Field::availableToMakeHit(int mX, int mY)
 void Field::setShip(Ship *mouseShip)
 {
 	ships.push_back(new Ship(mouseShip));
+	ships.back()->updateParts();
 	ships.back()->setCallbackClickedFunc(GameManager::onShipClicked);
 }
 

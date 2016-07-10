@@ -86,6 +86,7 @@ void GameManager::mouseclicked(int button, int state, int x, int y)
 				(*it)->setButton(button);
 				(*it)->setState(state);
 				(*it)->setClicked(true);
+				return;
 			}
 		}
 		break;
@@ -231,7 +232,7 @@ void GameManager::onButtonCleanClicked(GraphicsRectItem* obj, int button, int st
 	{
 		playerField->cleanField();
 		if(currPressShip)
-			currPressShip->setClicked(false);
+			currPressShip->setPressed(false);
 		mShip->setVisiable(false);
 		static_cast<ShipButton*>(items[SingleShipBtn])->setShipPlaceCount(4);
 		static_cast<ShipButton*>(items[DoubleShipBtn])->setShipPlaceCount(3);
