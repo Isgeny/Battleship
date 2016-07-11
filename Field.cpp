@@ -1,8 +1,8 @@
 #include "Field.h"
 #include "GameManager.h"
 
-Field::Field(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _placedShipsCount) :
-	GraphicsRectItem(x, y, width, height, visiable, clicked, callbackClickedFunc), placedShipsCount(_placedShipsCount)
+Field::Field(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _placedShipsCount) :
+	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), placedShipsCount(_placedShipsCount)
 {
 
 }
@@ -17,7 +17,7 @@ Field::~Field()
 
 void Field::draw()
 {
-	if(visiable)
+	if(visible)
 	{
 		GraphicsRectItem::draw();
 		//Рисование цифр
@@ -188,7 +188,7 @@ void Field::setRandomShips() //Рандомная расстановка кораблей
 void Field::hideShips()
 {
 	for(auto it = ships.begin(); it != ships.end(); it++)
-		(*it)->setVisiable(false);
+		(*it)->setvisible(false);
 }
 
 void Field::makeHit(int mX, int mY)
@@ -205,7 +205,7 @@ void Field::makeHit(int mX, int mY)
 					if((*itShip)->allPartsKilled())
 					{
 						(*itShip)->setAlive(false);
-						(*itShip)->setVisiable(true);
+						(*itShip)->setvisible(true);
 						this->placeDotsAroundShip((*itShip));
 					}
 					return;

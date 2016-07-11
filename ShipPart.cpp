@@ -1,7 +1,7 @@
 #include "ShipPart.h"
 
-ShipPart::ShipPart(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), bool _alive) :
-	GraphicsRectItem(x, y, width, height, visiable, clicked, callbackClickedFunc), alive(_alive)
+ShipPart::ShipPart(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), bool _alive) :
+	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), alive(_alive)
 {
 
 }

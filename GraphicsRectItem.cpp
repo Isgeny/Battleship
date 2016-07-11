@@ -1,13 +1,13 @@
 #include "GraphicsRectItem.h"
 
 GraphicsRectItem::GraphicsRectItem() : 
-	x(0), y(0), width(0), height(0), visiable(false), clicked(false), callbackClickedFunc(NULL)
+	x(0), y(0), width(0), height(0), visible(false), clicked(false), callbackClickedFunc(NULL)
 {
 
 }
 
-GraphicsRectItem::GraphicsRectItem(int _x, int _y, int _width, int _height, bool _visiable, bool _clicked, void (*_callbackClickedFunc)(GraphicsRectItem*, int button, int state)) :
-	x(_x), y(_y), width(_width), height(_height), visiable(_visiable), clicked(_clicked), callbackClickedFunc(_callbackClickedFunc)
+GraphicsRectItem::GraphicsRectItem(int _x, int _y, int _width, int _height, bool _visible, bool _clicked, void (*_callbackClickedFunc)(GraphicsRectItem*, int button, int state)) :
+	x(_x), y(_y), width(_width), height(_height), visible(_visible), clicked(_clicked), callbackClickedFunc(_callbackClickedFunc)
 {
 
 }
@@ -49,9 +49,9 @@ void GraphicsRectItem::setHeight(int aHeight)
 	height = aHeight;
 }
 
-void GraphicsRectItem::setVisiable(bool _visiable)
+void GraphicsRectItem::setvisible(bool _visible)
 {
-	visiable = _visiable;
+	visible = _visible;
 }
 
 void GraphicsRectItem::setClicked(bool _clicked)
@@ -96,9 +96,9 @@ int GraphicsRectItem::getHeight() const
 	return height;
 }
 
-bool GraphicsRectItem::isVisiable() const
+bool GraphicsRectItem::isvisible() const
 {
-	return visiable;
+	return visible;
 }
 
 bool GraphicsRectItem::isclicked() const

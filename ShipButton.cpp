@@ -1,7 +1,7 @@
 #include "ShipButton.h"
 
-ShipButton::ShipButton(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, int _shipPlaceCount, bool _pressed) :
-	Ship(x, y, width, height, visiable, clicked, callbackClickedFunc, deckCount, orientation, alive, areaX, areaY, areaWidth, areaHeight), shipPlaceCount(_shipPlaceCount), pressed(_pressed)
+ShipButton::ShipButton(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, int _shipPlaceCount, bool _pressed) :
+	Ship(x, y, width, height, visible, clicked, callbackClickedFunc, deckCount, orientation, alive, areaX, areaY, areaWidth, areaHeight), shipPlaceCount(_shipPlaceCount), pressed(_pressed)
 {
 
 }
@@ -13,7 +13,7 @@ ShipButton::~ShipButton()
 
 void ShipButton::draw()
 {
-	if(visiable)
+	if(visible)
 	{
 		
 		int space = 15;

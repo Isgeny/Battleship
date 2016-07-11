@@ -13,7 +13,7 @@ private:
 	std::vector<Dot*> dots;
 
 public:
-	Field(int x, int y, int weight, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int placedShipsCount);
+	Field(int x, int y, int weight, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int placedShipsCount);
 	~Field();
 	void draw();
 	void setPlacedShipsCount(int placedShipsCount);

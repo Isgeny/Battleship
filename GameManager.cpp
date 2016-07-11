@@ -72,7 +72,7 @@ void GameManager::mouseclicked(int button, int state, int x, int y)
 	case PLACING_SHIP:
 		for(auto it = items.begin(); it != items.end(); it++)
 		{
-			if(it->second->mouseOnItem(x, y) && it->second->isVisiable())
+			if(it->second->mouseOnItem(x, y) && it->second->isvisible())
 			{
 				it->second->setButton(button);
 				it->second->setState(state);
@@ -164,7 +164,7 @@ const GameStatus& GameManager::getGameStatus()
 void GameManager::hideAllItems()
 {
 	for(auto it = items.begin(); it != items.end(); it++)
-		it->second->setVisiable(false);
+		it->second->setvisible(false);
 }
 
 void GameManager::onButtonNewGameClicked(GraphicsRectItem* obj, int button, int state)
@@ -173,15 +173,15 @@ void GameManager::onButtonNewGameClicked(GraphicsRectItem* obj, int button, int 
 	{
 		gameStatus = PLACING_SHIP;
 		hideAllItems();
-		items[PlayerField]->setVisiable(true);
-		items[BtnAuto]->setVisiable(true);
-		items[BtnClean]->setVisiable(true);
-		items[BtnFight]->setVisiable(true);
-		items[SingleShipBtn]->setVisiable(true);
-		items[DoubleShipBtn]->setVisiable(true);
-		items[TripleShipBtn]->setVisiable(true);
-		items[QuadShipBtn]->setVisiable(true);
-		items[MouseShip]->setVisiable(true);
+		items[PlayerField]->setvisible(true);
+		items[BtnAuto]->setvisible(true);
+		items[BtnClean]->setvisible(true);
+		items[BtnFight]->setvisible(true);
+		items[SingleShipBtn]->setvisible(true);
+		items[DoubleShipBtn]->setvisible(true);
+		items[TripleShipBtn]->setvisible(true);
+		items[QuadShipBtn]->setvisible(true);
+		items[MouseShip]->setvisible(true);
 	}
 	obj->setClicked(false);
 }
@@ -233,7 +233,7 @@ void GameManager::onButtonCleanClicked(GraphicsRectItem* obj, int button, int st
 		playerField->cleanField();
 		if(currPressShip)
 			currPressShip->setPressed(false);
-		mShip->setVisiable(false);
+		mShip->setvisible(false);
 		static_cast<ShipButton*>(items[SingleShipBtn])->setShipPlaceCount(4);
 		static_cast<ShipButton*>(items[DoubleShipBtn])->setShipPlaceCount(3);
 		static_cast<ShipButton*>(items[TripleShipBtn])->setShipPlaceCount(2);
@@ -250,8 +250,8 @@ void GameManager::onButtonFightClicked(GraphicsRectItem* obj, int button, int st
 		compField->setRandomShips();
 		compField->hideShips();	//Скрываем корабли компьютера
 		hideAllItems();
-		items[PlayerField]->setVisiable(true);
-		items[CompField]->setVisiable(true);
+		items[PlayerField]->setvisible(true);
+		items[CompField]->setvisible(true);
 	}
 	obj->setClicked(false);
 }
@@ -268,7 +268,7 @@ void GameManager::onPlayerFieldClicked(GraphicsRectItem* obj, int button, int st
 		if(!currPressShip->getShipPlaceCount())
 		{
 			currPressShip->setPressed(false);
-			mShip->setVisiable(false);
+			mShip->setvisible(false);
 		}
 	}
 	obj->setClicked(false);
@@ -298,7 +298,7 @@ void GameManager::onSingleShipBtnClicked(GraphicsRectItem* obj, int button, int 
 		mShip->setHeight(30);
 		mShip->setDeckCount(1);
 		mShip->setOrientation(HORIZONTAL);
-		mShip->setVisiable(true);
+		mShip->setvisible(true);
 	}
 	obj->setClicked(false);
 }
@@ -318,7 +318,7 @@ void GameManager::onDoubleShipBtnClicked(GraphicsRectItem* obj, int button, int 
 		mShip->setHeight(30);
 		mShip->setDeckCount(2);
 		mShip->setOrientation(HORIZONTAL);
-		mShip->setVisiable(true);
+		mShip->setvisible(true);
 	}
 	obj->setClicked(false);
 }
@@ -338,7 +338,7 @@ void GameManager::onTripleShipBtnClicked(GraphicsRectItem* obj, int button, int 
 		mShip->setHeight(30);
 		mShip->setDeckCount(3);
 		mShip->setOrientation(HORIZONTAL);
-		mShip->setVisiable(true);
+		mShip->setvisible(true);
 	}
 	obj->setClicked(false);
 }
@@ -358,7 +358,7 @@ void GameManager::onQuadShipBtnClicked(GraphicsRectItem* obj, int button, int st
 		mShip->setHeight(30);
 		mShip->setDeckCount(4);
 		mShip->setOrientation(HORIZONTAL);
-		mShip->setVisiable(true);
+		mShip->setvisible(true);
 	}
 	obj->setClicked(false);
 }

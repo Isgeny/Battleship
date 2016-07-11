@@ -1,7 +1,7 @@
 #include "Button.h"
 
-Button::Button(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), const std::string& _text) :
-	GraphicsRectItem(x, y, width, height, visiable, clicked, callbackClickedFunc), text(_text)
+Button::Button(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), const std::string& _text) :
+	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), text(_text)
 {
 
 }
@@ -13,7 +13,7 @@ Button::~Button()
 
 void Button::draw()
 {
-	if(visiable)
+	if(visible)
 	{
 		GraphicsRectItem::draw();
 		int space = 15;

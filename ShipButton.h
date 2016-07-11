@@ -11,7 +11,7 @@ private:
 	bool pressed;
 
 public:
-	ShipButton(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, int shipPlaceCount, bool pressed = false);
+	ShipButton(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, int shipPlaceCount, bool pressed = false);
 	~ShipButton();
 	void draw();
 	void setShipPlaceCount(int shipPlaceCount);

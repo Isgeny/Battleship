@@ -1,7 +1,7 @@
 #include "Ship.h"
 
-Ship::Ship(int x, int y, int width, int height, bool visiable, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _deckCount, const Orientation& _orientation, bool _alive, int _areaX, int _areaY, int _areaWidth, int _areaHeight) :
-	GraphicsRectItem(x, y, width, height, visiable, clicked, callbackClickedFunc), deckCount(_deckCount), orientation(_orientation), alive(_alive), areaX(_areaX), areaY(_areaY), areaWidth(_areaWidth), areaHeight(_areaHeight)
+Ship::Ship(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _deckCount, const Orientation& _orientation, bool _alive, int _areaX, int _areaY, int _areaWidth, int _areaHeight) :
+	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), deckCount(_deckCount), orientation(_orientation), alive(_alive), areaX(_areaX), areaY(_areaY), areaWidth(_areaWidth), areaHeight(_areaHeight)
 {
 	//this->updateParts();
 }
@@ -12,7 +12,7 @@ Ship::Ship(Ship* mouseShip)
 	y = mouseShip->y;
 	width = mouseShip->width;
 	height = mouseShip->height;
-	visiable = mouseShip->visiable;
+	visible = mouseShip->visible;
 	clicked = mouseShip->clicked;
 	callbackClickedFunc = mouseShip->callbackClickedFunc;
 	deckCount = mouseShip->deckCount;
@@ -34,7 +34,7 @@ Ship::~Ship()
 
 void Ship::draw()
 {
-	if(visiable)
+	if(visible)
 	{
 		GraphicsRectItem::draw();
 	}
@@ -52,9 +52,9 @@ void Ship::setOrientation(const Orientation& aOrientation)
 	orientation = aOrientation;
 }
 
-void Ship::setVisiable(bool aVisiable)
+void Ship::setvisible(bool avisible)
 {
-	visiable = aVisiable;
+	visible = avisible;
 }
 
 void Ship::setArea(int aAreaX, int aAreaY, int aAreaWidth, int aAreaHeight)
@@ -77,9 +77,9 @@ const Orientation & Ship::getOrientation() const
 	return orientation;
 }
 
-bool Ship::isVisiable() const
+bool Ship::isvisible() const
 {
-	return visiable;
+	return visible;
 }
 
 int Ship::getAreaX() const
