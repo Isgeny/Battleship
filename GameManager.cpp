@@ -99,6 +99,7 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->mouseOnItem(x, y) && compField->availableToMakeHit(x, y))
 		{
 			compField->makeHit(x, y);
+			playerField->incPlayerStepCount();
 			gameStatus = WAITING_COMP_STEP;
 			playerField->setPlayerNameRGB(0.0, 0.0, 1.0);
 			compField->setPlayerNameRGB(1.0, 0.5, 0.0);
