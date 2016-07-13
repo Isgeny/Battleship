@@ -52,7 +52,7 @@ void Ship::setOrientation(const Orientation& aOrientation)
 	orientation = aOrientation;
 }
 
-void Ship::setvisible(bool avisible)
+void Ship::setVisible(bool avisible)
 {
 	visible = avisible;
 }
@@ -77,7 +77,7 @@ const Orientation & Ship::getOrientation() const
 	return orientation;
 }
 
-bool Ship::isvisible() const
+bool Ship::isVisible() const
 {
 	return visible;
 }

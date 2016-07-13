@@ -7,15 +7,6 @@
 #define CELL_SZ 30
 #define FIELD_SZ 10
 
-struct MyPoint
-{
-	int i, j;
-	MyPoint(int aI, int aJ) : i(aI), j(aJ)
-	{
-
-	}
-};
-
 enum ObjName
 {
 	SingleShipBtn = 1,
@@ -26,26 +17,20 @@ enum ObjName
 	BtnRecords,
 	BtnAbout,
 	BtnExit,
+	BtnMainMenu,
 	BtnFight,
 	BtnAuto,
 	BtnClean,
 	PlayerField,
 	CompField,
 	MouseShip,
+	TextEditName
 };
 
 enum Orientation
 {
 	HORIZONTAL,
 	VERTICAL
-};
-
-enum Cell
-{
-	EMPTY,
-	SHIP,
-	SHIP_AREA,
-	DOT
 };
 
 enum GameStatus

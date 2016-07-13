@@ -21,12 +21,12 @@ public:
 	void draw();
 	void setDeckCount(int deckCount);
 	void setOrientation(const Orientation& orientation);
-	void setvisible(bool visible);
+	void setVisible(bool visible);
 	void setArea(int areaX, int areaY, int areaWidth, int areaHeight);
 	void setAlive(bool alive);
 	int getDeckCount() const;
 	const Orientation& getOrientation() const;
-	bool isvisible() const;
+	bool isVisible() const;
 	int getAreaX() const;
 	int getAreaY() const;
 	int getAreaWidth() const;

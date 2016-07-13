@@ -10,6 +10,7 @@ Ship* GameManager::mShip;
 ShipButton* GameManager::currPressShip;
 Field* GameManager::playerField;
 Field* GameManager::compField;
+TextEdit* GameManager::textEditName;
 GameManager game;
 
 int main(int argc, char** argv)
@@ -28,10 +29,10 @@ int main(int argc, char** argv)
 	glMatrixMode(GL_MODELVIEW);
 
 	glutDisplayFunc(GameManager::draw);
-	glutMouseFunc(GameManager::mouseclicked);
+	glutMouseFunc(GameManager::mouseClicked);
 	glutPassiveMotionFunc(GameManager::mouseMove);
 	glutMouseWheelFunc(GameManager::mouseWheel);
-
+	glutKeyboardFunc(GameManager::keyboardPressed);
 	glutTimerFunc(50, GameManager::timerRedisplay, 0);
 	glutTimerFunc(1500, GameManager::timerCompStep, 0);
 

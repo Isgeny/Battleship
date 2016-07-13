@@ -1,8 +1,8 @@
 #include "Field.h"
 #include "GameManager.h"
 
-Field::Field(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _placedShipsCount) :
-	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), placedShipsCount(_placedShipsCount)
+Field::Field(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _placedShipsCount, const std::string& _playerName, double _pR, double _pG, double _pB) :
+	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), placedShipsCount(_placedShipsCount), playerName(_playerName), pR(_pR), pG(_pG), pB(_pB)
 {
 
 }
@@ -40,6 +40,13 @@ void Field::draw()
 			glRasterPos2d(x + i*CELL_SZ + 10, y - 10);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, alphabet[i]);
 		}
+		//Рисование имени игрока
+		for(int i = 0; i < playerName.size(); i++)
+		{
+			glColor3f(pR, pG, pB);
+			glRasterPos2d(x + width/2 + i*20 - playerName.size() * 19/2, y - 40);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, playerName[i]);
+		}
 		//Рисование кораблей
 		for(auto it = ships.begin(); it != ships.end(); it++)
 			(*it)->draw();
@@ -54,9 +61,24 @@ void Field::setPlacedShipsCount(int aPlacedShipsCount)
 	placedShipsCount = aPlacedShipsCount;
 }
 
+void Field::setPlayerName(const std::string & _playerName)
+{
+	playerName = _playerName;
+}
+
+void Field::setPlayerNameRGB(double _r, double _g, double _b)
+{
+	pR = _r; pG = _g; pB = _b;
+}
+
 int Field::getPlacedShipsCount() const
 {
 	return placedShipsCount;
+}
+
+const std::string & Field::getPlayerName() const
+{
+	return playerName;
 }
 
 std::vector<Ship*>& Field::getShips()
@@ -188,7 +210,7 @@ void Field::setRandomShips() //Рандомная расстановка кораблей
 void Field::hideShips()
 {
 	for(auto it = ships.begin(); it != ships.end(); it++)
-		(*it)->setvisible(false);
+		(*it)->setVisible(false);
 }
 
 void Field::makeHit(int mX, int mY)
@@ -205,7 +227,7 @@ void Field::makeHit(int mX, int mY)
 					if((*itShip)->allPartsKilled())
 					{
 						(*itShip)->setAlive(false);
-						(*itShip)->setvisible(true);
+						(*itShip)->setVisible(true);
 						this->placeDotsAroundShip((*itShip));
 					}
 					return;

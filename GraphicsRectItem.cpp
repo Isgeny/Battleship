@@ -49,7 +49,7 @@ void GraphicsRectItem::setHeight(int aHeight)
 	height = aHeight;
 }
 
-void GraphicsRectItem::setvisible(bool _visible)
+void GraphicsRectItem::setVisible(bool _visible)
 {
 	visible = _visible;
 }
@@ -96,7 +96,7 @@ int GraphicsRectItem::getHeight() const
 	return height;
 }
 
-bool GraphicsRectItem::isvisible() const
+bool GraphicsRectItem::isVisible() const
 {
 	return visible;
 }
