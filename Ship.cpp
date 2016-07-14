@@ -3,26 +3,7 @@
 Ship::Ship(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _deckCount, const Orientation& _orientation, bool _alive, int _areaX, int _areaY, int _areaWidth, int _areaHeight) :
 	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), deckCount(_deckCount), orientation(_orientation), alive(_alive), areaX(_areaX), areaY(_areaY), areaWidth(_areaWidth), areaHeight(_areaHeight)
 {
-	//this->updateParts();
-}
-
-Ship::Ship(Ship* mouseShip)
-{
-	x = mouseShip->x;
-	y = mouseShip->y;
-	width = mouseShip->width;
-	height = mouseShip->height;
-	visible = mouseShip->visible;
-	clicked = mouseShip->clicked;
-	callbackClickedFunc = mouseShip->callbackClickedFunc;
-	deckCount = mouseShip->deckCount;
-	orientation = mouseShip->orientation;
-	alive = mouseShip->alive;
-	areaX = mouseShip->areaX;
-	areaY = mouseShip->areaY;
-	areaWidth = mouseShip->areaWidth;
-	areaHeight = mouseShip->areaHeight;
-	parts = mouseShip->parts;
+	
 }
 
 Ship::~Ship()

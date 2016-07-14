@@ -6,12 +6,19 @@
 std::map<ObjName, GraphicsRectItem*> GameManager::items;
 GameStatus GameManager::gameStatus = MENU;
 const std::string GameManager::title = "BATTLESHIP";
+std::string GameManager::winnerName, GameManager::loserName;
 Ship* GameManager::mShip;
 ShipButton* GameManager::currPressShip;
 Field* GameManager::playerField;
 Field* GameManager::compField;
 TextEdit* GameManager::textEditName;
+Records* GameManager::records;
 GameManager game;
+
+void display()
+{
+	srand(time(NULL));
+}
 
 int main(int argc, char** argv)
 {
@@ -27,7 +34,8 @@ int main(int argc, char** argv)
 	glLoadIdentity();
 	gluOrtho2D(0, WIN_WIDTH, WIN_HEIGHT, 0);
 	glMatrixMode(GL_MODELVIEW);
-
+	
+	glutDisplayFunc(display);
 	glutDisplayFunc(GameManager::draw);
 	glutMouseFunc(GameManager::mouseClicked);
 	glutPassiveMotionFunc(GameManager::mouseMove);

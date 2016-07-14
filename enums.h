@@ -21,6 +21,10 @@ enum ObjName
 	BtnFight,
 	BtnAuto,
 	BtnClean,
+	BtnGiveUp,
+	BtnMainMenuR,
+	BtnRecordsR,
+	BtnNewGameR,
 	PlayerField,
 	CompField,
 	MouseShip,
@@ -40,5 +44,6 @@ enum GameStatus
 	ABOUT,
 	PLACING_SHIP,
 	WAITING_PLAYER_STEP,
-	WAITING_COMP_STEP
+	WAITING_COMP_STEP,
+	RESULTS
 };

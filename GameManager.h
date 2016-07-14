@@ -7,6 +7,7 @@
 #include "Ship.h"
 #include "ShipButton.h"
 #include "TextEdit.h"
+#include "Records.h"
 #include "enums.h"
 
 class GameManager
@@ -14,11 +15,13 @@ class GameManager
 private:
 	static GameStatus gameStatus;
 	static const std::string title;
+	static std::string winnerName, loserName;
 	static std::map<ObjName, GraphicsRectItem*> items;
 	static Ship *mShip;
 	static ShipButton *currPressShip;
 	static Field *playerField, *compField;
 	static TextEdit* textEditName;
+	static Records* records;
 	
 public:
 	GameManager();
@@ -51,5 +54,7 @@ public:
 	static void onQuadShipBtnClicked(GraphicsRectItem* obj, int button, int state);
 	static void onTextEditClicked(GraphicsRectItem* obj, int button, int state);
 	static void onShipClicked(GraphicsRectItem* obj, int button, int state);
-	
+	static void onButtonGiveUp(GraphicsRectItem* obj, int button, int state);
+	static void showResults(const std::string& winnerName, const std::string& loserName);
+
 };

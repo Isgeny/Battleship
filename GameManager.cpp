@@ -9,7 +9,13 @@ GameManager::GameManager()
 	items[BtnFight]			= new Button(690, 330, 120, 60, false, false, onButtonFightClicked, "FIGHT!");
 	items[BtnAuto]			= new Button(390, 330, 120, 60, false, false, onButtonAutoClicked, "AUTO");
 	items[BtnClean]			= new Button(540, 330, 120, 60, false, false, onButtonCleanClicked, "CLEAN");
+	
+	items[BtnGiveUp]		= new Button(0, 0, 150, 30, false, false, onButtonGiveUp, "GIVE UP");
 	items[BtnMainMenu]		= new Button(0, 0, 150, 30, false, false, onButtonMainMenuClicked, "MAIN MENU");
+	items[BtnNewGameR]		= new Button(210, 330, 120, 60, false, false, onButtonNewGameClicked, "NEW GAME");
+	items[BtnRecordsR]		= new Button(360, 330, 120, 60, false, false, onButtonRecordsClicked, "RECORDS");
+	items[BtnMainMenuR]		= new Button(510, 330, 120, 60, false, false, onButtonMainMenuClicked, "MENU");
+
 	items[PlayerField]		= new Field(60, 90, 300, 300, false, false, onPlayerFieldClicked, 0, "", 1.0, 0.5, 0.0);
 	items[CompField]		= new Field(510, 90, 300, 300, false, false, onCompFieldClicked, 0, "Computer");
 	items[MouseShip]		= new Ship(-100, -100, 0, 0, false, false, NULL, 0, HORIZONTAL, true, 0, 0, 0, 0);
@@ -19,6 +25,8 @@ GameManager::GameManager()
 	items[QuadShipBtn]		= new ShipButton(420, 90, 120, 30, false, false, onQuadShipBtnClicked, 4, HORIZONTAL, true, 0, 0, 0, 0, 1);
 	items[TextEditName]		= new TextEdit(690, 0, 150, 30, false, false, onTextEditClicked, "", false);
 
+
+	records = new Records;
 	mShip = (Ship*)items[MouseShip];
 	playerField = (Field*)items[PlayerField];
 	compField = (Field*)items[CompField];
@@ -30,6 +38,7 @@ GameManager::~GameManager()
 	for(auto it = items.begin(); it != items.end(); it++)
 		delete it->second;
 	items.erase(items.begin(), items.end());
+	delete records;
 }
 
 void GameManager::draw()
@@ -54,14 +63,25 @@ void GameManager::draw()
 	for(auto it = items.begin(); it != items.end(); it++)
 		it->second->draw();
 	//Рисование заголовка игры
-	if(gameStatus == MENU)
+	switch(gameStatus)
 	{
+	case MENU:
 		for(int i = 0; i < title.size(); i++)
 		{
 			glColor3d(0.0, 0.0, 1.0);
 			glRasterPos2d(325 + i * 20, 40);
 			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, title[i]);
 		}
+	break;
+	case RESULTS:
+		std::string txt = winnerName + " WON!";
+		for(int i = 0; i < txt.size(); i++)
+		{
+			glColor3d(0.0, 0.0, 1.0);
+			glRasterPos2d(WIN_WIDTH/2 - txt.size()*20 /2 + i*20, 55);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, txt[i]);
+		}
+	break;
 	}
 	glutSwapBuffers();
 }
@@ -96,13 +116,22 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 			textEditName->setFocus(false);
 		break;
 	case WAITING_PLAYER_STEP:
+		if(items[BtnGiveUp]->mouseOnItem(x, y))
+		{
+			items[BtnGiveUp]->setButton(button);
+			items[BtnGiveUp]->setState(state);
+			items[BtnGiveUp]->setClicked(true);
+		}
 		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->mouseOnItem(x, y) && compField->availableToMakeHit(x, y))
 		{
 			compField->makeHit(x, y);
-			playerField->incPlayerStepCount();
 			gameStatus = WAITING_COMP_STEP;
 			playerField->setPlayerNameRGB(0.0, 0.0, 1.0);
 			compField->setPlayerNameRGB(1.0, 0.5, 0.0);
+			if(compField->allShipsKilled())
+			{
+				showResults(playerField->getPlayerName(), compField->getPlayerName());
+			}
 		}
 		break;
 	}
@@ -182,8 +211,13 @@ void GameManager::timerCompStep(int)
 			compField->setPlayerNameRGB(0.0, 0.0, 1.0);
 			playerField->setPlayerNameRGB(1.0, 0.5, 0.0);
 		}
+		if(playerField->allShipsKilled())
+		{
+			gameStatus = RESULTS;
+			hideAllItems();
+		}
 	}
-	glutTimerFunc(1000, timerCompStep, 0);
+	glutTimerFunc(50, timerCompStep, 0);
 }
 
 void GameManager::setGameStatus(const GameStatus& st)
@@ -295,13 +329,12 @@ void GameManager::onButtonFightClicked(GraphicsRectItem* obj, int button, int st
 	{
 		gameStatus = WAITING_PLAYER_STEP;
 		compField->setRandomShips();
-		compField->hideShips();	//Скрываем корабли компьютера
+		//compField->hideShips();	//Скрываем корабли компьютера
 		hideAllItems();
 		items[PlayerField]->setVisible(true);
 		playerField->setPlayerName(textEditName->getText());
 		items[CompField]->setVisible(true);
-		items[BtnMainMenu]->setVisible(true);
-		
+		items[BtnGiveUp]->setVisible(true);
 	}
 	obj->setClicked(false);
 }
@@ -435,4 +468,20 @@ void GameManager::onShipClicked(GraphicsRectItem* obj, int button, int state)
 			}
 		}
 	}
+}
+
+void GameManager::onButtonGiveUp(GraphicsRectItem* obj, int button, int state)
+{
+	showResults(compField->getPlayerName(), playerField->getPlayerName());
+}
+
+void GameManager::showResults(const std::string& _winnerName, const std::string& _loserName)
+{
+	hideAllItems();
+	gameStatus = RESULTS;
+	winnerName = _winnerName;
+	loserName = _loserName;
+	items[BtnNewGameR]->setVisible(true);
+	items[BtnRecordsR]->setVisible(true);
+	items[BtnMainMenuR]->setVisible(true);
 }

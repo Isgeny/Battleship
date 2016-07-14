@@ -1,8 +1,8 @@
 #include "Field.h"
 #include "GameManager.h"
 
-Field::Field(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _placedShipsCount, const std::string& _playerName, double _pR, double _pG, double _pB, int _playerStepCount) :
-	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), placedShipsCount(_placedShipsCount), playerName(_playerName), pR(_pR), pG(_pG), pB(_pB), playerStepCount(_playerStepCount)
+Field::Field(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _placedShipsCount, const std::string& _playerName, double _pR, double _pG, double _pB) :
+	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), placedShipsCount(_placedShipsCount), playerName(_playerName), pR(_pR), pG(_pG), pB(_pB)
 {
 
 }
@@ -71,16 +71,6 @@ void Field::setPlayerNameRGB(double _r, double _g, double _b)
 	pR = _r; pG = _g; pB = _b;
 }
 
-void Field::setPlayerStepCount(int _playerStepCount)
-{
-	playerStepCount = _playerStepCount;
-}
-
-void Field::incPlayerStepCount()
-{
-	playerStepCount++;
-}
-
 int Field::getPlacedShipsCount() const
 {
 	return placedShipsCount;
@@ -99,11 +89,6 @@ std::vector<Ship*>& Field::getShips()
 std::vector<Dot*>& Field::getDots()
 {
 	return dots;
-}
-
-int Field::getPlayerStepCount() const
-{
-	return playerStepCount;
 }
 
 void Field::operator++(int)
@@ -160,7 +145,7 @@ bool Field::availableToMakeHit(int mX, int mY)
 
 void Field::setShip(Ship *mouseShip)
 {
-	ships.push_back(new Ship(mouseShip));
+	ships.push_back(new Ship(*mouseShip));
 	ships.back()->updateParts();
 	ships.back()->setCallbackClickedFunc(GameManager::onShipClicked);
 }
@@ -248,8 +233,7 @@ void Field::makeHit(int mX, int mY)
 					return;
 				}
 			}
-		}
-		
+		}	
 	}
 	dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ, true, false, NULL));
 }
@@ -271,4 +255,16 @@ void Field::placeDotsAroundShip(Ship* killedShip)
 			}
 		}
 	}
+}
+
+bool Field::allShipsKilled() const
+{
+	for(auto itShips = ships.begin(); itShips != ships.end(); itShips++)
+	{
+		if((*itShips)->getAlive())
+		{
+			return false;
+		}
+	}
+	return true;
 }

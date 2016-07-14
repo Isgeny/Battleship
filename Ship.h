@@ -16,7 +16,6 @@ private:
 
 public:
 	Ship(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight);
-	Ship(Ship *mouseShip);
 	~Ship();
 	void draw();
 	void setDeckCount(int deckCount);
