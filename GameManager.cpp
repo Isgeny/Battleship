@@ -35,6 +35,7 @@ GameManager::GameManager()
 
 GameManager::~GameManager()
 {
+	records->writeFile();
 	for(auto it = items.begin(); it != items.end(); it++)
 		delete it->second;
 	items.erase(items.begin(), items.end());
@@ -74,12 +75,57 @@ void GameManager::draw()
 		}
 	break;
 	case RESULTS:
+		//Отрисовка победителя
 		std::string txt = winnerName + " WON!";
 		for(int i = 0; i < txt.size(); i++)
 		{
 			glColor3d(0.0, 0.0, 1.0);
 			glRasterPos2d(WIN_WIDTH/2 - txt.size()*20 /2 + i*20, 55);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, txt[i]);
+		}
+		//Отрисовка векртикальных линий
+		glColor3d(0.0, 0.0, 1.0);
+		glBegin(GL_LINES);
+		for(int i = 0; i < 3; i++)
+		{
+			glVertex2d(270 + i*150, 90);
+			glVertex2d(270 + i*150, 270);
+		}
+		//Отрисовка горизонтальных линий
+		for(int i = 0; i < 3; i++)
+		{
+			glVertex2d(150, 135 + i*60);
+			glVertex2d(690, 135 + i*60);
+		}
+		glEnd();
+		//Отрисовка шапки таблицы
+		const std::string pName = "NAME";
+		for(int i = 0; i < pName.size(); i++)
+		{
+			glColor3d(0.0, 0.0, 1.0);
+			glRasterPos2d(170 + i*20, 115);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pName[i]);
+		}
+		const std::string pKilled = "KILLED";
+		for(int i = 0; i < pKilled.size(); i++)
+		{
+			glColor3d(0.0, 0.0, 1.0);
+			glRasterPos2d(290 + i * 20, 115);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pKilled[i]);
+		}
+		const std::string pWins = "WINS";
+		for(int i = 0; i < pWins.size(); i++)
+		{
+			glColor3d(0.0, 0.0, 1.0);
+			glRasterPos2d(460 + i * 20, 115);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pWins[i]);
+		}
+		const std::string pGames = "GAMES";
+		for(int i = 0; i < pGames.size(); i++)
+		{
+			glColor3d(0.0, 0.0, 1.0);
+			glRasterPos2d(590 + i * 20, 115);
+			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pGames[i]);
 		}
 	break;
 	}
@@ -131,6 +177,7 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 			if(compField->allShipsKilled())
 			{
 				showResults(playerField->getPlayerName(), compField->getPlayerName());
+				records->addNewUser(playerField->getPlayerName(), playerField->getWins());
 			}
 		}
 		break;
@@ -215,6 +262,7 @@ void GameManager::timerCompStep(int)
 		{
 			gameStatus = RESULTS;
 			hideAllItems();
+			records->addNewUser(compField->getPlayerName(), compField->getWins());
 		}
 	}
 	glutTimerFunc(50, timerCompStep, 0);

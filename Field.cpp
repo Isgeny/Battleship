@@ -71,6 +71,11 @@ void Field::setPlayerNameRGB(double _r, double _g, double _b)
 	pR = _r; pG = _g; pB = _b;
 }
 
+void Field::setWins(int _wins)
+{
+	wins = _wins;
+}
+
 int Field::getPlacedShipsCount() const
 {
 	return placedShipsCount;
@@ -89,6 +94,11 @@ std::vector<Ship*>& Field::getShips()
 std::vector<Dot*>& Field::getDots()
 {
 	return dots;
+}
+
+int Field::getWins() const
+{
+	return wins;
 }
 
 void Field::operator++(int)

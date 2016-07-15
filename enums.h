@@ -28,7 +28,7 @@ enum ObjName
 	PlayerField,
 	CompField,
 	MouseShip,
-	TextEditName
+	TextEditName,
 };
 
 enum Orientation
