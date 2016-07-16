@@ -175,6 +175,11 @@ void GameManager::draw()
 	glutSwapBuffers();
 }
 
+void GameManager::resize(int width, int height)
+{
+	glutReshapeWindow(WIN_WIDTH, WIN_HEIGHT);
+}
+
 void GameManager::mouseClicked(int button, int state, int x, int y)
 {
 	for(auto it = items.begin(); it != items.end(); it++)

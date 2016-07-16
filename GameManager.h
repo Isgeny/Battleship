@@ -37,6 +37,7 @@ public:
 	GameManager();
 	~GameManager();
 	static void draw();
+	static void resize(int width, int height);
 	static void mouseClicked(int button, int state, int x, int y);
 	static void mouseMove(int x, int y);
 	static void mouseWheel(int button, int dir, int x, int y);

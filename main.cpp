@@ -57,6 +57,7 @@ int main(int argc, char** argv)
 	glMatrixMode(GL_MODELVIEW);
 	
 	glutDisplayFunc(GameManager::draw);
+	glutReshapeFunc(GameManager::resize);
 	glutMouseFunc(GameManager::mouseClicked);
 	glutPassiveMotionFunc(GameManager::mouseMove);
 	glutMouseWheelFunc(GameManager::mouseWheel);
