@@ -1,4 +1,4 @@
-#include "Records.h"
+/*#include "Records.h"
 
 Records::Records()
 {
@@ -73,4 +73,4 @@ std::ostream& operator << (std::ostream& out, User& u)
 {
 	out << u.name << u.wins;
 	return out;
-}
+}*/

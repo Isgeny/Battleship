@@ -1,4 +1,4 @@
-#pragma once
+/*#pragma once
 #include <string>
 #include <vector>
 #include <iostream>
@@ -24,4 +24,4 @@ public:
 	void addNewUser(const std::string& name, int wins);
 	friend std::istream& operator >> (std::istream& in, User& u);
 	friend std::ostream& operator << (std::ostream& out, User& u);
-};
+};*/

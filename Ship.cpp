@@ -1,123 +1,128 @@
 #include "Ship.h"
-
-Ship::Ship(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _deckCount, const Orientation& _orientation, bool _alive, int _areaX, int _areaY, int _areaWidth, int _areaHeight) :
-	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), deckCount(_deckCount), orientation(_orientation), alive(_alive), areaX(_areaX), areaY(_areaY), areaWidth(_areaWidth), areaHeight(_areaHeight)
+Ship::Ship() : decks(0), orientation(HORIZONTAL), GraphicsItem()
 {
-	
+
+}
+
+Ship::Ship(int _decks, const Rect& _areaRect, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked, const Orientation& _orientation) :
+	decks(_decks), orientation(_orientation), areaRect(_areaRect), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
+{
+
 }
 
 Ship::~Ship()
 {
-	for(auto it = parts.begin(); it != parts.end(); it++)
-		delete (*it);
-	parts.erase(parts.begin(), parts.end());
+
 }
 
 void Ship::draw()
 {
 	if(visible)
 	{
-		GraphicsRectItem::draw();
+		drawRect();
 	}
-	for(int i = 0; i < parts.size(); i++)
-		parts[i]->draw();
 }
 
-void Ship::setDeckCount(int aDeckCount)
+void Ship::mousePressed(int button, int state, int mouseX, int mouseY)
 {
-	deckCount = aDeckCount;
+	GraphicsItem::mousePressed(button, state, mouseX, mouseY);
 }
 
-void Ship::setOrientation(const Orientation& aOrientation)
+void Ship::setDecks(int _decks)
 {
-	orientation = aOrientation;
+	decks = _decks;
 }
 
-void Ship::setVisible(bool avisible)
+void Ship::setHealths(int _healths)
 {
-	visible = avisible;
+	healths = _healths;
 }
 
-void Ship::setArea(int aAreaX, int aAreaY, int aAreaWidth, int aAreaHeight)
+void Ship::setOrientation(const Orientation& _orientation)
 {
-	areaX = aAreaX; areaY = aAreaY; areaWidth = aAreaWidth; areaHeight = aAreaHeight;
+	orientation = _orientation;
 }
 
-void Ship::setAlive(bool aAlive)
+void Ship::setAreaRect(int areaX, int areaY, int areaWidth, int areaHeight)
 {
-	alive = aAlive;
+	areaRect.setX(areaX);
+	areaRect.setY(areaY);
+	areaRect.setWidth(areaWidth);
+	areaRect.setHeight(areaHeight);
 }
 
-int Ship::getDeckCount() const
+void Ship::setAreaRect(const Rect& _rect)
 {
-	return deckCount;
+	rect = _rect;
 }
 
-const Orientation & Ship::getOrientation() const
+int Ship::getDecks() const
+{
+	return decks;
+}
+
+int Ship::getHealths() const
+{
+	return healths;
+}
+
+const Orientation& Ship::getOrientation() const
 {
 	return orientation;
 }
 
-bool Ship::isVisible() const
+const Rect& Ship::getAreaRect() const
 {
-	return visible;
+	return rect;
 }
 
-int Ship::getAreaX() const
+bool Ship::mouseOnShipArea(int mouseX, int mouseY)
 {
-	return areaX;
+	return (mouseX > areaRect.x() && mouseX < areaRect.x() + areaRect.width() && mouseY > areaRect.y() && mouseY < areaRect.y() + areaRect.height());
 }
 
-int Ship::getAreaY() const
+void Ship::operator -- (int)
 {
-	return areaY;
+	if(healths)
+		healths--;
 }
 
-int Ship::getAreaWidth() const
-{
-	return areaWidth;
-}
 
-int Ship::getAreaHeight() const
-{
-	return areaHeight;
-}
 
-bool Ship::getAlive() const
-{
-	return alive;
-}
 
-std::vector<ShipPart*>& Ship::getParts()
-{
-	return parts;
-}
 
-bool Ship::mouseOnShipArea(int mX, int mY)
-{
-	return (mX > areaX && mX < areaX + areaWidth && mY > areaY && mY < areaY + areaHeight);
-}
 
-void Ship::updateParts()
-{
-	for(int i = 0; i < deckCount; i++)
-	{
-		parts.push_back(new ShipPart(0, 0, 0, 0, true, false, NULL, true));
-		if(orientation == HORIZONTAL)
-		{
-			parts[i]->setX(x + i*CELL_SZ);
-			parts[i]->setY(y);
-		} else
-		{
-			parts[i]->setX(x);
-			parts[i]->setY(y + i*CELL_SZ);
-		}
-		parts[i]->setWidth(CELL_SZ);
-		parts[i]->setHeight(CELL_SZ);
-	}
-}
 
-bool Ship::allPartsKilled() const
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*bool Ship::allPartsKilled() const
 {
 	for(auto it = parts.begin(); it != parts.end(); it++)
 	{
@@ -126,3 +131,22 @@ bool Ship::allPartsKilled() const
 	}
 	return true;
 }
+
+void Ship::updateParts()
+{
+for(int i = 0; i < decks; i++)
+{
+parts.push_back(new ShipPart(0, 0, 0, 0, true, false, NULL, true));
+if(orientation == HORIZONTAL)
+{
+parts[i]->setX(x + i*CELL_SZ);
+parts[i]->setY(y);
+} else
+{
+parts[i]->setX(x);
+parts[i]->setY(y + i*CELL_SZ);
+}
+parts[i]->setWidth(CELL_SZ);
+parts[i]->setHeight(CELL_SZ);
+}
+}*/

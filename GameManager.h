@@ -8,20 +8,30 @@
 #include "ShipButton.h"
 #include "TextEdit.h"
 #include "Records.h"
+#include "Player.h"
+#include "Dot.h"
+#include "Cross.h"
 #include "enums.h"
 
 class GameManager
 {
 private:
 	static GameStatus gameStatus;
-	static const std::string title;
-	static std::string winnerName, loserName;
-	static std::map<ObjName, GraphicsRectItem*> items;
-	static Ship *mShip;
-	static ShipButton *currPressShip;
+	static std::map<ObjName, GraphicsItem*> items;
+	static Label *lblTitle, *lblPlayer, *lblComp;
+	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR;
 	static Field *playerField, *compField;
-	static TextEdit* textEditName;
-	static Records* records;
+	static TextEdit *textEditName;
+	static Ship *mouseShip;
+	static ShipButton *singleShip, *doubleShip, *tripleShip, *quadShip;
+	static ShipButton *currPressShip;
+	static Player *player, *comp, *winner, *loser;
+	static std::vector<Ship*> playerShips, compShips;
+	static std::vector<Ship*>::iterator it;
+	static std::vector<Dot*> dots;
+	static std::vector<Cross*> crosses;
+	static double alpha;
+	//static Records* records;
 	
 public:
 	GameManager();
@@ -33,28 +43,24 @@ public:
 	static void keyboardPressed(unsigned char key, int x, int y);
 	static void timerRedisplay(int);
 	static void timerCompStep(int);
-
-	static void setGameStatus(const GameStatus& status);
-	static const GameStatus& getGameStatus();
-
 	static void hideAllItems();
-	static void onButtonNewGameClicked(GraphicsRectItem* obj, int button, int state);
-	static void onButtonRecordsClicked(GraphicsRectItem* obj, int button, int state);
-	static void onButtonAbout(GraphicsRectItem* obj, int button, int state);
-	static void onButtonExitClicked(GraphicsRectItem* obj, int button, int state);
-	static void onButtonMainMenuClicked(GraphicsRectItem* obj, int button, int state);
-	static void onButtonAutoClicked(GraphicsRectItem* obj, int button, int state);
-	static void onButtonCleanClicked(GraphicsRectItem* obj, int button, int state);
-	static void onButtonFightClicked(GraphicsRectItem* obj, int button, int state);
-	static void onPlayerFieldClicked(GraphicsRectItem* obj, int button, int state);
-	static void onCompFieldClicked(GraphicsRectItem* obj, int button, int state);
-	static void onSingleShipBtnClicked(GraphicsRectItem* obj, int button, int state);
-	static void onDoubleShipBtnClicked(GraphicsRectItem* obj, int button, int state);
-	static void onTripleShipBtnClicked(GraphicsRectItem* obj, int button, int state);
-	static void onQuadShipBtnClicked(GraphicsRectItem* obj, int button, int state);
-	static void onTextEditClicked(GraphicsRectItem* obj, int button, int state);
-	static void onShipClicked(GraphicsRectItem* obj, int button, int state);
-	static void onButtonGiveUp(GraphicsRectItem* obj, int button, int state);
-	static void showResults(const std::string& winnerName, const std::string& loserName);
+	static void onButtonNewGameClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonRecordsClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonAboutClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonExitClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonMainMenuClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonAutoClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonCleanClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonFightClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onPlayerFieldClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onCompFieldClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onSingleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onDoubleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onTripleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onQuadShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onTextEditClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onShipClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonGiveUpClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void showResults(Player* winner, Player* loser);
 
 };

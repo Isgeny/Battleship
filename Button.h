@@ -1,17 +1,19 @@
 #pragma once
-#include <string>
-#include "GraphicsRectItem.h"
+#include "GraphicsItem.h"
+#include "Label.h"
 
-class Button : public GraphicsRectItem
+class Button : public GraphicsItem
 {
-protected:
-	std::string text;
+private:
+	Label* text;
 
 public:
-	Button(int x, int y , int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), const std::string& text);
+	Button();
+	Button(const std::string& text, const Rect& rect, double r = 1.0, double g = 1.0, double b = 1.0, double a = 1.0, bool visible = false, CallbackClicked callbackClicked = NULL);
 	~Button();
 	void draw();
-	void setText(std::string& text);
-	const std::string& getText() const;
+	void mousePressed(int button, int state, int mouseX, int mouseY);
+	void setText(Label* text);
+	Label* getText() const;
 
 };

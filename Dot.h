@@ -1,11 +1,15 @@
 #pragma once
 #include <cmath>
-#include "GraphicsRectItem.h"
-
-class Dot : public GraphicsRectItem
+#include "GraphicsItem.h"
+#include "enums.h"
+class Dot : public GraphicsItem
 {
+private:
+	int radius;
+
 public:
-	Dot(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state));
+	Dot();
+	Dot(int radius, const Rect& rect, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0, bool visible = false);
 	~Dot();
 	void draw();
 

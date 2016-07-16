@@ -1,9 +1,13 @@
 #include "ShipButton.h"
-
-ShipButton::ShipButton(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight, int _shipPlaceCount, bool _pressed) :
-	Ship(x, y, width, height, visible, clicked, callbackClickedFunc, deckCount, orientation, alive, areaX, areaY, areaWidth, areaHeight), shipPlaceCount(_shipPlaceCount), pressed(_pressed)
+ShipButton::ShipButton() : ships(0), focus(false), Ship()
 {
 
+}
+
+ShipButton::ShipButton(int _ships, int decks, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked, const Orientation & orientation, bool alive, bool _focus) :
+	ships(_ships), focus(_focus), Ship(decks, Rect(), rect, r, g, b, a, visible, callbackClicked, orientation)
+{
+	textShipsCount = new Label(std::to_string(ships) + "x", GLUT_BITMAP_HELVETICA_18, 15, Rect(rect.x() - CELL_SZ, rect.y() + 22, 0, 0), r, g, b, a, true);
 }
 
 ShipButton::~ShipButton()
@@ -15,55 +19,58 @@ void ShipButton::draw()
 {
 	if(visible)
 	{
-		
-		int space = 15;
-		glColor3d(0.0, 0.0, 1.0);
-		glRasterPos2d(x - CELL_SZ, y + 22);
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, std::to_string(shipPlaceCount)[0]);
-		glRasterPos2d(x - CELL_SZ + space, y + 22);
-		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, 'x');
-		if(pressed)
+		textShipsCount->setText(std::to_string(ships) + "x");
+		textShipsCount->draw();
+		drawRect();
+		if(focus)
 		{
 			glLineWidth(2.0);
 			glBegin(GL_LINE_LOOP);
 			glColor3d(0.0, 1.0, 0.0);
-			glVertex2d(x + width + 3.0, y + height + 3.0);
-			glVertex2d(x + width + 3.0, y - 3.0);
-			glVertex2d(x - 3.0, y - 3.0);
-			glVertex2d(x - 3.0, y + height + 3.0);
+			glVertex2d(rect.x() + rect.width() + 3.0, rect.y() + rect.height() + 3.0);
+			glVertex2d(rect.x() + rect.width() + 3.0, rect.y() - 3.0);
+			glVertex2d(rect.x() - 3.0, rect.y() - 3.0);
+			glVertex2d(rect.x() - 3.0, rect.y() + rect.height() + 3.0);
 			glEnd();
 		}
-		GraphicsRectItem::draw();
 	}
 }
 
-void ShipButton::setShipPlaceCount(int _shipPlaceCount)
+void ShipButton::mousePressed(int button, int state, int mouseX, int mouseY)
 {
-	shipPlaceCount = _shipPlaceCount;
+	if(contains(mouseX, mouseY) && visible)
+	{
+		GraphicsItem::mousePressed(button, state, mouseX, mouseY);
+	}
 }
 
-void ShipButton::setPressed(bool _pressed)
+void ShipButton::setShips(int _ships)
 {
-	pressed = _pressed;
+	ships = _ships;
 }
 
-int ShipButton::getShipPlaceCount() const
+void ShipButton::setFocus(bool _focus)
 {
-	return shipPlaceCount;
+	focus = _focus;
 }
 
-bool ShipButton::isPressed() const
+int ShipButton::getShips() const
 {
-	return pressed;
+	return ships;
+}
+
+bool ShipButton::hasFocus() const
+{
+	return focus;
 }
 
 void ShipButton::operator++(int)
 {
-	shipPlaceCount++;
+	ships++;
 }
 
 void ShipButton::operator--(int)
 {
-	if(shipPlaceCount)
-		shipPlaceCount--;
+	if(ships)
+		ships--;
 }

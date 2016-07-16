@@ -1,126 +1,93 @@
 #include "Field.h"
 #include "GameManager.h"
 
-Field::Field(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int _placedShipsCount, const std::string& _playerName, double _pR, double _pG, double _pB) :
-	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc), placedShipsCount(_placedShipsCount), playerName(_playerName), pR(_pR), pG(_pG), pB(_pB)
+Field::Field() : aliveShipsCount(0), GraphicsItem()
+{
+
+}
+
+Field::Field(int _aliveShipsCount, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked) :
+	aliveShipsCount(_aliveShipsCount), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
 {
 
 }
 
 Field::~Field()
 {
-	for(auto it = ships.begin(); it != ships.end(); it++)
-		delete (*it);
-	for(auto it = dots.begin(); it != dots.end(); it++)
-		delete (*it);
+
 }
 
 void Field::draw()
 {
+	//Рисование цифр
 	if(visible)
 	{
-		GraphicsRectItem::draw();
-		//Рисование цифр
 		for(int i = 1; i <= 9; i++)
 		{
-			glColor3d(0.0, 0.0, 1.0);
-			glRasterPos2d(x - CELL_SZ / 2 - 4, y + CELL_SZ*i - 7);
+			glColor4d(r, g, b, a);
+			glRasterPos2d(rect.x() - CELL_SZ / 2 - 4, rect.y() + CELL_SZ*i - 7);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, std::to_string(i)[0]);
 		}
 		//Рисование цифры 10
-		glRasterPos2d(x - CELL_SZ / 2 - 9, y + CELL_SZ * 10 - 7);
+		glRasterPos2d(rect.x() - CELL_SZ / 2 - 9, rect.y() + CELL_SZ * 10 - 7);
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '1');
-		glRasterPos2d(x - CELL_SZ / 2 - 2, y + CELL_SZ * 10 - 7);
+		glRasterPos2d(rect.x() - CELL_SZ / 2 - 2, rect.y() + CELL_SZ * 10 - 7);
 		glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, '0');
 		//Рисование букв
 		std::string alphabet = "ABCDEFGHKJ";
 		for(int i = 0; i < alphabet.size(); i++)
 		{
-			glColor3d(0.0, 0.0, 1.0);
-			glRasterPos2d(x + i*CELL_SZ + 10, y - 10);
+			glColor4d(r, g, b, a);
+			glRasterPos2d(rect.x() + i*CELL_SZ + 10, rect.y() - 10);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, alphabet[i]);
 		}
-		//Рисование имени игрока
-		for(int i = 0; i < playerName.size(); i++)
-		{
-			glColor3f(pR, pG, pB);
-			glRasterPos2d(x + width/2 + i*20 - playerName.size() * 19/2, y - 40);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, playerName[i]);
-		}
-		//Рисование кораблей
-		for(auto it = ships.begin(); it != ships.end(); it++)
-			(*it)->draw();
-		//Рисование точек
-		for(auto it = dots.begin(); it != dots.end(); it++)
-			(*it)->draw();
+		//Рисование прямоугольника
+		glLineWidth(3.0);
+		glBegin(GL_LINE_LOOP);
+		glColor4d(r, g, b, a);
+		glVertex2d(rect.x() + rect.width(), rect.y() + rect.height());
+		glVertex2d(rect.x() + rect.width(), rect.y());
+		glVertex2d(rect.x(), rect.y());
+		glVertex2d(rect.x(), rect.y() + rect.height());
+		glEnd();
 	}
 }
 
-void Field::setPlacedShipsCount(int aPlacedShipsCount)
+void Field::mousePressed(int button, int state, int mouseX, int mouseY)
 {
-	placedShipsCount = aPlacedShipsCount;
+	GraphicsItem::mousePressed(button, state, mouseX, mouseY);
 }
 
-void Field::setPlayerName(const std::string & _playerName)
+void Field::setAliveShipsCount(int _aliveShipsCount)
 {
-	playerName = _playerName;
+	aliveShipsCount = _aliveShipsCount;
 }
 
-void Field::setPlayerNameRGB(double _r, double _g, double _b)
+int Field::getAliveShipsCount() const
 {
-	pR = _r; pG = _g; pB = _b;
-}
-
-void Field::setWins(int _wins)
-{
-	wins = _wins;
-}
-
-int Field::getPlacedShipsCount() const
-{
-	return placedShipsCount;
-}
-
-const std::string & Field::getPlayerName() const
-{
-	return playerName;
-}
-
-std::vector<Ship*>& Field::getShips()
-{
-	return ships;
-}
-
-std::vector<Dot*>& Field::getDots()
-{
-	return dots;
-}
-
-int Field::getWins() const
-{
-	return wins;
+	return aliveShipsCount;
 }
 
 void Field::operator++(int)
 {
-	placedShipsCount++;
+	aliveShipsCount++;
 }
 
 void Field::operator--(int)
 {
-	if(placedShipsCount)
-		placedShipsCount--;
+	if(aliveShipsCount)
+		aliveShipsCount--;
 }
 
-bool Field::availableToPlaceShip(Ship* mShip)
+bool Field::availableToPlaceShip(std::vector<Ship*>& ships, Ship* mouseShip)
 {
 	//Проверка возможности установки корабля
-	int newX = mShip->getX() + CELL_SZ / 2, newY = mShip->getY() + CELL_SZ / 2;
+	int newX = mouseShip->getRect().x() + CELL_SZ/2, newY = mouseShip->getRect().y() + CELL_SZ/2;
 	for(auto it = ships.begin(); it != ships.end(); it++)
 	{
-		for(int i = 0; i < mShip->getDeckCount(); i++)
+		for(int i = 0; i < mouseShip->getDecks(); i++)
 		{
-			if(mShip->getOrientation() == HORIZONTAL && (*it)->mouseOnShipArea(newX + i*CELL_SZ, newY) || mShip->getOrientation() == VERTICAL && (*it)->mouseOnShipArea(newX, newY + i*CELL_SZ))
+			if(mouseShip->getOrientation() == HORIZONTAL && (*it)->mouseOnShipArea(newX + i*CELL_SZ, newY) || mouseShip->getOrientation() == VERTICAL && (*it)->mouseOnShipArea(newX, newY + i*CELL_SZ))
 			{
 				return false;
 			}
@@ -129,23 +96,75 @@ bool Field::availableToPlaceShip(Ship* mShip)
 	return true;
 }
 
-bool Field::availableToMakeHit(int mX, int mY)
+void Field::setRandomShips(std::vector<Ship*>& ships) //Рандомная расстановка кораблей
 {
-	//Проверка наличия уничтоженного корабля по координатам мыши
+	while(aliveShipsCount < 10)
+	{
+		int rX = rand() % rect.width() + rect.x(), rY = rand() % rect.height() + rect.y(), x = rX / CELL_SZ * CELL_SZ, y = rY / CELL_SZ * CELL_SZ, width, height, decks;
+		if(aliveShipsCount < 4)
+			decks = 1;
+		else if(aliveShipsCount >= 4 && aliveShipsCount < 7)
+			decks = 2;
+		else if(aliveShipsCount >= 7 && aliveShipsCount < 9)
+			decks = 3;
+		else if(aliveShipsCount == 9)
+			decks = 4;
+		int or = rand() % 2; Orientation orientation;
+		if(or)
+		{
+			orientation = HORIZONTAL;
+			width = decks*CELL_SZ;
+			height = CELL_SZ;
+			if(rX > rect.x() + FIELD_SZ*CELL_SZ - decks*CELL_SZ)
+			{
+				x = rect.x() + FIELD_SZ*CELL_SZ - decks*CELL_SZ;
+			}
+		} else
+		{
+			orientation = VERTICAL;
+			width = CELL_SZ;
+			height = decks*CELL_SZ;
+			if(rY > rect.y() + FIELD_SZ*CELL_SZ - decks*CELL_SZ)
+			{
+				y = rect.y() + FIELD_SZ*CELL_SZ - decks*CELL_SZ;
+			}
+		}
+		Rect areaRect; areaRect.setX(x - CELL_SZ); areaRect.setY(y - CELL_SZ); areaRect.setWidth(width + 2*CELL_SZ); areaRect.setHeight(height + 2*CELL_SZ);
+		Ship* mouseShip = new Ship(decks, areaRect, Rect(x, y, width, height), 0.0, 0.0, 1.0, 1.0, true, GameManager::onShipClicked, orientation);
+		mouseShip->setHealths(decks);
+		if(availableToPlaceShip(ships, mouseShip))
+		{
+			ships.push_back(mouseShip);
+			aliveShipsCount++;
+		} 
+		else
+		{
+			delete mouseShip;
+		}
+	}
+}
+
+void Field::hideShips(std::vector<Ship*>& ships)
+{
 	for(auto it = ships.begin(); it != ships.end(); it++)
 	{
-		for(auto itPart = (*it)->getParts().begin(); itPart != (*it)->getParts().end(); itPart++)
+		(*it)->setVisible(false);
+	}
+}
+
+bool Field::availableToPlaceDot(int mX, int mY, std::vector<Ship*>& ships, std::vector<Dot*>& dots)
+{
+	for(auto it = ships.begin(); it != ships.end(); it++)
+	{
+		if((*it)->contains(mX, mY))
 		{
-			if((*itPart)->mouseOnItem(mX, mY) && !(*itPart)->getAlive())
-			{
-				return false;
-			}
+			return false;
 		}
 	}
 	//Проверка наличия точки по координатам мыши
 	for(auto it = dots.begin(); it != dots.end(); it++)
 	{
-		if((*it)->mouseOnItem(mX, mY))
+		if((*it)->contains(mX, mY))
 		{
 			return false;
 		}
@@ -153,11 +172,46 @@ bool Field::availableToMakeHit(int mX, int mY)
 	return true;
 }
 
+bool Field::availableToPlaceCross(int mX, int mY, std::vector<Cross*>& crosses)
+{
+	for(auto it = crosses.begin(); it != crosses.end(); it++)
+	{
+		if((*it)->contains(mX, mY))
+		{
+			return false;
+		}
+	}
+	return true;
+}
+
+void Field::placeDotsAroundShip(Ship* killedShip, std::vector<Ship*>& ships, std::vector<Dot*>& dots)
+{
+	int x = killedShip->getRect().x() - CELL_SZ/2, y = killedShip->getRect().y() - CELL_SZ/2;
+	for(int i = 0; i < 3; i++)
+	{
+		for(int j = 0; j < killedShip->getDecks() + 2; j++)
+		{
+			if(killedShip->getOrientation() == HORIZONTAL && availableToPlaceDot(x + j*CELL_SZ, y + i*CELL_SZ, ships, dots) && contains(x + j*CELL_SZ, y + i*CELL_SZ))
+			{
+				dots.push_back(new Dot(40, Rect(x / CELL_SZ * CELL_SZ + j*CELL_SZ, y / CELL_SZ * CELL_SZ + i*CELL_SZ, CELL_SZ, CELL_SZ), 0.0, 0.0, 1.0, 1.0, true));
+			} 
+			else if(killedShip->getOrientation() == VERTICAL && availableToPlaceDot(x + i*CELL_SZ, y + j*CELL_SZ, ships, dots) && contains(x + i*CELL_SZ, y + j*CELL_SZ))
+			{
+				dots.push_back(new Dot(40, Rect(x / CELL_SZ * CELL_SZ + i*CELL_SZ, y / CELL_SZ * CELL_SZ + j*CELL_SZ, CELL_SZ, CELL_SZ), 0.0, 0.0, 1.0, 1.0, true));
+			}
+		}
+	}
+}
+
+
+
+
+/*
 void Field::setShip(Ship *mouseShip)
 {
 	ships.push_back(new Ship(*mouseShip));
 	ships.back()->updateParts();
-	ships.back()->setCallbackClickedFunc(GameManager::onShipClicked);
+	ships.back()->setcallbackClicked(GameManager::onShipClicked);
 }
 
 void Field::cleanField() //Удаление кораблей и точек с поля
@@ -171,51 +225,7 @@ void Field::cleanField() //Удаление кораблей и точек с поля
 	placedShipsCount = 0;
 }
 
-void Field::setRandomShips() //Рандомная расстановка кораблей
-{
-	while(placedShipsCount < 10)
-	{
-		int rX = rand() % width + x, rY = rand() % height + y, x = rX / CELL_SZ * CELL_SZ, y = rY / CELL_SZ * CELL_SZ, width, height, deckCount;
-		if(placedShipsCount < 4)
-			deckCount = 1;
-		else if(placedShipsCount >= 4 && placedShipsCount < 7)
-			deckCount = 2;
-		else if(placedShipsCount >= 7 && placedShipsCount < 9)
-			deckCount = 3;
-		else if(placedShipsCount == 9)
-			deckCount = 4;
-		int or = rand() % 2; Orientation orientation;
-		if(or)
-		{
-			orientation = HORIZONTAL;
-			width = deckCount * CELL_SZ;
-			height = CELL_SZ;
-			if(rX > this->x + FIELD_SZ*CELL_SZ - deckCount*CELL_SZ)
-			{
-				x = this->x + FIELD_SZ*CELL_SZ - deckCount*CELL_SZ;
-			}	
-		}
-		else
-		{
-			orientation = VERTICAL;
-			width = CELL_SZ;
-			height = deckCount * CELL_SZ;
-			if(rY > this->y + FIELD_SZ*CELL_SZ - deckCount*CELL_SZ)
-			{
-				y = this->y + FIELD_SZ*CELL_SZ - deckCount*CELL_SZ;
-			}
-		}
-		int areaX = x - CELL_SZ, areaY = y - CELL_SZ, areaWidth = width + 2*CELL_SZ, areaHeight = height + 2*CELL_SZ;
-		Ship* mShip = new Ship(x, y, width, height, true, false, NULL, deckCount, orientation, true, areaX, areaY, areaWidth, areaHeight);
-		if(this->availableToPlaceShip(mShip))
-		{
-			this->setShip(mShip);
-			this->placedShipsCount++;
-		}
-		else
-			delete mShip;
-	}
-}
+
 
 void Field::hideShips()
 {
@@ -248,24 +258,6 @@ void Field::makeHit(int mX, int mY)
 	dots.push_back(new Dot(mX / CELL_SZ * CELL_SZ, mY / CELL_SZ * CELL_SZ, CELL_SZ, CELL_SZ, true, false, NULL));
 }
 
-void Field::placeDotsAroundShip(Ship* killedShip)
-{
-	int x = killedShip->getX() - CELL_SZ / 2, y = killedShip->getY() - CELL_SZ / 2;
-	for(int i = 0; i < 3; i++)
-	{
-		for(int j = 0; j < killedShip->getDeckCount() + 2; j++)
-		{
-			if(killedShip->getOrientation() == HORIZONTAL && this->availableToMakeHit(x + j*CELL_SZ, y + i*CELL_SZ) && this->mouseOnItem(x + j*CELL_SZ, y + i*CELL_SZ))
-			{
-				dots.push_back(new Dot(x / CELL_SZ * CELL_SZ + j*CELL_SZ, y / CELL_SZ * CELL_SZ + i*CELL_SZ, CELL_SZ, CELL_SZ, true, false, NULL));
-			}
-			else if(killedShip->getOrientation() == VERTICAL && this->availableToMakeHit(x + i*CELL_SZ, y + j*CELL_SZ) && this->mouseOnItem(x + i*CELL_SZ, y + j*CELL_SZ))
-			{
-				dots.push_back(new Dot(x / CELL_SZ * CELL_SZ + i*CELL_SZ, y / CELL_SZ * CELL_SZ + j*CELL_SZ, CELL_SZ, CELL_SZ, true, false, NULL));
-			}
-		}
-	}
-}
 
 bool Field::allShipsKilled() const
 {
@@ -277,4 +269,5 @@ bool Field::allShipsKilled() const
 		}
 	}
 	return true;
-}
+}*/
+

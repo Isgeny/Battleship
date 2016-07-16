@@ -1,39 +1,31 @@
 #pragma once
-#include <vector>
-#include "GraphicsRectItem.h"
-#include "ShipPart.h"
-
-class Ship : public GraphicsRectItem
+#include "GraphicsItem.h"
+#include "enums.h"
+class Ship : public GraphicsItem
 {
 protected:
-	int deckCount;
+	int decks, healths;
 	Orientation orientation;
-	bool alive;
 
 private:
-	int areaX, areaY, areaWidth, areaHeight;
-	std::vector<ShipPart*> parts;
+	Rect areaRect;
 
 public:
-	Ship(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state), int deckCount, const Orientation& orientation, bool alive, int areaX, int areaY, int areaWidth, int areaHeight);
+	Ship();
+	Ship(int decks, const Rect& areaRect, const Rect& rect, double r = 1.0, double g = 1.0, double b = 1.0, double a = 1.0, bool visible = false, CallbackClicked callbackClicked = NULL, const Orientation& orientation = HORIZONTAL);
 	~Ship();
 	void draw();
-	void setDeckCount(int deckCount);
+	void mousePressed(int button, int state, int mouseX, int mouseY);
+	void setDecks(int decks);
+	void setHealths(int healths);
 	void setOrientation(const Orientation& orientation);
-	void setVisible(bool visible);
-	void setArea(int areaX, int areaY, int areaWidth, int areaHeight);
-	void setAlive(bool alive);
-	int getDeckCount() const;
+	void setAreaRect(int areaX, int areaY, int areaWidth, int areaHeight);
+	void setAreaRect(const Rect& rect);
+	int getDecks() const;
+	int getHealths() const;
 	const Orientation& getOrientation() const;
-	bool isVisible() const;
-	int getAreaX() const;
-	int getAreaY() const;
-	int getAreaWidth() const;
-	int getAreaHeight() const;
-	bool getAlive() const;
-	std::vector<ShipPart*>& getParts();
-	bool mouseOnShipArea(int mX, int mY);
-	void updateParts();
-	bool allPartsKilled() const;
+	const Rect& getAreaRect() const;
+	bool mouseOnShipArea(int mouseX, int mouseY);
+	void operator -- (int);
 	
 };

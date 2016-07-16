@@ -29,6 +29,9 @@ enum ObjName
 	CompField,
 	MouseShip,
 	TextEditName,
+	LblTitle,
+	LblPlayer,
+	LblComp
 };
 
 enum Orientation

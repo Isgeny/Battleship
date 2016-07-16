@@ -1,9 +1,14 @@
 #include "Dot.h"
 
-Dot::Dot(int x, int y, int width, int height, bool visible, bool clicked, void (*callbackClickedFunc)(GraphicsRectItem*, int button, int state)) :
-	GraphicsRectItem(x, y, width, height, visible, clicked, callbackClickedFunc)
+Dot::Dot() : radius(0), GraphicsItem()
 {
 
+}
+
+Dot::Dot(int _radius, const Rect& rect, double r, double g, double b, double a, bool visible) :
+	radius(_radius), GraphicsItem(rect, r, g, b, a, visible)
+{
+	//radius = 40;
 }
 
 Dot::~Dot()
@@ -14,11 +19,11 @@ Dot::~Dot()
 void Dot::draw()
 {
 	double tmpPoint;
-	int newX = x + CELL_SZ/2, newY = y + CELL_SZ/2, radius = 40;
-	glColor3d(0.0, 0.0, 1.0);
+	int newX = rect.x() + CELL_SZ/2, newY = rect.y() + CELL_SZ/2;
+	glColor4d(r, g, b, a);
 	glBegin(GL_TRIANGLE_FAN);
 	glVertex2f(newX, newY);
-	for(int i = 0; i <= 50; i++)
+	for(int i = 0; i <= 10; i++)
 	{
 		tmpPoint = (float)i / 10 * 3.1415f * 2.0f;
 		glVertex2f(newX + cos(tmpPoint) * (radius / 10),

@@ -2,53 +2,87 @@
 
 GameManager::GameManager()
 {
-	items[BtnNewGame]		= new Button(300, 60, 240, 60, true, false, onButtonNewGameClicked, "NEW GAME");
-	items[BtnRecords]		= new Button(300, 150, 240, 60, true, false, onButtonRecordsClicked, "RECORDS");
-	items[BtnAbout]			= new Button(300, 240, 240, 60, true, false, onButtonFightClicked, "ABOUT");
-	items[BtnExit]			= new Button(300, 330, 240, 60, true, false, onButtonExitClicked, "EXIT");
-	items[BtnFight]			= new Button(690, 330, 120, 60, false, false, onButtonFightClicked, "FIGHT!");
-	items[BtnAuto]			= new Button(390, 330, 120, 60, false, false, onButtonAutoClicked, "AUTO");
-	items[BtnClean]			= new Button(540, 330, 120, 60, false, false, onButtonCleanClicked, "CLEAN");
+	lblTitle	= new Label("BATTLESHIP", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(325, 40, 0, 0), 0.0, 0.0, 1.0, 1.0, true);
 	
-	items[BtnGiveUp]		= new Button(0, 0, 150, 30, false, false, onButtonGiveUp, "GIVE UP");
-	items[BtnMainMenu]		= new Button(0, 0, 150, 30, false, false, onButtonMainMenuClicked, "MAIN MENU");
-	items[BtnNewGameR]		= new Button(210, 330, 120, 60, false, false, onButtonNewGameClicked, "NEW GAME");
-	items[BtnRecordsR]		= new Button(360, 330, 120, 60, false, false, onButtonRecordsClicked, "RECORDS");
-	items[BtnMainMenuR]		= new Button(510, 330, 120, 60, false, false, onButtonMainMenuClicked, "MENU");
+	btnNewGame = new Button("NEW GAME", Rect(300, 60, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonNewGameClicked);
+	btnRecords = new Button("RECORDS", Rect(300, 150, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonRecordsClicked);
+	btnAbout   = new Button("ABOUT", Rect(300, 240, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonAboutClicked);
+	btnExit    = new Button("EXIT",	Rect(300, 330, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonExitClicked);
+	btnMainMenu = new Button("MENU", Rect(0, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuClicked);
+	btnAuto = new Button("AUTO", Rect(390, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonAutoClicked);
+	btnClean = new Button("CLEAN", Rect(540, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonCleanClicked);
+	btnFight = new Button("FIGHT", Rect(690, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonFightClicked);
+	btnGiveUp = new Button("GIVE UP", Rect(0, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onButtonGiveUpClicked);
+	btnNewGameR = new Button("NEW GAME", Rect(180, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonNewGameClicked);
+	btnRecordsR = new Button("RECORDS", Rect(360, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonRecordsClicked);
+	btnMainMenuR = new Button("MENU", Rect(540, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuClicked);
 
-	items[PlayerField]		= new Field(60, 90, 300, 300, false, false, onPlayerFieldClicked, 0, "", 1.0, 0.5, 0.0);
-	items[CompField]		= new Field(510, 90, 300, 300, false, false, onCompFieldClicked, 0, "Computer");
-	items[MouseShip]		= new Ship(-100, -100, 0, 0, false, false, NULL, 0, HORIZONTAL, true, 0, 0, 0, 0);
-	items[SingleShipBtn]	= new ShipButton(420, 270, 30, 30, false, false, onSingleShipBtnClicked, 1, HORIZONTAL, true, 0, 0, 0, 0, 4);
-	items[DoubleShipBtn]	= new ShipButton(420, 210, 60, 30, false, false, onDoubleShipBtnClicked, 2, HORIZONTAL, true, 0, 0, 0, 0, 3);
-	items[TripleShipBtn]	= new ShipButton(420, 150, 90, 30, false, false, onTripleShipBtnClicked, 3, HORIZONTAL, true, 0, 0, 0, 0, 2);
-	items[QuadShipBtn]		= new ShipButton(420, 90, 120, 30, false, false, onQuadShipBtnClicked, 4, HORIZONTAL, true, 0, 0, 0, 0, 1);
-	items[TextEditName]		= new TextEdit(690, 0, 150, 30, false, false, onTextEditClicked, "", false);
+	playerField = new Field(0, Rect(60, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onPlayerFieldClicked);
+	compField = new Field(0, Rect(510, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onCompFieldClicked);
 
+	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
+	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
 
-	records = new Records;
-	mShip = (Ship*)items[MouseShip];
-	playerField = (Field*)items[PlayerField];
-	compField = (Field*)items[CompField];
-	textEditName = (TextEdit*)items[TextEditName];
+	textEditName = new TextEdit("", Rect(690, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onTextEditClicked);
+
+	mouseShip = new Ship(0, Rect(), Rect(), 0.0, 0.0, 1.0, 1.0, false, onShipClicked);
+
+	singleShip = new ShipButton(4, 1, Rect(420, 270, 30, 30), 0.0, 0.0, 1.0, 1.0, false, onSingleShipBtnClicked);
+	doubleShip = new ShipButton(3, 2, Rect(420, 210, 60, 30), 0.0, 0.0, 1.0, 1.0, false, onDoubleShipBtnClicked);
+	tripleShip = new ShipButton(2, 3, Rect(420, 150, 90, 30), 0.0, 0.0, 1.0, 1.0, false, onTripleShipBtnClicked);
+	quadShip = new ShipButton(1, 4, Rect(420, 90, 120, 30), 0.0, 0.0, 1.0, 1.0, false, onQuadShipBtnClicked);
+
+	player = new Player;
+	comp = new Player("Computer");
+
+	//records = new Records;
+
+	items[LblTitle] = lblTitle;
+	items[LblPlayer] = lblPlayer;
+	items[LblComp] = lblComp;
+	items[BtnNewGame] = btnNewGame;
+	items[BtnAbout] = btnAbout;
+	items[BtnRecords] = btnRecords;
+	items[BtnExit] = btnExit;
+	items[BtnMainMenu] = btnMainMenu;
+	items[BtnAuto] = btnAuto;
+	items[BtnClean] = btnClean;
+	items[BtnFight] = btnFight;
+	items[BtnGiveUp] = btnGiveUp;
+	items[BtnNewGameR] = btnNewGameR;
+	items[BtnRecordsR] = btnRecordsR;
+	items[BtnMainMenuR] = btnMainMenuR;
+	items[PlayerField] = playerField;
+	items[CompField] = compField;
+	items[TextEditName] = textEditName;
+	items[MouseShip] = mouseShip;
+	items[SingleShipBtn] = singleShip;
+	items[DoubleShipBtn] = doubleShip;
+	items[TripleShipBtn] = tripleShip;
+	items[QuadShipBtn] = quadShip;
 }
 
 GameManager::~GameManager()
 {
-	records->writeFile();
+	//records->writeFile();
 	for(auto it = items.begin(); it != items.end(); it++)
+	{
 		delete it->second;
+	}
 	items.erase(items.begin(), items.end());
-	delete records;
+	//delete records;
 }
 
 void GameManager::draw()
 {
 	glClear(GL_COLOR_BUFFER_BIT);
+	glEnable(GL_ALPHA);
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 	//Рисование клеток
 	glLineWidth(2.0);
 	glBegin(GL_LINES);
-	glColor3d(0.5, 0.75, 0.95);
+	glColor4d(0.5, 0.75, 0.95, alpha);
 	for(int i = 0; i <= 28; i++)
 	{
 		glVertex2d(CELL_SZ*i + 1, 0);
@@ -62,21 +96,29 @@ void GameManager::draw()
 	glEnd();
 	//Рисование графических элементов
 	for(auto it = items.begin(); it != items.end(); it++)
-		it->second->draw();
-	//Рисование заголовка игры
-	switch(gameStatus)
 	{
-	case MENU:
-		for(int i = 0; i < title.size(); i++)
-		{
-			glColor3d(0.0, 0.0, 1.0);
-			glRasterPos2d(325 + i * 20, 40);
-			glutBitmapCharacter(GLUT_BITMAP_TIMES_ROMAN_24, title[i]);
-		}
-	break;
-	case RESULTS:
+		it->second->draw();
+	}
+	for(auto it = playerShips.begin(); it != playerShips.end(); it++)
+	{
+		(*it)->draw();
+	}
+	for(auto it = compShips.begin(); it != compShips.end(); it++)
+	{
+		(*it)->draw();
+	}
+	for(auto it = dots.begin(); it != dots.end(); it++)
+	{
+		(*it)->draw();
+	}
+	for(auto it = crosses.begin(); it != crosses.end(); it++)
+	{
+		(*it)->draw();
+	}
+	if(gameStatus == RESULTS)
+	{
 		//Отрисовка победителя
-		std::string txt = winnerName + " WON!";
+		std::string txt = winner->getName() + " WON!";
 		for(int i = 0; i < txt.size(); i++)
 		{
 			glColor3d(0.0, 0.0, 1.0);
@@ -127,90 +169,58 @@ void GameManager::draw()
 			glRasterPos2d(590 + i * 20, 115);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pGames[i]);
 		}
-	break;
 	}
+	glDisable(GL_BLEND);
+	glDisable(GL_ALPHA);
 	glutSwapBuffers();
 }
 
 void GameManager::mouseClicked(int button, int state, int x, int y)
 {
-	//Обработка нажатий мыши
-	switch(gameStatus)
+	for(auto it = items.begin(); it != items.end(); it++)
 	{
-	case MENU:
-	case PLACING_SHIP:
-		for(auto it = items.begin(); it != items.end(); it++)
-		{
-			if(it->second->mouseOnItem(x, y) && it->second->isVisible())
-			{
-				it->second->setButton(button);
-				it->second->setState(state);
-				it->second->setClicked(true);
-			}
-		}
-		for(auto it = playerField->getShips().begin(); it != playerField->getShips().end(); it++)
-		{
-			if((*it)->mouseOnItem(x, y))
-			{
-				(*it)->setButton(button);
-				(*it)->setState(state);
-				(*it)->setClicked(true);
-				return;
-			}
-		}
-		if(!textEditName->mouseOnItem(x, y) && textEditName->hasFocus())
-			textEditName->setFocus(false);
-		break;
-	case WAITING_PLAYER_STEP:
-		if(items[BtnGiveUp]->mouseOnItem(x, y))
-		{
-			items[BtnGiveUp]->setButton(button);
-			items[BtnGiveUp]->setState(state);
-			items[BtnGiveUp]->setClicked(true);
-		}
-		if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->mouseOnItem(x, y) && compField->availableToMakeHit(x, y))
-		{
-			compField->makeHit(x, y);
-			gameStatus = WAITING_COMP_STEP;
-			playerField->setPlayerNameRGB(0.0, 0.0, 1.0);
-			compField->setPlayerNameRGB(1.0, 0.5, 0.0);
-			if(compField->allShipsKilled())
-			{
-				showResults(playerField->getPlayerName(), compField->getPlayerName());
-				records->addNewUser(playerField->getPlayerName(), playerField->getWins());
-			}
-		}
-		break;
+		it->second->mousePressed(button, state, x, y);
+	}
+	it = playerShips.begin();
+	while(it != playerShips.end())
+	{
+		(*it)->mousePressed(button, state, x, y);
+		if(it != playerShips.end())
+			it++;
+	}
+	for(auto it = compShips.begin(); it != compShips.end(); it++)
+	{
+		(*it)->mousePressed(button, state, x, y);
 	}
 }
 
 void GameManager::mouseMove(int x, int y)
 {
 	//Перемещение корабля по полю при перемещении мыши
-	if(gameStatus == PLACING_SHIP && items[PlayerField]->mouseOnItem(x, y))
+	if(gameStatus == PLACING_SHIP && playerField->contains(x, y))
 	{
-		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, mDeck = mShip->getDeckCount();
-		if(mShip->getOrientation() == HORIZONTAL && x > items[PlayerField]->getX() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ)
-			newX = items[PlayerField]->getX() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ;
-		else if(mShip->getOrientation() == VERTICAL && y > items[PlayerField]->getY() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ)
-			newY = items[PlayerField]->getY() + FIELD_SZ*CELL_SZ - mDeck*CELL_SZ;
-		mShip->setX(newX);
-		mShip->setY(newY);
+		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, mouseDecks = mouseShip->getDecks();
+		if(mouseShip->getOrientation() == HORIZONTAL && x > playerField->getRect().x() + FIELD_SZ*CELL_SZ - mouseDecks*CELL_SZ)
+			newX = playerField->getRect().x() + FIELD_SZ*CELL_SZ - mouseDecks*CELL_SZ;
+		else if(mouseShip->getOrientation() == VERTICAL && y > playerField->getRect().y() + FIELD_SZ*CELL_SZ - mouseDecks*CELL_SZ)
+			newY = playerField->getRect().y() + FIELD_SZ*CELL_SZ - mouseDecks*CELL_SZ;
+		mouseShip->getRect().setX(newX);
+		mouseShip->getRect().setY(newY);
 	}
 }
 
 void GameManager::mouseWheel(int button, int dir, int x, int y)
 {
 	//Поворот корабля при прокрутке колесика мыши
-	if(gameStatus == PLACING_SHIP && x <= items[PlayerField]->getX() + FIELD_SZ*CELL_SZ - mShip->getDeckCount()*CELL_SZ + CELL_SZ && y <= items[PlayerField]->getY() + FIELD_SZ*CELL_SZ - mShip->getDeckCount()*CELL_SZ + CELL_SZ)
+	if(gameStatus == PLACING_SHIP && x < playerField->getRect().x() + FIELD_SZ*CELL_SZ - mouseShip->getDecks()*CELL_SZ + CELL_SZ && y <= playerField->getRect().y() + FIELD_SZ*CELL_SZ - mouseShip->getDecks()*CELL_SZ + CELL_SZ)
 	{
-		int mW = mShip->getWidth(), mH = mShip->getHeight();
-		mShip->setWidth(mH);
-		mShip->setHeight(mW);
-		if(mShip->getOrientation() == HORIZONTAL)
-			mShip->setOrientation(VERTICAL);
+		int mW = mouseShip->getRect().width(), mH = mouseShip->getRect().height();
+		mouseShip->getRect().setWidth(mH);
+		mouseShip->getRect().setHeight(mW);
+		if(mouseShip->getOrientation() == HORIZONTAL)
+			mouseShip->setOrientation(VERTICAL);
 		else
-			mShip->setOrientation(HORIZONTAL);
+			mouseShip->setOrientation(HORIZONTAL);
 	}
 }
 
@@ -221,14 +231,14 @@ void GameManager::keyboardPressed(unsigned char key, int x, int y)
 		std::string temp = textEditName->getText();
 		switch(key)
 		{
-		case 8:	//backspace
+		case 8:	//Backspace
 			if(temp.size())
 			{
 				temp.erase(temp.size() - 1);
 				textEditName->setText(temp);
 			}
 		break;
-		case 13:	//Enter
+		case 13: //Enter
 			textEditName->setFocus(false);
 		break;
 		default:
@@ -249,287 +259,330 @@ void GameManager::timerCompStep(int)
 {
 	if(gameStatus == WAITING_COMP_STEP)
 	{
-		int rX = rand() % playerField->getWidth() + playerField->getX();
-		int rY = rand() % playerField->getHeight() + playerField->getY();
-		if(playerField->availableToMakeHit(rX, rY))
+		int rX = rand() % playerField->getRect().width() + playerField->getRect().x();
+		int rY = rand() % playerField->getRect().height() + playerField->getRect().y();
+		playerField->mousePressed(GLUT_LEFT_BUTTON, GLUT_DOWN, rX, rY);
+		for(auto it = playerShips.begin(); it != playerShips.end(); it++)
 		{
-			playerField->makeHit(rX, rY);
-			gameStatus = WAITING_PLAYER_STEP;
-			compField->setPlayerNameRGB(0.0, 0.0, 1.0);
-			playerField->setPlayerNameRGB(1.0, 0.5, 0.0);
-		}
-		if(playerField->allShipsKilled())
-		{
-			gameStatus = RESULTS;
-			hideAllItems();
-			records->addNewUser(compField->getPlayerName(), compField->getWins());
+			(*it)->mousePressed(GLUT_LEFT_BUTTON, GLUT_DOWN, rX, rY);
 		}
 	}
-	glutTimerFunc(50, timerCompStep, 0);
-}
-
-void GameManager::setGameStatus(const GameStatus& st)
-{
-	gameStatus = st;
-}
-
-const GameStatus& GameManager::getGameStatus()
-{
-	return gameStatus;
+	glutTimerFunc(500, timerCompStep, 0);
 }
 
 void GameManager::hideAllItems()
 {
 	for(auto it = items.begin(); it != items.end(); it++)
+	{
 		it->second->setVisible(false);
+	}
 }
 
-void GameManager::onButtonNewGameClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onButtonNewGameClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
 		gameStatus = PLACING_SHIP;
 		hideAllItems();
-		items[PlayerField]->setVisible(true);
+		items[BtnMainMenu]->setVisible(true);
 		items[BtnAuto]->setVisible(true);
 		items[BtnClean]->setVisible(true);
 		items[BtnFight]->setVisible(true);
+		items[PlayerField]->setVisible(true);
 		items[SingleShipBtn]->setVisible(true);
 		items[DoubleShipBtn]->setVisible(true);
 		items[TripleShipBtn]->setVisible(true);
 		items[QuadShipBtn]->setVisible(true);
 		items[MouseShip]->setVisible(true);
 		items[TextEditName]->setVisible(true);
-		items[BtnMainMenu]->setVisible(true);
+		for(auto it = playerShips.begin(); it != playerShips.end(); it++)
+		{
+			(*it)->setVisible(true);
+		}
 	}
-	obj->setClicked(false);
 }
 
-void GameManager::onButtonRecordsClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onButtonRecordsClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-	{
-		gameStatus = RECORDS;
-
-		
-	}
-	obj->setClicked(false);
-}
-
-void GameManager::onButtonAbout(GraphicsRectItem* obj, int button, int state)
-{
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-	{
-		gameStatus = ABOUT;
-
-		
-	}
-	obj->setClicked(false);
-}
-
-void GameManager::onButtonExitClicked(GraphicsRectItem* obj, int button, int state)
-{
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-		exit(0);
-}
-
-void GameManager::onButtonMainMenuClicked(GraphicsRectItem * obj, int button, int state)
-{
-	gameStatus = MENU;
 	hideAllItems();
-	items[BtnNewGame]->setVisible(true);
-	items[BtnRecords]->setVisible(true);
-	items[BtnAbout]->setVisible(true);
-	items[BtnExit]->setVisible(true);
+	gameStatus = RECORDS;
 }
 
-void GameManager::onButtonAutoClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onButtonAboutClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	hideAllItems();
+	gameStatus = ABOUT;
+}
+
+void GameManager::onButtonExitClicked(GraphicsItem* obj, int button, int state, int x, int y)
+{
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		playerField->cleanField();
-		playerField->setRandomShips();
-		for(int i = 1; i <= 4; i++)
-			static_cast<ShipButton*>(items[(ObjName)i])->setShipPlaceCount(0);
+		exit(0);
 	}
-	obj->setClicked(false);
 }
 
-void GameManager::onButtonCleanClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onButtonMainMenuClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
 	{
-		playerField->cleanField();
+		gameStatus = MENU;
+		hideAllItems();
+		playerField->hideShips(playerShips);
+		items[LblTitle]->setVisible(true);
+		items[BtnNewGame]->setVisible(true);
+		items[BtnRecords]->setVisible(true);
+		items[BtnAbout]->setVisible(true);
+		items[BtnExit]->setVisible(true);
+	}
+}
+
+void GameManager::onButtonAutoClicked(GraphicsItem* obj, int button, int state, int x, int y)
+{
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		for(auto it = playerShips.begin(); it != playerShips.end(); it++)
+		{
+			delete (*it);
+		}
+		playerShips.erase(playerShips.begin(), playerShips.end());
+		playerField->setAliveShipsCount(0);
+		playerField->setRandomShips(playerShips);
+		singleShip->setShips(0);
+		doubleShip->setShips(0);
+		tripleShip->setShips(0);
+		quadShip->setShips(0);
+	}
+}
+
+void GameManager::onButtonCleanClicked(GraphicsItem* obj, int button, int state, int x, int y)
+{
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+	{
+		for(auto it = playerShips.begin(); it != playerShips.end(); it++)
+		{
+			delete (*it);
+		}
+		playerShips.erase(playerShips.begin(), playerShips.end());
 		if(currPressShip)
-			currPressShip->setPressed(false);
-		mShip->setVisible(false);
-		static_cast<ShipButton*>(items[SingleShipBtn])->setShipPlaceCount(4);
-		static_cast<ShipButton*>(items[DoubleShipBtn])->setShipPlaceCount(3);
-		static_cast<ShipButton*>(items[TripleShipBtn])->setShipPlaceCount(2);
-		static_cast<ShipButton*>(items[QuadShipBtn])->setShipPlaceCount(1);
+		{
+			currPressShip->setFocus(false);
+		}
+		mouseShip->setVisible(false);
+		singleShip->setShips(4);
+		doubleShip->setShips(3);
+		tripleShip->setShips(2);
+		quadShip->setShips(1);
+		playerField->setAliveShipsCount(0);
 	}
-	obj->setClicked(false);
 }
 
-void GameManager::onButtonFightClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onButtonFightClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP && playerField->getPlacedShipsCount() == 10 && textEditName->getText() != "")
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP && playerField->getAliveShipsCount() == 10 && textEditName->getText() != "")
 	{
 		gameStatus = WAITING_PLAYER_STEP;
-		compField->setRandomShips();
-		//compField->hideShips();	//Скрываем корабли компьютера
+		compField->setRandomShips(compShips);
+		//compField->hideShips();				//Скрываем корабли компьютера
 		hideAllItems();
-		items[PlayerField]->setVisible(true);
-		playerField->setPlayerName(textEditName->getText());
-		items[CompField]->setVisible(true);
-		items[BtnGiveUp]->setVisible(true);
+		playerField->setVisible(true);
+		compField->setVisible(true);
+		btnGiveUp->setVisible(true);
+		player->setName(textEditName->getText());
+		lblPlayer->setText(player->getName());
+		lblPlayer->setVisible(true);
+		lblComp->setVisible(true);
 	}
-	obj->setClicked(false);
 }
 
-void GameManager::onPlayerFieldClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onPlayerFieldClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currPressShip && currPressShip->isPressed() && playerField->availableToPlaceShip(mShip))
+	if(gameStatus == PLACING_SHIP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && currPressShip && currPressShip->hasFocus() && playerField->availableToPlaceShip(playerShips, mouseShip) && playerField->getAliveShipsCount() != 10)
 	{
-		mShip->setArea(mShip->getX() - CELL_SZ, mShip->getY() - CELL_SZ, mShip->getWidth() + 2 * CELL_SZ, mShip->getHeight() + 2 * CELL_SZ);
-		playerField->setShip(mShip);
+		mouseShip->setAreaRect(mouseShip->getRect().x() - CELL_SZ, mouseShip->getRect().y() - CELL_SZ, mouseShip->getRect().width() + 2 * CELL_SZ, mouseShip->getRect().height() + 2 * CELL_SZ);
+		mouseShip->setHealths(mouseShip->getDecks());
+		playerShips.push_back(new Ship(*mouseShip));
 		(*playerField)++;
 		(*currPressShip)--;
 		//Скрываем выбранный корабль и отрисовку корабля мыши
-		if(!currPressShip->getShipPlaceCount())
+		if(!currPressShip->getShips())
 		{
-			currPressShip->setPressed(false);
-			mShip->setVisible(false);
+			currPressShip->setFocus(false);
+			mouseShip->setVisible(false);
 		}
 	}
-	obj->setClicked(false);
+	if(gameStatus == WAITING_COMP_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && playerField->availableToPlaceDot(x, y, playerShips, dots))
+	{
+		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
+		dots.push_back(new Dot(40, Rect(newX, newY, w, h), 0.0, 0.0, 1.0, 1.0, true));
+		gameStatus = WAITING_PLAYER_STEP;
+		lblPlayer->setRGBA(1.0, 0.5, 0.0, 1.0);
+		lblComp->setRGBA(0.0, 0.0, 1.0, 1.0);
+	}
 }
 
-void GameManager::onCompFieldClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onCompFieldClicked(GraphicsItem* obj, int button, int state, int x, int y)
+{
+	if(gameStatus == WAITING_PLAYER_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->availableToPlaceDot(x, y, compShips, dots))
+	{
+		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
+		dots.push_back(new Dot(40, Rect(newX, newY, w, h), 0.0, 0.0, 1.0, 1.0, true));
+		gameStatus = WAITING_COMP_STEP;
+		lblPlayer->setRGBA(0.0, 0.0, 1.0, 1.0);
+		lblComp->setRGBA(1.0, 0.5, 0.0, 1.0);
+	}
+}
+
+void GameManager::onSingleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-
+		singleShip->setFocus(true);
+		doubleShip->setFocus(false);
+		tripleShip->setFocus(false);
+		quadShip->setFocus(false);
+		currPressShip = singleShip;
+		mouseShip->setRect(-100, -100, 30, 30);
+		mouseShip->setDecks(1);
+		mouseShip->setOrientation(HORIZONTAL);
+		mouseShip->setVisible(true);
 	}
-	obj->setClicked(false);
 }
 
-void GameManager::onSingleShipBtnClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onDoubleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		static_cast<ShipButton*>(items[SingleShipBtn])->setPressed(true);
-		static_cast<ShipButton*>(items[DoubleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[TripleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[QuadShipBtn])->setPressed(false);
-		currPressShip = (ShipButton*)items[SingleShipBtn];
-		mShip->setX(-100);
-		mShip->setY(-100);
-		mShip->setWidth(30);
-		mShip->setHeight(30);
-		mShip->setDeckCount(1);
-		mShip->setOrientation(HORIZONTAL);
-		mShip->setVisible(true);
+		singleShip->setFocus(false);
+		doubleShip->setFocus(true);
+		tripleShip->setFocus(false);
+		quadShip->setFocus(false);
+		currPressShip = doubleShip;
+		mouseShip->setRect(-100, -100, 60, 30);
+		mouseShip->setDecks(2);
+		mouseShip->setOrientation(HORIZONTAL);
+		mouseShip->setVisible(true);
 	}
-	obj->setClicked(false);
 }
 
-void GameManager::onDoubleShipBtnClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onTripleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		static_cast<ShipButton*>(items[SingleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[DoubleShipBtn])->setPressed(true);
-		static_cast<ShipButton*>(items[TripleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[QuadShipBtn])->setPressed(false);
-		currPressShip = (ShipButton*)items[DoubleShipBtn];
-		mShip->setX(-100);
-		mShip->setY(-100);
-		mShip->setWidth(60);
-		mShip->setHeight(30);
-		mShip->setDeckCount(2);
-		mShip->setOrientation(HORIZONTAL);
-		mShip->setVisible(true);
+		singleShip->setFocus(false);
+		doubleShip->setFocus(false);
+		tripleShip->setFocus(true);
+		quadShip->setFocus(false);
+		currPressShip = tripleShip;
+		mouseShip->setRect(-100, -100, 90, 30);
+		mouseShip->setDecks(3);
+		mouseShip->setOrientation(HORIZONTAL);
+		mouseShip->setVisible(true);
 	}
-	obj->setClicked(false);
 }
 
-void GameManager::onTripleShipBtnClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onQuadShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
 	{
-		static_cast<ShipButton*>(items[SingleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[DoubleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[TripleShipBtn])->setPressed(true);
-		static_cast<ShipButton*>(items[QuadShipBtn])->setPressed(false);
-		currPressShip = (ShipButton*)items[TripleShipBtn];
-		mShip->setX(-100);
-		mShip->setY(-100);
-		mShip->setWidth(90);
-		mShip->setHeight(30);
-		mShip->setDeckCount(3);
-		mShip->setOrientation(HORIZONTAL);
-		mShip->setVisible(true);
+		singleShip->setFocus(false);
+		doubleShip->setFocus(false);
+		tripleShip->setFocus(false);
+		quadShip->setFocus(true);
+		currPressShip = quadShip;
+		mouseShip->setRect(-100, -100, 120, 30);
+		mouseShip->setDecks(4);
+		mouseShip->setOrientation(HORIZONTAL);
+		mouseShip->setVisible(true);
 	}
-	obj->setClicked(false);
 }
 
-void GameManager::onQuadShipBtnClicked(GraphicsRectItem* obj, int button, int state)
+void GameManager::onTextEditClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+
+}
+
+void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x, int y)
+{
+	Ship* ship = static_cast<Ship*>(obj);
+	if(gameStatus == PLACING_SHIP && button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
 	{
-		static_cast<ShipButton*>(items[SingleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[DoubleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[TripleShipBtn])->setPressed(false);
-		static_cast<ShipButton*>(items[QuadShipBtn])->setPressed(true);
-		currPressShip = (ShipButton*)items[QuadShipBtn];
-		mShip->setX(-100);
-		mShip->setY(-100);
-		mShip->setWidth(120);
-		mShip->setHeight(30);
-		mShip->setDeckCount(4);
-		mShip->setOrientation(HORIZONTAL);
-		mShip->setVisible(true);
-	}
-	obj->setClicked(false);
-}
-
-void GameManager::onTextEditClicked(GraphicsRectItem * obj, int button, int state)
-{
-	textEditName->setFocus(true);
-}
-
-void GameManager::onShipClicked(GraphicsRectItem* obj, int button, int state)
-{
-	if(button == GLUT_RIGHT_BUTTON && state == GLUT_DOWN)
-	{
-		for(auto it = playerField->getShips().begin(); it != playerField->getShips().end(); it++)
+		for(it = playerShips.begin(); it != playerShips.end(); it++)
 		{
 			if((*it) == obj)
 			{
-				int deck = (*it)->getDeckCount();
+				int deck = (*it)->getDecks();
 				delete (*it);
-				playerField->getShips().erase(it);
+				playerShips.erase(it);
+				it = playerShips.end();
 				(*playerField)--;
 				(*(ShipButton*)(items[(ObjName)deck]))++;
 				break;
 			}
 		}
 	}
+	if(gameStatus == WAITING_PLAYER_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->availableToPlaceCross(x, y, crosses))
+	{
+		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
+		crosses.push_back(new Cross(Rect(newX, newY, w, h), 1.0, 0.0, 0.0, 1.0, true));
+		(*ship)--;
+		if(!ship->getHealths())
+		{
+			compField->placeDotsAroundShip(ship, compShips, dots);
+			(*compField)--;
+			if(!compField->getAliveShipsCount())
+			{
+				gameStatus = RESULTS;
+				showResults(player, comp);
+			}
+		}
+	}
+	if(gameStatus == WAITING_COMP_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && playerField->availableToPlaceCross(x, y, crosses))
+	{
+		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
+		crosses.push_back(new Cross(Rect(newX, newY, w, h), 1.0, 0.0, 0.0, 1.0, true));
+		(*ship)--;
+		if(!ship->getHealths())
+		{
+			playerField->placeDotsAroundShip(ship, playerShips, dots);
+			(*playerField)--;
+			if(!playerField->getAliveShipsCount())
+			{
+				gameStatus = RESULTS;
+				showResults(comp, player);
+			}
+		}
+	}
 }
 
-void GameManager::onButtonGiveUp(GraphicsRectItem* obj, int button, int state)
+void GameManager::onButtonGiveUpClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	showResults(compField->getPlayerName(), playerField->getPlayerName());
+	if(gameStatus == WAITING_PLAYER_STEP || gameStatus == WAITING_COMP_STEP)
+	{
+		showResults(comp, player);
+	}
 }
 
-void GameManager::showResults(const std::string& _winnerName, const std::string& _loserName)
+void GameManager::showResults(Player* _winner, Player* _loser)
 {
-	hideAllItems();
-	gameStatus = RESULTS;
-	winnerName = _winnerName;
-	loserName = _loserName;
-	items[BtnNewGameR]->setVisible(true);
-	items[BtnRecordsR]->setVisible(true);
-	items[BtnMainMenuR]->setVisible(true);
+	alpha = 0.1;
+	playerField->setAlpha(alpha);
+	compField->setAlpha(alpha);
+	btnGiveUp->setAlpha(alpha);
+	btnGiveUp->getText()->setAlpha(alpha);
+	lblPlayer->setAlpha(alpha);
+	lblComp->setAlpha(alpha);
+	for(auto it = playerShips.begin(); it != playerShips.end(); it++)
+		(*it)->setAlpha(alpha);
+	for(auto it = compShips.begin(); it != compShips.end(); it++)
+		(*it)->setAlpha(alpha);
+	for(auto it = dots.begin(); it != dots.end(); it++)
+		(*it)->setAlpha(alpha);
+	for(auto it = crosses.begin(); it != crosses.end(); it++)
+		(*it)->setAlpha(alpha);
+	btnNewGameR->setVisible(true);
+	btnRecordsR->setVisible(true);
+	btnMainMenuR->setVisible(true);
+	winner = _winner;
+	loser = _loser;
 }
