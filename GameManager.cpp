@@ -6,6 +6,11 @@ GameManager::GameManager()
 	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
 	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
 
+	lblTableName = new Label("NAME", GLUT_BITMAP_HELVETICA_18, 20, Rect(170, 115, 0, 0));
+	lblTableKilled = new Label("KILLED", GLUT_BITMAP_HELVETICA_18, 20, Rect(290, 115, 0, 0));
+	lblTableWins = new Label("WINS", GLUT_BITMAP_HELVETICA_18, 20, Rect(460, 115, 0, 0));
+	lblTableGames = new Label("GAMES", GLUT_BITMAP_HELVETICA_18, 20, Rect(590, 115, 0, 0));
+
 	btnNewGame = new Button("NEW GAME", Rect(300, 60, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonNewGameClicked);
 	btnRecords = new Button("RECORDS", Rect(300, 150, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonRecordsClicked);
 	btnAbout   = new Button("ABOUT", Rect(300, 240, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonAboutClicked);
@@ -15,9 +20,9 @@ GameManager::GameManager()
 	btnClean = new Button("CLEAN", Rect(540, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonCleanClicked);
 	btnFight = new Button("FIGHT", Rect(690, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonFightClicked);
 	btnGiveUp = new Button("GIVE UP", Rect(0, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onButtonGiveUpClicked);
-	btnNewGameR = new Button("NEW GAME", Rect(180, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonNewGameClicked);
+	btnNewGameR = new Button("NEW GAME", Rect(180, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonNewGameRClicked);
 	btnRecordsR = new Button("RECORDS", Rect(360, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonRecordsRClicked);
-	btnMainMenuR = new Button("MENU", Rect(540, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuClicked);
+	btnMainMenuR = new Button("MENU", Rect(540, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuRClicked);
 
 	playerField = new Field(0, Rect(60, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onPlayerFieldClicked);
 	compField = new Field(0, Rect(510, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onCompFieldClicked);
@@ -39,6 +44,10 @@ GameManager::GameManager()
 	items[LblTitle] = lblTitle;
 	items[LblPlayer] = lblPlayer;
 	items[LblComp] = lblComp;
+	items[LblTableName] = lblTableName;
+	items[LblTableKilled] = lblTableKilled;
+	items[LblTableWins] = lblTableWins;
+	items[LblTableGames] = lblTableGames;
 	items[BtnNewGame] = btnNewGame;
 	items[BtnAbout] = btnAbout;
 	items[BtnRecords] = btnRecords;
@@ -139,35 +148,6 @@ void GameManager::draw()
 			glVertex2d(690, 135 + i*60);
 		}
 		glEnd();
-		//Отрисовка шапки таблицы
-		const std::string pName = "NAME";
-		for(int i = 0; i < pName.size(); i++)
-		{
-			glColor3d(0.0, 0.0, 1.0);
-			glRasterPos2d(170 + i*20, 115);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pName[i]);
-		}
-		const std::string pKilled = "KILLED";
-		for(int i = 0; i < pKilled.size(); i++)
-		{
-			glColor3d(0.0, 0.0, 1.0);
-			glRasterPos2d(290 + i * 20, 115);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pKilled[i]);
-		}
-		const std::string pWins = "WINS";
-		for(int i = 0; i < pWins.size(); i++)
-		{
-			glColor3d(0.0, 0.0, 1.0);
-			glRasterPos2d(460 + i * 20, 115);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pWins[i]);
-		}
-		const std::string pGames = "GAMES";
-		for(int i = 0; i < pGames.size(); i++)
-		{
-			glColor3d(0.0, 0.0, 1.0);
-			glRasterPos2d(590 + i * 20, 115);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, pGames[i]);
-		}
 	}
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA);
@@ -388,6 +368,16 @@ void GameManager::onButtonNewGameClicked(GraphicsItem* obj, int button, int stat
 	}
 }
 
+void GameManager::onButtonNewGameRClicked(GraphicsItem * obj, int button, int state, int x, int y)
+{
+	onButtonNewGameClicked(obj, button, state, x, y);
+	setAlpha(1.0);
+	deleteAllShips(playerShips);
+	deleteAllShips(compShips);
+	deleteAllDots(dots);
+	deleteAllCrosses(crosses);
+}
+
 void GameManager::onButtonRecordsClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
 	hideAllItems();
@@ -433,12 +423,18 @@ void GameManager::onButtonMainMenuClicked(GraphicsItem* obj, int button, int sta
 		items[BtnRecords]->setVisible(true);
 		items[BtnAbout]->setVisible(true);
 		items[BtnExit]->setVisible(true);
-		setAlpha(1.0);
-		deleteAllShips(playerShips);
-		deleteAllShips(compShips);
-		deleteAllCrosses(crosses);
-		deleteAllDots(dots);
+		
 	}
+}
+
+void GameManager::onButtonMainMenuRClicked(GraphicsItem * obj, int button, int state, int x, int y)
+{
+	onButtonMainMenuClicked(obj, button, state, x, y);
+	setAlpha(1.0);
+	deleteAllShips(playerShips);
+	deleteAllShips(compShips);
+	deleteAllCrosses(crosses);
+	deleteAllDots(dots);
 }
 
 void GameManager::onButtonAutoClicked(GraphicsItem* obj, int button, int state, int x, int y)
@@ -663,6 +659,10 @@ void GameManager::showResults(Player* _winner, Player* _loser)
 		(*it)->setAlpha(alpha);
 	for(auto it = crosses.begin(); it != crosses.end(); it++)
 		(*it)->setAlpha(alpha);
+	lblTableName->setVisible(true);
+	lblTableKilled->setVisible(true);
+	lblTableWins->setVisible(true);
+	lblTableGames->setVisible(true);
 	btnNewGameR->setVisible(true);
 	btnRecordsR->setVisible(true);
 	btnMainMenuR->setVisible(true);

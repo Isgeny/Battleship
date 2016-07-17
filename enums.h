@@ -32,7 +32,11 @@ enum ObjName
 	TextEditName,
 	LblTitle,
 	LblPlayer,
-	LblComp
+	LblComp,
+	LblTableName,
+	LblTableKilled,
+	LblTableWins,
+	LblTableGames
 };
 
 enum Orientation
