@@ -6,6 +6,7 @@
 #define WIN_HEIGHT 421
 #define CELL_SZ 30
 #define FIELD_SZ 10
+#define LIMIT_GENERATING 100000
 
 enum ObjName
 {

@@ -201,6 +201,9 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 
 void GameManager::mouseMove(int x, int y)
 {
+	std::string str;
+	str = std::to_string(x) + " : " + std::to_string(y);
+	glutSetWindowTitle(str.c_str());
 	//ѕеремещение корабл€ по полю при перемещении мыши
 	if(gameStatus == PLACING_SHIP && playerField->contains(x, y))
 	{
@@ -217,7 +220,7 @@ void GameManager::mouseMove(int x, int y)
 void GameManager::mouseWheel(int button, int dir, int x, int y)
 {
 	//ѕоворот корабл€ при прокрутке колесика мыши
-	if(gameStatus == PLACING_SHIP && x < playerField->getRect().x() + FIELD_SZ*CELL_SZ - mouseShip->getDecks()*CELL_SZ + CELL_SZ && y <= playerField->getRect().y() + FIELD_SZ*CELL_SZ - mouseShip->getDecks()*CELL_SZ + CELL_SZ)
+	if(gameStatus == PLACING_SHIP && x < playerField->getRect().x() + playerField->getRect().width() - mouseShip->getDecks()*CELL_SZ + CELL_SZ && y <= playerField->getRect().y() + FIELD_SZ*CELL_SZ - mouseShip->getDecks()*CELL_SZ + CELL_SZ)
 	{
 		int mW = mouseShip->getRect().width(), mH = mouseShip->getRect().height();
 		mouseShip->getRect().setWidth(mH);
@@ -357,6 +360,9 @@ void GameManager::onButtonAutoClicked(GraphicsItem* obj, int button, int state, 
 		doubleShip->setShips(0);
 		tripleShip->setShips(0);
 		quadShip->setShips(0);
+		if(currPressShip)
+			currPressShip->setFocus(false);
+		mouseShip->setVisible(false);
 	}
 }
 
@@ -440,7 +446,7 @@ void GameManager::onCompFieldClicked(GraphicsItem* obj, int button, int state, i
 
 void GameManager::onSingleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && singleShip->getShips())
 	{
 		singleShip->setFocus(true);
 		doubleShip->setFocus(false);
@@ -456,7 +462,7 @@ void GameManager::onSingleShipBtnClicked(GraphicsItem* obj, int button, int stat
 
 void GameManager::onDoubleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && doubleShip->getShips())
 	{
 		singleShip->setFocus(false);
 		doubleShip->setFocus(true);
@@ -472,7 +478,7 @@ void GameManager::onDoubleShipBtnClicked(GraphicsItem* obj, int button, int stat
 
 void GameManager::onTripleShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && tripleShip->getShips())
 	{
 		singleShip->setFocus(false);
 		doubleShip->setFocus(false);
@@ -488,7 +494,7 @@ void GameManager::onTripleShipBtnClicked(GraphicsItem* obj, int button, int stat
 
 void GameManager::onQuadShipBtnClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+	if(button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && quadShip->getShips())
 	{
 		singleShip->setFocus(false);
 		doubleShip->setFocus(false);

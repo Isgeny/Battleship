@@ -1,13 +1,13 @@
 #include "Field.h"
 #include "GameManager.h"
 
-Field::Field() : aliveShipsCount(0), GraphicsItem()
+Field::Field() : aliveShipsCount(0), randoming(0), GraphicsItem()
 {
 
 }
 
 Field::Field(int _aliveShipsCount, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked) :
-	aliveShipsCount(_aliveShipsCount), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
+	aliveShipsCount(_aliveShipsCount), randoming(0), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
 {
 
 }
@@ -98,6 +98,7 @@ bool Field::availableToPlaceShip(std::vector<Ship*>& ships, Ship* mouseShip)
 
 void Field::setRandomShips(std::vector<Ship*>& ships) //Рандомная расстановка кораблей
 {
+	randoming = 0;
 	while(aliveShipsCount < 10)
 	{
 		int rX = rand() % rect.width() + rect.x(), rY = rand() % rect.height() + rect.y(), x = rX / CELL_SZ * CELL_SZ, y = rY / CELL_SZ * CELL_SZ, width, height, decks;
@@ -140,6 +141,15 @@ void Field::setRandomShips(std::vector<Ship*>& ships) //Рандомная расстановка ко
 		else
 		{
 			delete mouseShip;
+		}
+		randoming++;
+		if(randoming > LIMIT_GENERATING)
+		{
+			aliveShipsCount = 0;
+			randoming = 0;
+			for(auto it = ships.begin(); it != ships.end(); it++)
+				delete (*it);
+			ships.erase(ships.begin(), ships.end());
 		}
 	}
 }

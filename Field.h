@@ -11,6 +11,7 @@ class Field : public GraphicsItem
 {
 private:
 	int aliveShipsCount;
+	int randoming;
 
 public:
 	Field();
