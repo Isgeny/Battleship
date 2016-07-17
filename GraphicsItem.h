@@ -23,7 +23,7 @@ public:
 	void setRect(const Rect& rect);
 	void setRect(int x, int y, int width, int height);
 	void setRGBA(double r, double g, double b, double a);
-	void setAlpha(double alpha);
+	virtual void setAlpha(double alpha);
 	void setVisible(bool visible);
 	void setCallbackClicked(CallbackClicked callbackClicked);
 	Rect& getRect();

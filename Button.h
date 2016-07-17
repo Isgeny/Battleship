@@ -14,6 +14,7 @@ public:
 	void draw();
 	void mousePressed(int button, int state, int mouseX, int mouseY);
 	void setText(Label* text);
+	void setAlpha(double alpha);
 	Label* getText() const;
 
 };

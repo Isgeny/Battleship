@@ -34,6 +34,12 @@ void Button::setText(Label* _text)
 	text = _text;
 }
 
+void Button::setAlpha(double alpha)
+{
+	a = alpha;
+	text->setAlpha(alpha);
+}
+
 Label* Button::getText() const
 {
 	return text;

@@ -18,7 +18,7 @@ class GameManager
 private:
 	static GameStatus gameStatus;
 	static std::map<ObjName, GraphicsItem*> items;
-	static Label *lblTitle, *lblPlayer, *lblComp;
+	static Label *lblTitle, *lblPlayer, *lblComp, *lblTableName, *lblTableKilled, *lblTableWins, *lblTableGames;
 	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR;
 	static Field *playerField, *compField;
 	static TextEdit *textEditName;
@@ -45,8 +45,13 @@ public:
 	static void timerRedisplay(int);
 	static void timerCompStep(int);
 	static void hideAllItems();
+	static void setAlpha(int alpha);
+	static void deleteAllShips(std::vector<Ship*>& ships);
+	static void deleteAllDots(std::vector<Dot*>& dots);
+	static void deleteAllCrosses(std::vector<Cross*>& crosses);
 	static void onButtonNewGameClicked(GraphicsItem* obj, int button, int state, int x, int y);
 	static void onButtonRecordsClicked(GraphicsItem* obj, int button, int state, int x, int y);
+	static void onButtonRecordsRClicked(GraphicsItem* obj, int button, int state, int x, int y);
 	static void onButtonAboutClicked(GraphicsItem* obj, int button, int state, int x, int y);
 	static void onButtonExitClicked(GraphicsItem* obj, int button, int state, int x, int y);
 	static void onButtonMainMenuClicked(GraphicsItem* obj, int button, int state, int x, int y);

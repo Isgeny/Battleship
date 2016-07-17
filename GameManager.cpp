@@ -3,7 +3,9 @@
 GameManager::GameManager()
 {
 	lblTitle	= new Label("BATTLESHIP", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(325, 40, 0, 0), 0.0, 0.0, 1.0, 1.0, true);
-	
+	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
+	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
+
 	btnNewGame = new Button("NEW GAME", Rect(300, 60, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonNewGameClicked);
 	btnRecords = new Button("RECORDS", Rect(300, 150, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonRecordsClicked);
 	btnAbout   = new Button("ABOUT", Rect(300, 240, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonAboutClicked);
@@ -14,14 +16,11 @@ GameManager::GameManager()
 	btnFight = new Button("FIGHT", Rect(690, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonFightClicked);
 	btnGiveUp = new Button("GIVE UP", Rect(0, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onButtonGiveUpClicked);
 	btnNewGameR = new Button("NEW GAME", Rect(180, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonNewGameClicked);
-	btnRecordsR = new Button("RECORDS", Rect(360, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonRecordsClicked);
+	btnRecordsR = new Button("RECORDS", Rect(360, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonRecordsRClicked);
 	btnMainMenuR = new Button("MENU", Rect(540, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuClicked);
 
 	playerField = new Field(0, Rect(60, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onPlayerFieldClicked);
 	compField = new Field(0, Rect(510, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onCompFieldClicked);
-
-	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
-	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
 
 	textEditName = new TextEdit("", Rect(690, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onTextEditClicked);
 
@@ -186,12 +185,19 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 	{
 		it->second->mousePressed(button, state, x, y);
 	}
-	it = playerShips.begin();
+	/*it = playerShips.begin();
 	while(it != playerShips.end())
 	{
-		(*it)->mousePressed(button, state, x, y);
 		if(it != playerShips.end())
+		{
+			(*it)->mousePressed(button, state, x, y);
 			it++;
+		}
+	}*/
+	for(int i = 0; i < playerShips.size(); i++)
+	{
+		if(playerShips[i])
+			playerShips[i]->mousePressed(button, state, x, y);
 	}
 	for(auto it = compShips.begin(); it != compShips.end(); it++)
 	{
@@ -201,9 +207,11 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 
 void GameManager::mouseMove(int x, int y)
 {
+	//DEBUG
 	std::string str;
 	str = std::to_string(x) + " : " + std::to_string(y);
 	glutSetWindowTitle(str.c_str());
+	//DEBUG
 	//ѕеремещение корабл€ по полю при перемещении мыши
 	if(gameStatus == PLACING_SHIP && playerField->contains(x, y))
 	{
@@ -269,13 +277,37 @@ void GameManager::timerCompStep(int)
 	{
 		int rX = rand() % playerField->getRect().width() + playerField->getRect().x();
 		int rY = rand() % playerField->getRect().height() + playerField->getRect().y();
-		playerField->mousePressed(GLUT_LEFT_BUTTON, GLUT_DOWN, rX, rY);
 		for(auto it = playerShips.begin(); it != playerShips.end(); it++)
 		{
-			(*it)->mousePressed(GLUT_LEFT_BUTTON, GLUT_DOWN, rX, rY);
+			if((*it)->contains(rX, rY))
+			{
+				if(playerField->availableToPlaceCross(rX, rY, crosses))
+				{
+					crosses.push_back(new Cross(Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 1.0, 0.0, 0.0, 1.0, true));
+					(*(*it))--;
+					if(!(*it)->getHealths())
+					{
+						playerField->placeDotsAroundShip(*it, playerShips, dots);
+						(*playerField)--;
+						if(!playerField->getAliveShipsCount())
+						{
+							gameStatus = RESULTS;
+							showResults(comp, player);
+						}
+					}
+					break;
+				}
+			}
+		}
+		if(playerField->availableToPlaceDot(rX, rY, playerShips, dots))
+		{
+			dots.push_back(new Dot(40, Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 0.0, 0.0, 1.0, 1.0, true));
+			gameStatus = WAITING_PLAYER_STEP;
+			lblPlayer->setRGBA(1.0, 0.5, 0.0, 1.0);
+			lblComp->setRGBA(0.0, 0.0, 1.0, 1.0);
 		}
 	}
-	glutTimerFunc(500, timerCompStep, 0);
+	glutTimerFunc(50, timerCompStep, 0);
 }
 
 void GameManager::hideAllItems()
@@ -284,6 +316,52 @@ void GameManager::hideAllItems()
 	{
 		it->second->setVisible(false);
 	}
+}
+
+void GameManager::setAlpha(int _alpha)
+{
+	alpha = _alpha;
+	for(auto it = items.begin(); it != items.end(); it++)
+	{
+		it->second->setAlpha(_alpha);
+	}
+	for(auto it = playerShips.begin(); it != playerShips.end(); it++)
+	{
+		(*it)->setAlpha(_alpha);
+	}
+	for(auto it = compShips.begin(); it != compShips.end(); it++)
+	{
+		(*it)->setAlpha(_alpha);
+	}
+	for(auto it = dots.begin(); it != dots.end(); it++)
+	{
+		(*it)->setAlpha(_alpha);
+	}
+	for(auto it = crosses.begin(); it != crosses.end(); it++)
+	{
+		(*it)->setAlpha(_alpha);
+	}
+}
+
+void GameManager::deleteAllShips(std::vector<Ship*>& ships)
+{
+	for(auto it = ships.begin(); it != ships.end(); it++)
+		delete (*it);
+	ships.erase(ships.begin(), ships.end());
+}
+
+void GameManager::deleteAllDots(std::vector<Dot*>& dots)
+{
+	for(auto it = dots.begin(); it != dots.end(); it++)
+		delete (*it);
+	dots.erase(dots.begin(), dots.end());
+}
+
+void GameManager::deleteAllCrosses(std::vector<Cross*>& crosses)
+{
+	for(auto it = crosses.begin(); it != crosses.end(); it++)
+		delete (*it);
+	crosses.erase(crosses.begin(), crosses.end());
 }
 
 void GameManager::onButtonNewGameClicked(GraphicsItem* obj, int button, int state, int x, int y)
@@ -314,12 +392,25 @@ void GameManager::onButtonRecordsClicked(GraphicsItem* obj, int button, int stat
 {
 	hideAllItems();
 	gameStatus = RECORDS;
+	setAlpha(1.0);
+}
+
+void GameManager::onButtonRecordsRClicked(GraphicsItem* obj, int button, int state, int x, int y)
+{
+	hideAllItems();
+	gameStatus = RECORDS;
+	setAlpha(1.0);
+	deleteAllShips(playerShips);
+	deleteAllShips(compShips);
+	deleteAllCrosses(crosses);
+	deleteAllDots(dots);
 }
 
 void GameManager::onButtonAboutClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
 	hideAllItems();
 	gameStatus = ABOUT;
+	setAlpha(1.0);
 }
 
 void GameManager::onButtonExitClicked(GraphicsItem* obj, int button, int state, int x, int y)
@@ -342,6 +433,11 @@ void GameManager::onButtonMainMenuClicked(GraphicsItem* obj, int button, int sta
 		items[BtnRecords]->setVisible(true);
 		items[BtnAbout]->setVisible(true);
 		items[BtnExit]->setVisible(true);
+		setAlpha(1.0);
+		deleteAllShips(playerShips);
+		deleteAllShips(compShips);
+		deleteAllCrosses(crosses);
+		deleteAllDots(dots);
 	}
 }
 
@@ -421,14 +517,6 @@ void GameManager::onPlayerFieldClicked(GraphicsItem* obj, int button, int state,
 			currPressShip->setFocus(false);
 			mouseShip->setVisible(false);
 		}
-	}
-	if(gameStatus == WAITING_COMP_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && playerField->availableToPlaceDot(x, y, playerShips, dots))
-	{
-		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
-		dots.push_back(new Dot(40, Rect(newX, newY, w, h), 0.0, 0.0, 1.0, 1.0, true));
-		gameStatus = WAITING_PLAYER_STEP;
-		lblPlayer->setRGBA(1.0, 0.5, 0.0, 1.0);
-		lblComp->setRGBA(0.0, 0.0, 1.0, 1.0);
 	}
 }
 
@@ -532,7 +620,7 @@ void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x,
 			}
 		}
 	}
-	if(gameStatus == WAITING_PLAYER_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->availableToPlaceCross(x, y, crosses))
+	if(gameStatus == WAITING_PLAYER_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->availableToPlaceCross(x, y, crosses) && compField->contains(x, y))
 	{
 		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
 		crosses.push_back(new Cross(Rect(newX, newY, w, h), 1.0, 0.0, 0.0, 1.0, true));
@@ -548,28 +636,13 @@ void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x,
 			}
 		}
 	}
-	if(gameStatus == WAITING_COMP_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && playerField->availableToPlaceCross(x, y, crosses))
-	{
-		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
-		crosses.push_back(new Cross(Rect(newX, newY, w, h), 1.0, 0.0, 0.0, 1.0, true));
-		(*ship)--;
-		if(!ship->getHealths())
-		{
-			playerField->placeDotsAroundShip(ship, playerShips, dots);
-			(*playerField)--;
-			if(!playerField->getAliveShipsCount())
-			{
-				gameStatus = RESULTS;
-				showResults(comp, player);
-			}
-		}
-	}
 }
 
 void GameManager::onButtonGiveUpClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
 	if(gameStatus == WAITING_PLAYER_STEP || gameStatus == WAITING_COMP_STEP)
 	{
+		gameStatus = RESULTS;
 		showResults(comp, player);
 	}
 }
@@ -580,7 +653,6 @@ void GameManager::showResults(Player* _winner, Player* _loser)
 	playerField->setAlpha(alpha);
 	compField->setAlpha(alpha);
 	btnGiveUp->setAlpha(alpha);
-	btnGiveUp->getText()->setAlpha(alpha);
 	lblPlayer->setAlpha(alpha);
 	lblComp->setAlpha(alpha);
 	for(auto it = playerShips.begin(); it != playerShips.end(); it++)
@@ -596,4 +668,10 @@ void GameManager::showResults(Player* _winner, Player* _loser)
 	btnMainMenuR->setVisible(true);
 	winner = _winner;
 	loser = _loser;
+	singleShip->setShips(4);
+	doubleShip->setShips(3);
+	tripleShip->setShips(2);
+	quadShip->setShips(1);
+	playerField->setAliveShipsCount(0);
+	compField->setAliveShipsCount(0);
 }
