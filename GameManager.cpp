@@ -256,34 +256,37 @@ void GameManager::timerCompStep(int)
 	{
 		int rX = rand() % playerField->getRect().width() + playerField->getRect().x();
 		int rY = rand() % playerField->getRect().height() + playerField->getRect().y();
-		for(auto it = playerShips.begin(); it != playerShips.end(); it++)
+		if(rX % CELL_SZ != 0 && rY % CELL_SZ != 0)
 		{
-			if((*it)->contains(rX, rY))
+			for(auto it = playerShips.begin(); it != playerShips.end(); it++)
 			{
-				if(playerField->availableToPlaceCross(rX, rY, crosses))
+				if((*it)->contains(rX, rY))
 				{
-					crosses.push_back(new Cross(Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 1.0, 0.0, 0.0, 1.0, true));
-					(*(*it))--;
-					if(!(*it)->getHealths())
+					if(playerField->availableToPlaceCross(rX, rY, crosses))
 					{
-						playerField->placeDotsAroundShip(*it, playerShips, dots);
-						(*playerField)--;
-						if(!playerField->getAliveShipsCount())
+						crosses.push_back(new Cross(Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 1.0, 0.0, 0.0, 1.0, true));
+						(*(*it))--;
+						if(!(*it)->getHealths())
 						{
-							gameStatus = RESULTS;
-							showResults(comp, compField, compShips, player, playerField, playerShips);
+							playerField->placeDotsAroundShip(*it, playerShips, dots);
+							(*playerField)--;
+							if(!playerField->getAliveShipsCount())
+							{
+								gameStatus = RESULTS;
+								showResults(comp, compField, compShips, player, playerField, playerShips);
+							}
 						}
+						break;
 					}
-					break;
 				}
 			}
-		}
-		if(playerField->availableToPlaceDot(rX, rY, playerShips, dots))
-		{
-			dots.push_back(new Dot(40, Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 0.0, 0.0, 1.0, 1.0, true));
-			gameStatus = WAITING_PLAYER_STEP;
-			lblPlayer->setRGBA(1.0, 0.5, 0.0, 1.0);
-			lblComp->setRGBA(0.0, 0.0, 1.0, 1.0);
+			if(playerField->availableToPlaceDot(rX, rY, playerShips, dots))
+			{
+				dots.push_back(new Dot(40, Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 0.0, 0.0, 1.0, 1.0, true));
+				gameStatus = WAITING_PLAYER_STEP;
+				lblPlayer->setRGBA(1.0, 0.5, 0.0, 1.0);
+				lblComp->setRGBA(0.0, 0.0, 1.0, 1.0);
+			}
 		}
 	}
 	glutTimerFunc(50, timerCompStep, 0);
