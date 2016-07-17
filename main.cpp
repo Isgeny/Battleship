@@ -8,10 +8,6 @@ std::map<ObjName, GraphicsItem*> GameManager::items;
 Label* GameManager::lblTitle;
 Label* GameManager::lblPlayer;
 Label* GameManager::lblComp;
-Label* GameManager::lblTableName;
-Label* GameManager::lblTableKilled;
-Label* GameManager::lblTableWins;
-Label* GameManager::lblTableGames;
 Button* GameManager::btnNewGame;
 Button* GameManager::btnRecords;
 Button* GameManager::btnAbout;
@@ -42,6 +38,7 @@ std::vector<Ship*>::iterator GameManager::it;
 std::vector<Dot*> GameManager::dots;
 std::vector<Cross*> GameManager::crosses;
 double GameManager::alpha = 1.0;
+Table* GameManager::resultsTable;
 //Records* GameManager::records;
 GameManager game;
 

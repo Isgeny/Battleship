@@ -33,7 +33,7 @@ void TextEdit::draw()
 		for(int i = 0; i < text.size(); i++)
 		{
 			glColor4d(r, g, b, a);
-			glRasterPos2d(rect.x() + 5 + i*15, rect.y() + 20);
+			glRasterPos2d(rect.x() + 5 + i*17, rect.y() + 20);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 		}
 		if(focus)
@@ -41,8 +41,8 @@ void TextEdit::draw()
 			glLineWidth(1.5);
 			glColor4d(r, g, b, a);
 			glBegin(GL_LINES);
-			glVertex2d(rect.x() + 5 + text.size()*15, rect.y() + 5);
-			glVertex2d(rect.x() + 5 + text.size()*15, rect.y() + rect.height() - 5);
+			glVertex2d(rect.x() + 5 + text.size()*17, rect.y() + 5);
+			glVertex2d(rect.x() + 5 + text.size()*17, rect.y() + rect.height() - 5);
 			glEnd();
 		}
 	}

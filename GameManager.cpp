@@ -6,11 +6,6 @@ GameManager::GameManager()
 	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
 	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
 
-	lblTableName = new Label("NAME", GLUT_BITMAP_HELVETICA_18, 20, Rect(170, 115, 0, 0));
-	lblTableKilled = new Label("KILLED", GLUT_BITMAP_HELVETICA_18, 20, Rect(290, 115, 0, 0));
-	lblTableWins = new Label("WINS", GLUT_BITMAP_HELVETICA_18, 20, Rect(460, 115, 0, 0));
-	lblTableGames = new Label("GAMES", GLUT_BITMAP_HELVETICA_18, 20, Rect(590, 115, 0, 0));
-
 	btnNewGame = new Button("NEW GAME", Rect(300, 60, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonNewGameClicked);
 	btnRecords = new Button("RECORDS", Rect(300, 150, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonRecordsClicked);
 	btnAbout   = new Button("ABOUT", Rect(300, 240, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonAboutClicked);
@@ -39,15 +34,15 @@ GameManager::GameManager()
 	player = new Player;
 	comp = new Player("Computer");
 
-	//records = new Records;
+	resultsTable = new Table(3, 4, Rect(150, 90, 540, 180), 0.0, 0.0, 1.0, 1.0, false);
+	resultsTable->addData(0, 0, "NAME");
+	resultsTable->addData(0, 1, "KILLED");
+	resultsTable->addData(0, 2, "WINS");
+	resultsTable->addData(0, 3, "GAMES");
 
 	items[LblTitle] = lblTitle;
 	items[LblPlayer] = lblPlayer;
 	items[LblComp] = lblComp;
-	items[LblTableName] = lblTableName;
-	items[LblTableKilled] = lblTableKilled;
-	items[LblTableWins] = lblTableWins;
-	items[LblTableGames] = lblTableGames;
 	items[BtnNewGame] = btnNewGame;
 	items[BtnAbout] = btnAbout;
 	items[BtnRecords] = btnRecords;
@@ -68,6 +63,7 @@ GameManager::GameManager()
 	items[DoubleShipBtn] = doubleShip;
 	items[TripleShipBtn] = tripleShip;
 	items[QuadShipBtn] = quadShip;
+	items[ResultsTable] = resultsTable;
 }
 
 GameManager::~GameManager()
@@ -133,7 +129,7 @@ void GameManager::draw()
 			glRasterPos2d(WIN_WIDTH/2 - txt.size()*20 /2 + i*20, 55);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, txt[i]);
 		}
-		//Отрисовка векртикальных линий
+		/*//Отрисовка векртикальных линий
 		glColor3d(0.0, 0.0, 1.0);
 		glBegin(GL_LINES);
 		for(int i = 0; i < 3; i++)
@@ -147,7 +143,7 @@ void GameManager::draw()
 			glVertex2d(150, 135 + i*60);
 			glVertex2d(690, 135 + i*60);
 		}
-		glEnd();
+		glEnd();*/
 	}
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA);
@@ -238,8 +234,11 @@ void GameManager::keyboardPressed(unsigned char key, int x, int y)
 			textEditName->setFocus(false);
 		break;
 		default:
-			temp += key;
-			textEditName->setText(temp);
+			if(textEditName->getText().size() < 8)
+			{
+				temp += key;
+				textEditName->setText(temp);
+			}
 		break;
 		}
 	}
@@ -272,7 +271,7 @@ void GameManager::timerCompStep(int)
 						if(!playerField->getAliveShipsCount())
 						{
 							gameStatus = RESULTS;
-							showResults(comp, player);
+							showResults(comp, compField, compShips, player, playerField, playerShips);
 						}
 					}
 					break;
@@ -628,7 +627,7 @@ void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x,
 			if(!compField->getAliveShipsCount())
 			{
 				gameStatus = RESULTS;
-				showResults(player, comp);
+				showResults(player, playerField, playerShips, comp, compField, compShips);
 			}
 		}
 	}
@@ -639,11 +638,11 @@ void GameManager::onButtonGiveUpClicked(GraphicsItem* obj, int button, int state
 	if(gameStatus == WAITING_PLAYER_STEP || gameStatus == WAITING_COMP_STEP)
 	{
 		gameStatus = RESULTS;
-		showResults(comp, player);
+		showResults(comp, compField, compShips, player, playerField, playerShips);
 	}
 }
 
-void GameManager::showResults(Player* _winner, Player* _loser)
+void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<Ship*>& winnerShips, Player* _loser, Field* loserField, std::vector<Ship*>& loserShips)
 {
 	alpha = 0.1;
 	playerField->setAlpha(alpha);
@@ -659,15 +658,25 @@ void GameManager::showResults(Player* _winner, Player* _loser)
 		(*it)->setAlpha(alpha);
 	for(auto it = crosses.begin(); it != crosses.end(); it++)
 		(*it)->setAlpha(alpha);
-	lblTableName->setVisible(true);
-	lblTableKilled->setVisible(true);
-	lblTableWins->setVisible(true);
-	lblTableGames->setVisible(true);
 	btnNewGameR->setVisible(true);
 	btnRecordsR->setVisible(true);
 	btnMainMenuR->setVisible(true);
 	winner = _winner;
 	loser = _loser;
+	
+
+	resultsTable->setVisible(true);
+	resultsTable->addData(1, 0, winner->getName());
+	resultsTable->addData(1, 1, "100%");
+	resultsTable->addData(2, 0, loser->getName());
+
+	double count = 0.0;
+	for(auto it = winnerShips.begin(); it != winnerShips.end(); it++)
+		count += (*it)->getHealths();
+	count = 20.0 - count;
+	resultsTable->addData(2, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
+
+
 	singleShip->setShips(4);
 	doubleShip->setShips(3);
 	tripleShip->setShips(2);

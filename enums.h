@@ -36,7 +36,8 @@ enum ObjName
 	LblTableName,
 	LblTableKilled,
 	LblTableWins,
-	LblTableGames
+	LblTableGames,
+	ResultsTable
 };
 
 enum Orientation

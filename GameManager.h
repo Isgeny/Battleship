@@ -11,6 +11,7 @@
 #include "Player.h"
 #include "Dot.h"
 #include "Cross.h"
+#include "Table.h"
 #include "enums.h"
 
 class GameManager
@@ -31,6 +32,7 @@ private:
 	static std::vector<Dot*> dots;
 	static std::vector<Cross*> crosses;
 	static double alpha;
+	static Table* resultsTable;
 	//static Records* records;
 	
 public:
@@ -69,6 +71,6 @@ public:
 	static void onTextEditClicked(GraphicsItem* obj, int button, int state, int x, int y);
 	static void onShipClicked(GraphicsItem* obj, int button, int state, int x, int y);
 	static void onButtonGiveUpClicked(GraphicsItem* obj, int button, int state, int x, int y);
-	static void showResults(Player* winner, Player* loser);
+	static void showResults(Player* winner, Field* winnerField, std::vector<Ship*>& winnerShips, Player* loser, Field* loserField, std::vector<Ship*>& loserShips);
 
 };
