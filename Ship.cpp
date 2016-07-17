@@ -25,7 +25,10 @@ void Ship::draw()
 
 void Ship::mousePressed(int button, int state, int mouseX, int mouseY)
 {
-	GraphicsItem::mousePressed(button, state, mouseX, mouseY);
+	if(mouseX % CELL_SZ != 0 && mouseY % CELL_SZ != 0)
+	{
+		GraphicsItem::mousePressed(button, state, mouseX, mouseY);
+	}
 }
 
 void Ship::setDecks(int _decks)
