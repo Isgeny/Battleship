@@ -20,7 +20,7 @@ class GameManager
 private:
 	static GameStatus gameStatus;
 	static std::map<ObjName, GraphicsItem*> items;
-	static Label *lblTitle, *lblPlayer, *lblComp, *lblTableName, *lblTableKilled, *lblTableWins, *lblTableGames;
+	static Label *lblTitle, *lblPlayer, *lblComp, *lblRecords;
 	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR, *btnMainMenuRec;
 	static Field *playerField, *compField;
 	static TextEdit *textEditName;

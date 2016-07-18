@@ -8,6 +8,7 @@ std::map<ObjName, GraphicsItem*> GameManager::items;
 Label* GameManager::lblTitle;
 Label* GameManager::lblPlayer;
 Label* GameManager::lblComp;
+Label* GameManager::lblRecords;
 Button* GameManager::btnNewGame;
 Button* GameManager::btnRecords;
 Button* GameManager::btnAbout;

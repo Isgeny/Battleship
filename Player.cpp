@@ -81,6 +81,5 @@ std::ostream& operator << (std::ostream& out, Player& p)
 	out << p.games;
 	out << ' ';
 	out << p.steps;
-	out << '\n';
 	return out;
 }

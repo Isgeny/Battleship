@@ -5,7 +5,7 @@
 
 class Table : public GraphicsItem
 {
-private:
+protected:
 	int rows, columns;
 	int cellWidth, cellHeight;
 	std::vector<Label*> cells;

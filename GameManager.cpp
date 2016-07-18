@@ -5,6 +5,7 @@ GameManager::GameManager()
 	lblTitle	= new Label("BATTLESHIP", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(325, 40, 0, 0), 0.0, 0.0, 1.0, 1.0, true);
 	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
 	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
+	lblRecords = new Label("Records", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(355, 40, 0, 0));
 
 	btnNewGame = new Button("NEW GAME", Rect(300, 60, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonNewGameClicked);
 	btnRecords = new Button("RECORDS", Rect(300, 150, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonRecordsClicked);
@@ -18,7 +19,7 @@ GameManager::GameManager()
 	btnNewGameR = new Button("NEW GAME", Rect(180, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonNewGameRClicked);
 	btnRecordsR = new Button("RECORDS", Rect(360, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonRecordsRClicked);
 	btnMainMenuR = new Button("MENU", Rect(540, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuRClicked);
-	btnMainMenuRec = new Button(*btnMainMenu);
+	btnMainMenuRec = new Button("MENU", Rect(0, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuClicked);
 
 	playerField = new Field(0, Rect(60, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onPlayerFieldClicked);
 	compField = new Field(0, Rect(510, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onCompFieldClicked);
@@ -37,7 +38,7 @@ GameManager::GameManager()
 
 	resultsTable = new Table(3, 3, Rect(150, 90, 540, 180), 0.0, 0.0, 1.0, 1.0, false);
 
-	records = new Records(11, 5, Rect(120, 60, 600, 330), 0.0, 0.0, 1.0, true);
+	records = new Records(11, 5, Rect(60, 60, 750, 330), 0.0, 0.0, 1.0, true);
 	records->addData(0, 0, "POS.");
 	records->addData(0, 1, "NAME");
 	records->addData(0, 2, "WINS");
@@ -47,6 +48,7 @@ GameManager::GameManager()
 	items[LblTitle] = lblTitle;
 	items[LblPlayer] = lblPlayer;
 	items[LblComp] = lblComp;
+	items[LblRecords] = lblRecords;
 	items[BtnNewGame] = btnNewGame;
 	items[BtnAbout] = btnAbout;
 	items[BtnRecords] = btnRecords;
@@ -74,13 +76,11 @@ GameManager::GameManager()
 
 GameManager::~GameManager()
 {
-	//records->writeFile();
 	for(auto it = items.begin(); it != items.end(); it++)
 	{
 		delete it->second;
 	}
 	items.erase(items.begin(), items.end());
-	//delete records;
 }
 
 void GameManager::draw()
@@ -396,6 +396,7 @@ void GameManager::onButtonRecordsClicked(GraphicsItem* obj, int button, int stat
 	setAlpha(1.0);
 	btnMainMenuRec->setVisible(true);
 	records->setVisible(true);
+	lblRecords->setVisible(true);
 }
 
 void GameManager::onButtonRecordsRClicked(GraphicsItem* obj, int button, int state, int x, int y)
