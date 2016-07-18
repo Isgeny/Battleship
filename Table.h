@@ -15,5 +15,6 @@ public:
 	~Table();
 	void draw();
 	void addData(int row, int column, const std::string& text);
+	void deleteData();
 
 };

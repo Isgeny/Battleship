@@ -8,8 +8,7 @@ Table::Table(int _rows, int _columns, const Rect& rect, double r, double g, doub
 
 Table::~Table()
 {
-	for(auto it = cells.begin(); it != cells.end(); it++)
-		delete (*it);
+	deleteData();
 }
 
 void Table::draw()
@@ -42,4 +41,11 @@ void Table::addData(int row, int column, const std::string& text)
 	r.setX(rect.x() + column*cellWidth + cellWidth/2 - text.size()*16/2);
 	r.setY(rect.y() + row*cellHeight + cellHeight/2 + 7);
 	cells.push_back(new Label(text, GLUT_BITMAP_HELVETICA_18, 17, r, 0.0, 0.0, 1.0, 1.0, true));
+}
+
+void Table::deleteData()
+{
+	for(auto it = cells.begin(); it != cells.end(); it++)
+		delete (*it);
+	cells.erase(cells.begin(), cells.end());
 }

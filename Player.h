@@ -5,6 +5,7 @@ class Player
 private:
 	std::string name;
 	int wins, games;
+	int steps;
 	double r, g, b, a;
 
 public:
@@ -14,10 +15,12 @@ public:
 	void setName(const std::string& name);
 	void setWins(int wins);
 	void setGames(int games);
+	void setSteps(int steps);
 	void setRGBA(double r, double g, double b, double a);
 	const std::string& getName() const;
 	int getWins() const;
 	int getGames() const;
-	void readDataFromFile();
+	int getSteps() const;
+	void operator ++ (int);
 
 };

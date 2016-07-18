@@ -1,12 +1,12 @@
 #include "Player.h"
 
-Player::Player() : name(""), wins(0), games(0), r(0.0), g(0.0), b(1.0), a(1.0)
+Player::Player() : name(""), wins(0), games(0), steps(0), r(0.0), g(0.0), b(1.0), a(1.0)
 {
 
 }
 
 Player::Player(const std::string& _name, int _wins, int _games, double _r, double _g, double _b, double _a) : 
-	name(_name), wins(_wins), games(_games), r(_r), g(_g), b(_b), a(_a)
+	name(_name), wins(_wins), games(_games), steps(0), r(_r), g(_g), b(_b), a(_a)
 {
 
 }
@@ -31,6 +31,11 @@ void Player::setGames(int _games)
 	games = _games;
 }
 
+void Player::setSteps(int _steps)
+{
+	steps = _steps;
+}
+
 void Player::setRGBA(double _r, double _g, double _b, double _a)
 {
 	r = _r; g = _g; b = _b; a = _a;
@@ -51,7 +56,12 @@ int Player::getGames() const
 	return games;
 }
 
-void Player::readDataFromFile()
+int Player::getSteps() const
 {
+	return steps;
+}
 
+void Player::operator ++ (int)
+{
+	steps++;
 }

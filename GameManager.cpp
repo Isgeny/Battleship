@@ -34,11 +34,7 @@ GameManager::GameManager()
 	player = new Player;
 	comp = new Player("Computer");
 
-	resultsTable = new Table(3, 4, Rect(150, 90, 540, 180), 0.0, 0.0, 1.0, 1.0, false);
-	resultsTable->addData(0, 0, "NAME");
-	resultsTable->addData(0, 1, "KILLED");
-	resultsTable->addData(0, 2, "WINS");
-	resultsTable->addData(0, 3, "GAMES");
+	resultsTable = new Table(3, 3, Rect(150, 90, 540, 180), 0.0, 0.0, 1.0, 1.0, false);
 
 	items[LblTitle] = lblTitle;
 	items[LblPlayer] = lblPlayer;
@@ -266,6 +262,7 @@ void GameManager::timerCompStep(int)
 					{
 						crosses.push_back(new Cross(Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 1.0, 0.0, 0.0, 1.0, true));
 						(*(*it))--;
+						(*comp)++;
 						if(!(*it)->getHealths())
 						{
 							playerField->placeDotsAroundShip(*it, playerShips, dots);
@@ -286,6 +283,7 @@ void GameManager::timerCompStep(int)
 				gameStatus = WAITING_PLAYER_STEP;
 				lblPlayer->setRGBA(1.0, 0.5, 0.0, 1.0);
 				lblComp->setRGBA(0.0, 0.0, 1.0, 1.0);
+				(*comp)++;
 			}
 		}
 	}
@@ -378,6 +376,7 @@ void GameManager::onButtonNewGameRClicked(GraphicsItem * obj, int button, int st
 	deleteAllShips(compShips);
 	deleteAllDots(dots);
 	deleteAllCrosses(crosses);
+	resultsTable->deleteData();
 }
 
 void GameManager::onButtonRecordsClicked(GraphicsItem* obj, int button, int state, int x, int y)
@@ -394,8 +393,9 @@ void GameManager::onButtonRecordsRClicked(GraphicsItem* obj, int button, int sta
 	setAlpha(1.0);
 	deleteAllShips(playerShips);
 	deleteAllShips(compShips);
-	deleteAllCrosses(crosses);
 	deleteAllDots(dots);
+	deleteAllCrosses(crosses);
+	resultsTable->deleteData();
 }
 
 void GameManager::onButtonAboutClicked(GraphicsItem* obj, int button, int state, int x, int y)
@@ -437,6 +437,7 @@ void GameManager::onButtonMainMenuRClicked(GraphicsItem * obj, int button, int s
 	deleteAllShips(compShips);
 	deleteAllCrosses(crosses);
 	deleteAllDots(dots);
+	resultsTable->deleteData();
 }
 
 void GameManager::onButtonAutoClicked(GraphicsItem* obj, int button, int state, int x, int y)
@@ -527,6 +528,7 @@ void GameManager::onCompFieldClicked(GraphicsItem* obj, int button, int state, i
 		gameStatus = WAITING_COMP_STEP;
 		lblPlayer->setRGBA(0.0, 0.0, 1.0, 1.0);
 		lblComp->setRGBA(1.0, 0.5, 0.0, 1.0);
+		(*player)++;
 	}
 }
 
@@ -623,6 +625,7 @@ void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x,
 		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
 		crosses.push_back(new Cross(Rect(newX, newY, w, h), 1.0, 0.0, 0.0, 1.0, true));
 		(*ship)--;
+		(*player)++;
 		if(!ship->getHealths())
 		{
 			compField->placeDotsAroundShip(ship, compShips, dots);
@@ -667,18 +670,26 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	winner = _winner;
 	loser = _loser;
 	
-
+	resultsTable->addData(0, 0, "NAME");
+	resultsTable->addData(0, 1, "KILLED");
+	resultsTable->addData(0, 2, "STEPS");
 	resultsTable->setVisible(true);
-	resultsTable->addData(1, 0, winner->getName());
-	resultsTable->addData(1, 1, "100%");
-	resultsTable->addData(2, 0, loser->getName());
-
+	
 	double count = 0.0;
+	for(auto it = loserShips.begin(); it != loserShips.end(); it++)
+		count += (*it)->getHealths();
+	count = 20.0 - count;
+	resultsTable->addData(1, 0, winner->getName());
+	resultsTable->addData(1, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
+	resultsTable->addData(1, 2, std::to_string(player->getSteps()));
+
+	count = 0.0;
 	for(auto it = winnerShips.begin(); it != winnerShips.end(); it++)
 		count += (*it)->getHealths();
 	count = 20.0 - count;
+	resultsTable->addData(2, 0, loser->getName());
 	resultsTable->addData(2, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
-
+	resultsTable->addData(2, 2, std::to_string(comp->getSteps()));
 
 	singleShip->setShips(4);
 	doubleShip->setShips(3);
@@ -686,4 +697,6 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	quadShip->setShips(1);
 	playerField->setAliveShipsCount(0);
 	compField->setAliveShipsCount(0);
+	player->setSteps(0);
+	comp->setSteps(0);
 }
