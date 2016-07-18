@@ -65,3 +65,22 @@ void Player::operator ++ (int)
 {
 	steps++;
 }
+
+std::istream& operator >> (std::istream& in, Player& p)
+{
+	in >> p.name >> p.wins >> p.games >> p.steps;
+	return in;
+}
+
+std::ostream& operator << (std::ostream& out, Player& p)
+{
+	out << p.name;
+	out << ' ';
+	out << p.wins;
+	out << ' ';
+	out << p.games;
+	out << ' ';
+	out << p.steps;
+	out << '\n';
+	return out;
+}

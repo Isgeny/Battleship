@@ -24,6 +24,7 @@ enum ObjName
 	BtnClean,
 	BtnGiveUp,
 	BtnMainMenuR,
+	BtnMainMenuRec,
 	BtnRecordsR,
 	BtnNewGameR,
 	PlayerField,
@@ -37,7 +38,8 @@ enum ObjName
 	LblTableKilled,
 	LblTableWins,
 	LblTableGames,
-	ResultsTable
+	ResultsTable,
+	RecordsTable
 };
 
 enum Orientation

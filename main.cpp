@@ -20,6 +20,7 @@ Button* GameManager::btnGiveUp;
 Button* GameManager::btnNewGameR;
 Button* GameManager::btnRecordsR;
 Button* GameManager::btnMainMenuR;
+Button* GameManager::btnMainMenuRec;
 Field* GameManager::playerField;
 Field* GameManager::compField;
 TextEdit* GameManager::textEditName;
@@ -39,7 +40,7 @@ std::vector<Dot*> GameManager::dots;
 std::vector<Cross*> GameManager::crosses;
 double GameManager::alpha = 1.0;
 Table* GameManager::resultsTable;
-//Records* GameManager::records;
+Records* GameManager::records;
 GameManager game;
 
 int main(int argc, char** argv)

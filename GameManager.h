@@ -12,6 +12,7 @@
 #include "Dot.h"
 #include "Cross.h"
 #include "Table.h"
+#include "Records.h"
 #include "enums.h"
 
 class GameManager
@@ -20,7 +21,7 @@ private:
 	static GameStatus gameStatus;
 	static std::map<ObjName, GraphicsItem*> items;
 	static Label *lblTitle, *lblPlayer, *lblComp, *lblTableName, *lblTableKilled, *lblTableWins, *lblTableGames;
-	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR;
+	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR, *btnMainMenuRec;
 	static Field *playerField, *compField;
 	static TextEdit *textEditName;
 	static Ship *mouseShip;
@@ -33,7 +34,7 @@ private:
 	static std::vector<Cross*> crosses;
 	static double alpha;
 	static Table* resultsTable;
-	//static Records* records;
+	static Records* records;
 	
 public:
 	GameManager();

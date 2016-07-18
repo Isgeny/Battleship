@@ -18,6 +18,7 @@ GameManager::GameManager()
 	btnNewGameR = new Button("NEW GAME", Rect(180, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonNewGameRClicked);
 	btnRecordsR = new Button("RECORDS", Rect(360, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonRecordsRClicked);
 	btnMainMenuR = new Button("MENU", Rect(540, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuRClicked);
+	btnMainMenuRec = new Button(*btnMainMenu);
 
 	playerField = new Field(0, Rect(60, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onPlayerFieldClicked);
 	compField = new Field(0, Rect(510, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onCompFieldClicked);
@@ -36,6 +37,13 @@ GameManager::GameManager()
 
 	resultsTable = new Table(3, 3, Rect(150, 90, 540, 180), 0.0, 0.0, 1.0, 1.0, false);
 
+	records = new Records(11, 5, Rect(120, 60, 600, 330), 0.0, 0.0, 1.0, true);
+	records->addData(0, 0, "POS.");
+	records->addData(0, 1, "NAME");
+	records->addData(0, 2, "WINS");
+	records->addData(0, 3, "GAMES");
+	records->addData(0, 4, "STEPS");
+
 	items[LblTitle] = lblTitle;
 	items[LblPlayer] = lblPlayer;
 	items[LblComp] = lblComp;
@@ -51,6 +59,7 @@ GameManager::GameManager()
 	items[BtnNewGameR] = btnNewGameR;
 	items[BtnRecordsR] = btnRecordsR;
 	items[BtnMainMenuR] = btnMainMenuR;
+	items[BtnMainMenuRec] = btnMainMenuRec;
 	items[PlayerField] = playerField;
 	items[CompField] = compField;
 	items[TextEditName] = textEditName;
@@ -60,6 +69,7 @@ GameManager::GameManager()
 	items[TripleShipBtn] = tripleShip;
 	items[QuadShipBtn] = quadShip;
 	items[ResultsTable] = resultsTable;
+	items[RecordsTable] = records;
 }
 
 GameManager::~GameManager()
@@ -384,13 +394,13 @@ void GameManager::onButtonRecordsClicked(GraphicsItem* obj, int button, int stat
 	hideAllItems();
 	gameStatus = RECORDS;
 	setAlpha(1.0);
+	btnMainMenuRec->setVisible(true);
+	records->setVisible(true);
 }
 
 void GameManager::onButtonRecordsRClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
-	hideAllItems();
-	gameStatus = RECORDS;
-	setAlpha(1.0);
+	onButtonRecordsClicked(obj, button, state, x, y);
 	deleteAllShips(playerShips);
 	deleteAllShips(compShips);
 	deleteAllDots(dots);
@@ -690,6 +700,8 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	resultsTable->addData(2, 0, loser->getName());
 	resultsTable->addData(2, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
 	resultsTable->addData(2, 2, std::to_string(comp->getSteps()));
+
+	records->addNewUser(_winner);
 
 	singleShip->setShips(4);
 	doubleShip->setShips(3);

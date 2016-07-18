@@ -22,5 +22,7 @@ public:
 	int getGames() const;
 	int getSteps() const;
 	void operator ++ (int);
+	friend std::istream& operator >> (std::istream& in, Player& p);
+	friend std::ostream& operator << (std::ostream& out, Player& p);
 
 };

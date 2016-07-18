@@ -1,27 +1,53 @@
-/*#include "Records.h"
+#include "Records.h"
 
-Records::Records()
+Records::Records(int rows, int columns, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked) :
+	Table(rows, columns, rect, r, g, b, a, visible, callbackClicked)
 {
-	uVec.resize(10);
-	for(auto it = uVec.begin(); it != uVec.end(); it++)
-	{
-		it->name = "";
-		it->wins = 0;
-	}
-	readFile();
+	readPlayersFromFile();
+	writePlayersToFile();
 }
 
 Records::~Records()
 {
-
+	for(auto it = players.begin(); it != players.end(); it++)
+		delete (*it);
 }
 
-const std::vector<User>& Records::getUVec() const
+void Records::draw()
 {
-	return uVec;
+	Table::draw();
 }
 
-void Records::readFile()
+void Records::readPlayersFromFile()
+{
+	std::ifstream input;
+	input.open("Records.txt");
+	while(!input.eof())
+	{
+		Player *temp = new Player;
+		input >> *temp;
+		players.push_back(temp);
+	}
+	input.close();
+}
+
+void Records::writePlayersToFile()
+{
+	std::ofstream output;
+	output.open("Records.txt");
+	for(auto it = players.begin(); it != players.end(); it++)
+	{
+		output << (*(*it));
+	}
+	output.close();
+}
+
+void Records::addNewUser(Player* player)
+{
+
+}
+
+/*void Records::readFile()
 {
 	std::ifstream input;
 	input.open("Records.txt");
@@ -62,15 +88,4 @@ void Records::addNewUser(const std::string& name, int stepCount)
 		}
 	}
 }
-
-std::istream& operator >> (std::istream& in, User& u)
-{
-	in >> u.name >> u.wins;
-	return in;
-}
-
-std::ostream& operator << (std::ostream& out, User& u)
-{
-	out << u.name << u.wins;
-	return out;
-}*/
+*/

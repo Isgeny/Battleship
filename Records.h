@@ -1,27 +1,20 @@
-/*#pragma once
-#include <string>
+#pragma once
 #include <vector>
-#include <iostream>
 #include <fstream>
+#include "Table.h"
+#include "Player.h"
 
-struct User
-{
-	std::string name;
-	int wins;
-};
-
-class Records
+class Records : public Table
 {
 private:
-	std::vector<User> uVec;
+	std::vector<Player*> players;
 
 public:
-	Records();
+	Records(int rows, int columns, const Rect& rect, double r = 1.0, double g = 1.0, double b = 1.0, double a = 1.0, bool visible = false, CallbackClicked callbackClicked = NULL);
 	~Records();
-	const std::vector<User>& getUVec() const;
-	void readFile();
-	void writeFile();
-	void addNewUser(const std::string& name, int wins);
-	friend std::istream& operator >> (std::istream& in, User& u);
-	friend std::ostream& operator << (std::ostream& out, User& u);
-};*/
+	void draw();
+	void readPlayersFromFile();
+	void writePlayersToFile();
+	void addNewUser(Player* player);
+
+};
