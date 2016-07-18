@@ -128,28 +128,13 @@ void GameManager::draw()
 	if(gameStatus == RESULTS)
 	{
 		//Отрисовка победителя
-		std::string txt = winner->getName() + " WON!";
+		/*std::string txt = winner->getName() + " WON!";
 		for(int i = 0; i < txt.size(); i++)
 		{
 			glColor3d(0.0, 0.0, 1.0);
 			glRasterPos2d(WIN_WIDTH/2 - txt.size()*20 /2 + i*20, 55);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, txt[i]);
-		}
-		/*//Отрисовка векртикальных линий
-		glColor3d(0.0, 0.0, 1.0);
-		glBegin(GL_LINES);
-		for(int i = 0; i < 3; i++)
-		{
-			glVertex2d(270 + i*150, 90);
-			glVertex2d(270 + i*150, 270);
-		}
-		//Отрисовка горизонтальных линий
-		for(int i = 0; i < 3; i++)
-		{
-			glVertex2d(150, 135 + i*60);
-			glVertex2d(690, 135 + i*60);
-		}
-		glEnd();*/
+		}*/
 	}
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA);
@@ -167,15 +152,6 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 	{
 		it->second->mousePressed(button, state, x, y);
 	}
-	/*it = playerShips.begin();
-	while(it != playerShips.end())
-	{
-		if(it != playerShips.end())
-		{
-			(*it)->mousePressed(button, state, x, y);
-			it++;
-		}
-	}*/
 	for(int i = 0; i < playerShips.size(); i++)
 	{
 		if(playerShips[i])
@@ -678,8 +654,8 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	btnNewGameR->setVisible(true);
 	btnRecordsR->setVisible(true);
 	btnMainMenuR->setVisible(true);
-	winner = _winner;
-	loser = _loser;
+	//winner = _winner;
+	//loser = _loser;
 	
 	resultsTable->addData(0, 0, "NAME");
 	resultsTable->addData(0, 1, "KILLED");
@@ -690,7 +666,7 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	for(auto it = loserShips.begin(); it != loserShips.end(); it++)
 		count += (*it)->getHealths();
 	count = 20.0 - count;
-	resultsTable->addData(1, 0, winner->getName());
+	resultsTable->addData(1, 0, _winner->getName());
 	resultsTable->addData(1, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
 	resultsTable->addData(1, 2, std::to_string(player->getSteps()));
 
@@ -698,11 +674,34 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	for(auto it = winnerShips.begin(); it != winnerShips.end(); it++)
 		count += (*it)->getHealths();
 	count = 20.0 - count;
-	resultsTable->addData(2, 0, loser->getName());
+	resultsTable->addData(2, 0, _loser->getName());
 	resultsTable->addData(2, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
 	resultsTable->addData(2, 2, std::to_string(comp->getSteps()));
 
-	records->addNewUser(_winner);
+	Player* somePlayer1 = records->findPlayer(_winner->getName());
+	if(somePlayer1 == nullptr)
+	{
+		records->addNewUser(_winner);
+		_winner->incWins();
+		_winner->incGames();
+	}
+	else
+	{
+		somePlayer1->incWins();
+		somePlayer1->incGames();
+	}
+	Player* somePlayer2 = records->findPlayer(_loser->getName());
+	if(somePlayer2 == nullptr)
+	{
+		records->addNewUser(_loser);
+		_loser->incGames();
+	}
+	else
+	{
+		somePlayer2->incGames();
+	}
+	records->updateRecords();
+	records->writePlayersToFile();
 
 	singleShip->setShips(4);
 	doubleShip->setShips(3);

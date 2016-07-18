@@ -33,8 +33,8 @@ ShipButton* GameManager::quadShip;
 ShipButton* GameManager::currPressShip;
 Player* GameManager::player;
 Player* GameManager::comp;
-Player* GameManager::winner;
-Player* GameManager::loser;
+/*Player* GameManager::winner;
+Player* GameManager::loser;*/
 std::vector<Ship*> GameManager::playerShips, GameManager::compShips;
 std::vector<Ship*>::iterator GameManager::it;
 std::vector<Dot*> GameManager::dots;

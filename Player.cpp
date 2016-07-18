@@ -26,9 +26,19 @@ void Player::setWins(int _wins)
 	wins = _wins;
 }
 
+void Player::incWins()
+{
+	wins++;
+}
+
 void Player::setGames(int _games)
 {
 	games = _games;
+}
+
+void Player::incGames()
+{
+	games++;
 }
 
 void Player::setSteps(int _steps)

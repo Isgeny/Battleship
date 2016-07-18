@@ -1,6 +1,7 @@
 #pragma once
 #include <vector>
 #include <fstream>
+#include <iostream>
 #include "Table.h"
 #include "Player.h"
 
@@ -16,5 +17,7 @@ public:
 	void readPlayersFromFile();
 	void writePlayersToFile();
 	void addNewUser(Player* player);
+	Player* findPlayer(const std::string& name);
+	void updateRecords();
 
 };

@@ -27,7 +27,7 @@ private:
 	static Ship *mouseShip;
 	static ShipButton *singleShip, *doubleShip, *tripleShip, *quadShip;
 	static ShipButton *currPressShip;
-	static Player *player, *comp, *winner, *loser;
+	static Player *player, *comp/*, *winner, *loser*/;
 	static std::vector<Ship*> playerShips, compShips;
 	static std::vector<Ship*>::iterator it;
 	static std::vector<Dot*> dots;
