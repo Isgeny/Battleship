@@ -5,7 +5,7 @@ GameManager::GameManager()
 	lblTitle	= new Label("BATTLESHIP", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(325, 40, 0, 0), 0.0, 0.0, 1.0, 1.0, true);
 	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
 	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
-	lblRecords = new Label("Records", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(355, 40, 0, 0));
+	lblRecords = new Label("Records", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(370, 40, 0, 0));
 
 	btnNewGame = new Button("NEW GAME", Rect(300, 60, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonNewGameClicked);
 	btnRecords = new Button("RECORDS", Rect(300, 150, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonRecordsClicked);
@@ -24,7 +24,7 @@ GameManager::GameManager()
 	playerField = new Field(0, Rect(60, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onPlayerFieldClicked);
 	compField = new Field(0, Rect(510, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onCompFieldClicked);
 
-	textEditName = new TextEdit("", Rect(690, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onTextEditClicked);
+	textEditName = new TextEdit("Player", Rect(690, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onTextEditClicked);
 
 	mouseShip = new Ship(0, Rect(), Rect(), 0.0, 0.0, 1.0, 1.0, false, onShipClicked);
 
@@ -635,7 +635,7 @@ void GameManager::onButtonGiveUpClicked(GraphicsItem* obj, int button, int state
 	}
 }
 
-void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<Ship*>& winnerShips, Player* _loser, Field* loserField, std::vector<Ship*>& loserShips)
+void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Ship*>& winnerShips, Player* loser, Field* loserField, std::vector<Ship*>& loserShips)
 {
 	alpha = 0.1;
 	playerField->setAlpha(alpha);
@@ -654,8 +654,6 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	btnNewGameR->setVisible(true);
 	btnRecordsR->setVisible(true);
 	btnMainMenuR->setVisible(true);
-	//winner = _winner;
-	//loser = _loser;
 	
 	resultsTable->addData(0, 0, "NAME");
 	resultsTable->addData(0, 1, "KILLED");
@@ -666,7 +664,7 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	for(auto it = loserShips.begin(); it != loserShips.end(); it++)
 		count += (*it)->getHealths();
 	count = 20.0 - count;
-	resultsTable->addData(1, 0, _winner->getName());
+	resultsTable->addData(1, 0, winner->getName());
 	resultsTable->addData(1, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
 	resultsTable->addData(1, 2, std::to_string(player->getSteps()));
 
@@ -674,27 +672,31 @@ void GameManager::showResults(Player* _winner, Field* winnerField, std::vector<S
 	for(auto it = winnerShips.begin(); it != winnerShips.end(); it++)
 		count += (*it)->getHealths();
 	count = 20.0 - count;
-	resultsTable->addData(2, 0, _loser->getName());
+	resultsTable->addData(2, 0, loser->getName());
 	resultsTable->addData(2, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
 	resultsTable->addData(2, 2, std::to_string(comp->getSteps()));
 
-	Player* somePlayer1 = records->findPlayer(_winner->getName());
+	Player* somePlayer1 = records->findPlayer(winner->getName());
 	if(somePlayer1 == nullptr)
 	{
-		records->addNewUser(_winner);
-		_winner->incWins();
-		_winner->incGames();
+		records->addNewUser(winner);
+		winner->incWins();
+		winner->incGames();
 	}
 	else
 	{
 		somePlayer1->incWins();
 		somePlayer1->incGames();
+		if(winner->getSteps() < somePlayer1->getSteps())
+		{
+			somePlayer1->setSteps(winner->getSteps());
+		}
 	}
-	Player* somePlayer2 = records->findPlayer(_loser->getName());
+	Player* somePlayer2 = records->findPlayer(loser->getName());
 	if(somePlayer2 == nullptr)
 	{
-		records->addNewUser(_loser);
-		_loser->incGames();
+		records->addNewUser(loser);
+		loser->incGames();
 	}
 	else
 	{
