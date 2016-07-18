@@ -34,17 +34,11 @@ GameManager::GameManager()
 	tripleShip = new ShipButton(2, 3, Rect(420, 150, 90, 30), 0.0, 0.0, 1.0, 1.0, false, onTripleShipBtnClicked);
 	quadShip = new ShipButton(1, 4, Rect(420, 90, 120, 30), 0.0, 0.0, 1.0, 1.0, false, onQuadShipBtnClicked);
 
-	player = new Player;
+	player = new Player();
 	comp = new Player("Computer");
 
 	resultsTable = new Table(3, 3, Rect(150, 90, 540, 180), 0.0, 0.0, 1.0, 1.0, false);
-
 	records = new Records(11, 5, Rect(60, 60, 750, 330), 0.0, 0.0, 1.0, true);
-	/*records->addData(0, 0, "POS.");
-	records->addData(0, 1, "NAME");
-	records->addData(0, 2, "WINS");
-	records->addData(0, 3, "GAMES");
-	records->addData(0, 4, "STEPS");*/
 
 	items[LblTitle] = lblTitle;
 	items[LblPlayer] = lblPlayer;
@@ -79,9 +73,7 @@ GameManager::GameManager()
 GameManager::~GameManager()
 {
 	for(auto it = items.begin(); it != items.end(); it++)
-	{
 		delete it->second;
-	}
 	items.erase(items.begin(), items.end());
 }
 
@@ -127,17 +119,6 @@ void GameManager::draw()
 	{
 		(*it)->draw();
 	}
-	if(gameStatus == RESULTS)
-	{
-		//Отрисовка победителя
-		/*std::string txt = winner->getName() + " WON!";
-		for(int i = 0; i < txt.size(); i++)
-		{
-			glColor3d(0.0, 0.0, 1.0);
-			glRasterPos2d(WIN_WIDTH/2 - txt.size()*20 /2 + i*20, 55);
-			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, txt[i]);
-		}*/
-	}
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA);
 	glutSwapBuffers();
@@ -145,6 +126,7 @@ void GameManager::draw()
 
 void GameManager::resize(int width, int height)
 {
+	//Запрещение изменения размера окна
 	glutReshapeWindow(WIN_WIDTH, WIN_HEIGHT);
 }
 
@@ -167,11 +149,11 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 
 void GameManager::mouseMove(int x, int y)
 {
-	//DEBUG
+	///////////////DEBUG
 	std::string str;
 	str = std::to_string(x) + " : " + std::to_string(y);
 	glutSetWindowTitle(str.c_str());
-	//DEBUG
+	///////////////DEBUG
 	//Перемещение корабля по полю при перемещении мыши
 	if(gameStatus == PLACING_SHIP && playerField->contains(x, y))
 	{
@@ -338,21 +320,19 @@ void GameManager::onButtonNewGameClicked(GraphicsItem* obj, int button, int stat
 	{
 		gameStatus = PLACING_SHIP;
 		hideAllItems();
-		items[BtnMainMenu]->setVisible(true);
-		items[BtnAuto]->setVisible(true);
-		items[BtnClean]->setVisible(true);
-		items[BtnFight]->setVisible(true);
-		items[PlayerField]->setVisible(true);
-		items[SingleShipBtn]->setVisible(true);
-		items[DoubleShipBtn]->setVisible(true);
-		items[TripleShipBtn]->setVisible(true);
-		items[QuadShipBtn]->setVisible(true);
-		items[MouseShip]->setVisible(true);
-		items[TextEditName]->setVisible(true);
+		btnMainMenu->setVisible(true);
+		btnAuto->setVisible(true);
+		btnClean->setVisible(true);
+		btnFight->setVisible(true);
+		playerField->setVisible(true);
+		singleShip->setVisible(true);
+		doubleShip->setVisible(true);
+		tripleShip->setVisible(true);
+		quadShip->setVisible(true);
+		mouseShip->setVisible(true);
+		textEditName->setVisible(true);
 		for(auto it = playerShips.begin(); it != playerShips.end(); it++)
-		{
 			(*it)->setVisible(true);
-		}
 	}
 }
 
@@ -397,9 +377,7 @@ void GameManager::onButtonAboutClicked(GraphicsItem* obj, int button, int state,
 void GameManager::onButtonExitClicked(GraphicsItem* obj, int button, int state, int x, int y)
 {
 	if(button == GLUT_LEFT_BUTTON && state == GLUT_UP)
-	{
 		exit(0);
-	}
 }
 
 void GameManager::onButtonMainMenuClicked(GraphicsItem* obj, int button, int state, int x, int y)
@@ -409,12 +387,12 @@ void GameManager::onButtonMainMenuClicked(GraphicsItem* obj, int button, int sta
 		gameStatus = MENU;
 		hideAllItems();
 		playerField->hideShips(playerShips);
-		items[LblTitle]->setVisible(true);
-		items[BtnNewGame]->setVisible(true);
-		items[BtnRecords]->setVisible(true);
-		items[BtnAbout]->setVisible(true);
-		items[BtnExit]->setVisible(true);
-		
+		lblTitle->setVisible(true);
+		btnNewGame->setVisible(true);
+		btnRecords->setVisible(true);
+		btnAbout->setVisible(true);
+		btnExit->setVisible(true);
+		mouseShip->setRect(Rect());
 	}
 }
 
@@ -424,8 +402,8 @@ void GameManager::onButtonMainMenuRClicked(GraphicsItem * obj, int button, int s
 	setAlpha(1.0);
 	deleteAllShips(playerShips);
 	deleteAllShips(compShips);
-	deleteAllCrosses(crosses);
 	deleteAllDots(dots);
+	deleteAllCrosses(crosses);
 	resultsTable->deleteData();
 }
 
@@ -485,6 +463,7 @@ void GameManager::onButtonFightClicked(GraphicsItem* obj, int button, int state,
 		btnGiveUp->setVisible(true);
 		player->setName(textEditName->getText());
 		lblPlayer->setText(player->getName());
+		lblPlayer->getRect().setX(playerField->getRect().x() + playerField->getRect().width()/2 - lblPlayer->getText().size()*19/2);
 		lblPlayer->setVisible(true);
 		lblComp->setVisible(true);
 	}
