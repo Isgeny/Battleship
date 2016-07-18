@@ -6,6 +6,7 @@ GameManager::GameManager()
 	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
 	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
 	lblRecords = new Label("Records", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(370, 40, 0, 0));
+	lblWin = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(325, 55, 0, 0));
 
 	btnNewGame = new Button("NEW GAME", Rect(300, 60, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonNewGameClicked);
 	btnRecords = new Button("RECORDS", Rect(300, 150, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonRecordsClicked);
@@ -39,16 +40,17 @@ GameManager::GameManager()
 	resultsTable = new Table(3, 3, Rect(150, 90, 540, 180), 0.0, 0.0, 1.0, 1.0, false);
 
 	records = new Records(11, 5, Rect(60, 60, 750, 330), 0.0, 0.0, 1.0, true);
-	records->addData(0, 0, "POS.");
+	/*records->addData(0, 0, "POS.");
 	records->addData(0, 1, "NAME");
 	records->addData(0, 2, "WINS");
 	records->addData(0, 3, "GAMES");
-	records->addData(0, 4, "STEPS");
+	records->addData(0, 4, "STEPS");*/
 
 	items[LblTitle] = lblTitle;
 	items[LblPlayer] = lblPlayer;
 	items[LblComp] = lblComp;
 	items[LblRecords] = lblRecords;
+	items[LblWin] = lblWin;
 	items[BtnNewGame] = btnNewGame;
 	items[BtnAbout] = btnAbout;
 	items[BtnRecords] = btnRecords;
@@ -631,11 +633,11 @@ void GameManager::onButtonGiveUpClicked(GraphicsItem* obj, int button, int state
 	if(gameStatus == WAITING_PLAYER_STEP || gameStatus == WAITING_COMP_STEP)
 	{
 		gameStatus = RESULTS;
-		showResults(comp, compField, compShips, player, playerField, playerShips);
+		showResults(comp, compField, compShips, player, playerField, playerShips, true);
 	}
 }
 
-void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Ship*>& winnerShips, Player* loser, Field* loserField, std::vector<Ship*>& loserShips)
+void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Ship*>& winnerShips, Player* loser, Field* loserField, std::vector<Ship*>& loserShips, bool giveUp)
 {
 	alpha = 0.1;
 	playerField->setAlpha(alpha);
@@ -651,6 +653,18 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 		(*it)->setAlpha(alpha);
 	for(auto it = crosses.begin(); it != crosses.end(); it++)
 		(*it)->setAlpha(alpha);
+
+	if(giveUp)
+	{
+		lblWin->getRect().setX(40);
+		lblWin->setText("PLAYER SAID : GO FUCK YOURSELF, COMPUTER!");
+		//lblWin->setText(loser->getName() + "GIVE UP");
+	}
+	else
+	{
+		lblWin->setText(winner->getName() + " WON!");
+	}
+	lblWin->setVisible(true);
 	btnNewGameR->setVisible(true);
 	btnRecordsR->setVisible(true);
 	btnMainMenuR->setVisible(true);
@@ -676,34 +690,37 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	resultsTable->addData(2, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
 	resultsTable->addData(2, 2, std::to_string(comp->getSteps()));
 
-	Player* somePlayer1 = records->findPlayer(winner->getName());
-	if(somePlayer1 == nullptr)
+	if(!giveUp)
 	{
-		records->addNewUser(winner);
-		winner->incWins();
-		winner->incGames();
-	}
-	else
-	{
-		somePlayer1->incWins();
-		somePlayer1->incGames();
-		if(winner->getSteps() < somePlayer1->getSteps())
+		Player* somePlayer1 = records->findPlayer(winner->getName());
+		if(somePlayer1 == nullptr)
 		{
-			somePlayer1->setSteps(winner->getSteps());
+			records->addNewUser(winner);
+			winner->incWins();
+			winner->incGames();
 		}
+		else
+		{
+			somePlayer1->incWins();
+			somePlayer1->incGames();
+			if(winner->getSteps() < somePlayer1->getSteps())
+			{
+				somePlayer1->setSteps(winner->getSteps());
+			}
+		}
+		Player* somePlayer2 = records->findPlayer(loser->getName());
+		if(somePlayer2 == nullptr)
+		{
+			records->addNewUser(loser);
+			loser->incGames();
+		}
+		else
+		{
+			somePlayer2->incGames();
+		}
+		records->updateRecords();
+		records->writePlayersToFile();
 	}
-	Player* somePlayer2 = records->findPlayer(loser->getName());
-	if(somePlayer2 == nullptr)
-	{
-		records->addNewUser(loser);
-		loser->incGames();
-	}
-	else
-	{
-		somePlayer2->incGames();
-	}
-	records->updateRecords();
-	records->writePlayersToFile();
 
 	singleShip->setShips(4);
 	doubleShip->setShips(3);

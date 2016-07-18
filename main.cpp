@@ -9,6 +9,7 @@ Label* GameManager::lblTitle;
 Label* GameManager::lblPlayer;
 Label* GameManager::lblComp;
 Label* GameManager::lblRecords;
+Label* GameManager::lblWin;
 Button* GameManager::btnNewGame;
 Button* GameManager::btnRecords;
 Button* GameManager::btnAbout;
@@ -33,8 +34,6 @@ ShipButton* GameManager::quadShip;
 ShipButton* GameManager::currPressShip;
 Player* GameManager::player;
 Player* GameManager::comp;
-/*Player* GameManager::winner;
-Player* GameManager::loser;*/
 std::vector<Ship*> GameManager::playerShips, GameManager::compShips;
 std::vector<Ship*>::iterator GameManager::it;
 std::vector<Dot*> GameManager::dots;

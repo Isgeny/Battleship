@@ -20,14 +20,14 @@ class GameManager
 private:
 	static GameStatus gameStatus;
 	static std::map<ObjName, GraphicsItem*> items;
-	static Label *lblTitle, *lblPlayer, *lblComp, *lblRecords;
+	static Label *lblTitle, *lblPlayer, *lblComp, *lblRecords, *lblWin;
 	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR, *btnMainMenuRec;
 	static Field *playerField, *compField;
 	static TextEdit *textEditName;
 	static Ship *mouseShip;
 	static ShipButton *singleShip, *doubleShip, *tripleShip, *quadShip;
 	static ShipButton *currPressShip;
-	static Player *player, *comp/*, *winner, *loser*/;
+	static Player *player, *comp;
 	static std::vector<Ship*> playerShips, compShips;
 	static std::vector<Ship*>::iterator it;
 	static std::vector<Dot*> dots;
@@ -72,6 +72,6 @@ public:
 	static void onTextEditClicked(GraphicsItem* obj, int button, int state, int x, int y);
 	static void onShipClicked(GraphicsItem* obj, int button, int state, int x, int y);
 	static void onButtonGiveUpClicked(GraphicsItem* obj, int button, int state, int x, int y);
-	static void showResults(Player* winner, Field* winnerField, std::vector<Ship*>& winnerShips, Player* loser, Field* loserField, std::vector<Ship*>& loserShips);
+	static void showResults(Player* winner, Field* winnerField, std::vector<Ship*>& winnerShips, Player* loser, Field* loserField, std::vector<Ship*>& loserShips, bool giveUp = false);
 
 };

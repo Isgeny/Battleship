@@ -35,6 +35,7 @@ enum ObjName
 	LblPlayer,
 	LblComp,
 	LblRecords,
+	LblWin,
 	ResultsTable,
 	RecordsTable
 };

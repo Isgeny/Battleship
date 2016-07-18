@@ -4,6 +4,7 @@ Records::Records(int rows, int columns, const Rect& rect, double r, double g, do
 	Table(rows, columns, rect, r, g, b, a, visible, callbackClicked)
 {
 	readPlayersFromFile();
+	updateRecords();
 }
 
 Records::~Records()
