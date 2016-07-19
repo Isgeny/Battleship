@@ -8,6 +8,7 @@ private:
 	std::string text;
 	bool focus, carriage;
 	Label* yourName;
+	int carriageX;
 
 public:
 	TextEdit();
@@ -16,11 +17,14 @@ public:
 	void draw();
 	void mousePressed(int button, int state, int mouseX, int mouseY);
 	void keyboardPressed(unsigned char key, int x, int y);
+	void sKeyboardPressed(int key, int x, int y);
 	void setText(const std::string& text);
 	void setFocus(bool focus);
 	void setCarriage(bool carriage);
+	void setcarriageX(int carriageX);
 	const std::string& getText() const;
 	bool hasFocus() const;
 	bool hasCarriage() const;
+	int getCarriageX() const;
 
 };

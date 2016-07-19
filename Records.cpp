@@ -126,8 +126,8 @@ void Records::sortByPoints()
 			if(players[j]->getPoints() > players[i]->getPoints())
 			{
 				temp = players[i];
-				players[i] = players[i+1];
-				players[i+1] = temp;
+				players[i] = players[j];
+				players[j] = temp;
 			}
 		}
 	}

@@ -53,13 +53,7 @@ void Player::setPointsK(int _pointsK)
 
 void Player::incPointsK()
 {
-	pointsK += 25;
-}
-
-void Player::decPointsK()
-{
-	if(pointsK > 0)
-		pointsK -= 5;
+	pointsK += 100;
 }
 
 void Player::setRGBA(double _r, double _g, double _b, double _a)

@@ -9,6 +9,7 @@ TextEdit::TextEdit(const std::string& _text, const Rect& rect, double r, double 
 	text(_text), focus(_focus), carriage(false), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
 {
 	yourName = new Label("Your name:", GLUT_BITMAP_HELVETICA_18, 15, Rect(rect.x() - 142, rect.y() + 20, 0, 0), r, g, b, a, true);
+	carriageX = rect.x() + text.size()*17 + 3;
 }
 
 TextEdit::~TextEdit()
@@ -41,8 +42,8 @@ void TextEdit::draw()
 			glLineWidth(1.5);
 			glColor4d(r, g, b, a);
 			glBegin(GL_LINES);
-			glVertex2d(rect.x() + 5 + text.size()*17, rect.y() + 5);
-			glVertex2d(rect.x() + 5 + text.size()*17, rect.y() + rect.height() - 5);
+			glVertex2d(carriageX, rect.y() + 5);
+			glVertex2d(carriageX, rect.y() + rect.height() - 5);
 			glEnd();
 		}
 	}
@@ -71,6 +72,7 @@ void TextEdit::keyboardPressed(unsigned char key, int x, int y)
 		{
 			temp.erase(temp.size() - 1);
 			this->setText(temp);
+			carriageX -= 17;
 		}
 		break;
 	case 127:	//delete
@@ -84,6 +86,7 @@ void TextEdit::keyboardPressed(unsigned char key, int x, int y)
 		{
 			temp += key;
 			this->setText(temp);
+			carriageX += 17;
 		}
 		break;
 	}
@@ -104,6 +107,11 @@ void TextEdit::setCarriage(bool _carriage)
 	carriage = _carriage;
 }
 
+void TextEdit::setcarriageX(int _carriageX)
+{
+	carriageX = _carriageX;
+}
+
 const std::string& TextEdit::getText() const
 {
 	return text;
@@ -117,4 +125,9 @@ bool TextEdit::hasFocus() const
 bool TextEdit::hasCarriage() const
 {
 	return carriage;
+}
+
+int TextEdit::getCarriageX() const
+{
+	return carriageX;
 }

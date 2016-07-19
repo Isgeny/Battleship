@@ -149,11 +149,6 @@ void GameManager::mouseClicked(int button, int state, int x, int y)
 
 void GameManager::mouseMove(int x, int y)
 {
-	///////////////DEBUG
-	std::string str;
-	str = std::to_string(x) + " : " + std::to_string(y);
-	glutSetWindowTitle(str.c_str());
-	///////////////DEBUG
 	//ѕеремещение корабл€ по полю при перемещении мыши
 	if(gameStatus == PLACING_SHIP && playerField->contains(x, y))
 	{
@@ -219,6 +214,7 @@ void GameManager::timerCompStep(int)
 							comp->incPointsK();
 							if(!playerField->getAliveShipsCount())
 							{
+								comp->setPoints(comp->getPoints() + 3000);
 								gameStatus = RESULTS;
 								showResults(comp, compField, compShips, player, playerField, playerShips);
 							}
@@ -593,6 +589,7 @@ void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x,
 			player->incPointsK();
 			if(!compField->getAliveShipsCount())
 			{
+				player->setPoints(player->getPoints() + 3000);
 				gameStatus = RESULTS;
 				showResults(player, playerField, playerShips, comp, compField, compShips);
 			}
@@ -628,9 +625,7 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 
 	if(giveUp)
 	{
-		lblWin->getRect().setX(40);
-		lblWin->setText("PLAYER SAID : GO FUCK YOURSELF, COMPUTER!");
-		//lblWin->setText(loser->getName() + "GIVE UP");
+		lblWin->setText(loser->getName() + "GIVE UP");
 	}
 	else
 	{
@@ -689,6 +684,10 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 		else
 		{
 			somePlayer2->incGames();
+			if(loser->getPoints() > somePlayer2->getPoints())
+			{
+				somePlayer2->setPoints(loser->getPoints());
+			}
 		}
 		records->sortByPoints();
 		records->writePlayersToFile();

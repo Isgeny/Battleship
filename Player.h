@@ -20,7 +20,6 @@ public:
 	void setPoints(int points);
 	void setPointsK(int pointsK);
 	void incPointsK();
-	void decPointsK();
 	void setRGBA(double r, double g, double b, double a);
 	const std::string& getName() const;
 	int getWins() const;
