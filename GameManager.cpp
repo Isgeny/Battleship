@@ -430,7 +430,7 @@ void GameManager::onButtonFightClicked(GraphicsItem* obj, int button, int state,
 	{
 		gameStatus = WAITING_PLAYER_STEP;
 		compField->setRandomShips(compShips);
-		//compField->hideShips();				//Скрываем корабли компьютера
+		compField->hideShips(compShips);				//Скрываем корабли компьютера
 		hideAllItems();
 		playerField->setVisible(true);
 		compField->setVisible(true);
@@ -558,7 +558,13 @@ void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x,
 				playerShips.erase(it);
 				it = playerShips.end();
 				(*playerField)--;
-				//(*(ShipButton*)(items[(ObjName)deck]))++;
+				switch(deck)
+				{
+					case 1: (*singleShip)++; break;
+					case 2: (*doubleShip)++; break;
+					case 3: (*tripleShip)++; break;
+					case 4: (*quadShip)++; break;
+				}
 				break;
 			}
 		}
@@ -696,6 +702,7 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 
 //Инициализация статических полей класса
 GameStatus GameManager::gameStatus = MENU;
+double GameManager::alpha = 1.0;
 std::vector<GraphicsItem*> GameManager::items;
 Label* GameManager::lblTitle;
 Label* GameManager::lblPlayer;
@@ -726,10 +733,10 @@ ShipButton* GameManager::quadShip;
 ShipButton* GameManager::currPressShip;
 Player* GameManager::player;
 Player* GameManager::comp;
+Table* GameManager::resultsTable;
+Records* GameManager::records;
+
 std::vector<Ship*> GameManager::playerShips, GameManager::compShips;
 std::vector<Ship*>::iterator GameManager::it;
 std::vector<Dot*> GameManager::dots;
 std::vector<Cross*> GameManager::crosses;
-double GameManager::alpha = 1.0;
-Table* GameManager::resultsTable;
-Records* GameManager::records;

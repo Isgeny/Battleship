@@ -17,6 +17,7 @@ class GameManager
 {
 private:
 	static GameStatus gameStatus;
+	static double alpha;
 	static std::vector<GraphicsItem*> items;
 	static Label *lblTitle, *lblPlayer, *lblComp, *lblRecords, *lblWin;
 	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR, *btnMainMenuRec;
@@ -26,13 +27,13 @@ private:
 	static ShipButton *singleShip, *doubleShip, *tripleShip, *quadShip;
 	static ShipButton *currPressShip;
 	static Player *player, *comp;
+	static Table* resultsTable;
+	static Records* records;
+
 	static std::vector<Ship*> playerShips, compShips;
 	static std::vector<Ship*>::iterator it;
 	static std::vector<Dot*> dots;
 	static std::vector<Cross*> crosses;
-	static double alpha;
-	static Table* resultsTable;
-	static Records* records;
 	
 public:
 	GameManager();
