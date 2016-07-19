@@ -1,12 +1,12 @@
 #include "Player.h"
 
-Player::Player() : name(""), wins(0), games(0), steps(0), r(0.0), g(0.0), b(1.0), a(1.0)
+Player::Player() : name(""), wins(0), games(0), points(0), pointsK(100), r(0.0), g(0.0), b(1.0), a(1.0)
 {
 
 }
 
 Player::Player(const std::string& _name, int _wins, int _games, double _r, double _g, double _b, double _a) : 
-	name(_name), wins(_wins), games(_games), steps(0), r(_r), g(_g), b(_b), a(_a)
+	name(_name), wins(_wins), games(_games), points(0), pointsK(100), r(_r), g(_g), b(_b), a(_a)
 {
 
 }
@@ -41,9 +41,25 @@ void Player::incGames()
 	games++;
 }
 
-void Player::setSteps(int _steps)
+void Player::setPoints(int _points)
 {
-	steps = _steps;
+	points = _points;
+}
+
+void Player::setPointsK(int _pointsK)
+{
+	pointsK = _pointsK;
+}
+
+void Player::incPointsK()
+{
+	pointsK += 25;
+}
+
+void Player::decPointsK()
+{
+	if(pointsK > 0)
+		pointsK -= 5;
 }
 
 void Player::setRGBA(double _r, double _g, double _b, double _a)
@@ -66,19 +82,19 @@ int Player::getGames() const
 	return games;
 }
 
-int Player::getSteps() const
+int Player::getPoints() const
 {
-	return steps;
+	return points;
 }
 
-void Player::operator ++ (int)
+int Player::getPointsK() const
 {
-	steps++;
+	return pointsK;
 }
 
 std::istream& operator >> (std::istream& in, Player& p)
 {
-	in >> p.name >> p.wins >> p.games >> p.steps;
+	in >> p.name >> p.points >> p.wins  >> p.games;
 	return in;
 }
 
@@ -86,10 +102,10 @@ std::ostream& operator << (std::ostream& out, Player& p)
 {
 	out << p.name;
 	out << ' ';
+	out << p.points;
+	out << ' ';
 	out << p.wins;
 	out << ' ';
 	out << p.games;
-	out << ' ';
-	out << p.steps;
 	return out;
 }

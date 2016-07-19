@@ -66,6 +66,7 @@ int main(int argc, char** argv)
 	glutKeyboardFunc(GameManager::keyboardPressed);
 	glutTimerFunc(50, GameManager::timerRedisplay, 0);
 	glutTimerFunc(50, GameManager::timerCompStep, 0);
+	glutTimerFunc(750, GameManager::timerTextEditCarriage, 0);
 
 	glutMainLoop();
 	return 0;

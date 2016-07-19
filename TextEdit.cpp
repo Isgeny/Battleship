@@ -1,12 +1,12 @@
 #include "TextEdit.h"
 
-TextEdit::TextEdit() : text(""), yourName(NULL), GraphicsItem()
+TextEdit::TextEdit() : text(""), focus(false), carriage(false), yourName(NULL), GraphicsItem()
 {
 
 }
 
 TextEdit::TextEdit(const std::string& _text, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked, bool _focus) :
-	text(_text), focus(_focus), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
+	text(_text), focus(_focus), carriage(false), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
 {
 	yourName = new Label("Your name:", GLUT_BITMAP_HELVETICA_18, 15, Rect(rect.x() - 142, rect.y() + 20, 0, 0), r, g, b, a, true);
 }
@@ -36,7 +36,7 @@ void TextEdit::draw()
 			glRasterPos2d(rect.x() + 5 + i*17, rect.y() + 20);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 		}
-		if(focus)
+		if(focus && carriage)
 		{
 			glLineWidth(1.5);
 			glColor4d(r, g, b, a);
@@ -61,6 +61,34 @@ void TextEdit::mousePressed(int button, int state, int mouseX, int mouseY)
 	}
 }
 
+void TextEdit::keyboardPressed(unsigned char key, int x, int y)
+{
+	std::string temp = text;
+	switch(key)
+	{
+	case 8:	//Backspace
+		if(temp.size())
+		{
+			temp.erase(temp.size() - 1);
+			this->setText(temp);
+		}
+		break;
+	case 127:	//delete
+
+	break;
+	case 13: //Enter
+		this->setFocus(false);
+		break;
+	default:
+		if(this->getText().size() < 8)
+		{
+			temp += key;
+			this->setText(temp);
+		}
+		break;
+	}
+}
+
 void TextEdit::setText(const std::string& _text)
 {
 	text = _text;
@@ -71,6 +99,11 @@ void TextEdit::setFocus(bool _focus)
 	focus = _focus;
 }
 
+void TextEdit::setCarriage(bool _carriage)
+{
+	carriage = _carriage;
+}
+
 const std::string& TextEdit::getText() const
 {
 	return text;
@@ -79,4 +112,9 @@ const std::string& TextEdit::getText() const
 bool TextEdit::hasFocus() const
 {
 	return focus;
+}
+
+bool TextEdit::hasCarriage() const
+{
+	return carriage;
 }

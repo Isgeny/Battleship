@@ -6,7 +6,7 @@ class TextEdit : public GraphicsItem
 {
 private:
 	std::string text;
-	bool focus;
+	bool focus, carriage;
 	Label* yourName;
 
 public:
@@ -15,9 +15,12 @@ public:
 	~TextEdit();
 	void draw();
 	void mousePressed(int button, int state, int mouseX, int mouseY);
+	void keyboardPressed(unsigned char key, int x, int y);
 	void setText(const std::string& text);
 	void setFocus(bool focus);
+	void setCarriage(bool carriage);
 	const std::string& getText() const;
 	bool hasFocus() const;
+	bool hasCarriage() const;
 
 };

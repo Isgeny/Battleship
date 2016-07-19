@@ -185,29 +185,7 @@ void GameManager::mouseWheel(int button, int dir, int x, int y)
 void GameManager::keyboardPressed(unsigned char key, int x, int y)
 {
 	if(gameStatus == PLACING_SHIP && textEditName->hasFocus())
-	{
-		std::string temp = textEditName->getText();
-		switch(key)
-		{
-		case 8:	//Backspace
-			if(temp.size())
-			{
-				temp.erase(temp.size() - 1);
-				textEditName->setText(temp);
-			}
-		break;
-		case 13: //Enter
-			textEditName->setFocus(false);
-		break;
-		default:
-			if(textEditName->getText().size() < 8)
-			{
-				temp += key;
-				textEditName->setText(temp);
-			}
-		break;
-		}
-	}
+		textEditName->keyboardPressed(key, x, y);
 }
 
 void GameManager::timerRedisplay(int)
@@ -232,11 +210,13 @@ void GameManager::timerCompStep(int)
 					{
 						crosses.push_back(new Cross(Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 1.0, 0.0, 0.0, 1.0, true));
 						(*(*it))--;
-						(*comp)++;
+						comp->incPointsK();
+						comp->setPoints(comp->getPoints() + comp->getPointsK());
 						if(!(*it)->getHealths())
 						{
 							playerField->placeDotsAroundShip(*it, playerShips, dots);
 							(*playerField)--;
+							comp->incPointsK();
 							if(!playerField->getAliveShipsCount())
 							{
 								gameStatus = RESULTS;
@@ -253,11 +233,21 @@ void GameManager::timerCompStep(int)
 				gameStatus = WAITING_PLAYER_STEP;
 				lblPlayer->setRGBA(1.0, 0.5, 0.0, 1.0);
 				lblComp->setRGBA(0.0, 0.0, 1.0, 1.0);
-				(*comp)++;
+				comp->setPointsK(100);
+				comp->setPoints(comp->getPoints() + comp->getPointsK());
 			}
 		}
 	}
 	glutTimerFunc(50, timerCompStep, 0);
+}
+
+void GameManager::timerTextEditCarriage(int)
+{
+	if(textEditName->hasCarriage())
+		textEditName->setCarriage(false);
+	else
+		textEditName->setCarriage(true);
+	glutTimerFunc(750, timerTextEditCarriage, 0);
 }
 
 void GameManager::hideAllItems()
@@ -496,7 +486,8 @@ void GameManager::onCompFieldClicked(GraphicsItem* obj, int button, int state, i
 		gameStatus = WAITING_COMP_STEP;
 		lblPlayer->setRGBA(0.0, 0.0, 1.0, 1.0);
 		lblComp->setRGBA(1.0, 0.5, 0.0, 1.0);
-		(*player)++;
+		player->setPointsK(100);
+		player->setPoints(player->getPoints() + player->getPointsK());
 	}
 }
 
@@ -593,11 +584,13 @@ void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x,
 		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
 		crosses.push_back(new Cross(Rect(newX, newY, w, h), 1.0, 0.0, 0.0, 1.0, true));
 		(*ship)--;
-		(*player)++;
+		player->incPointsK();
+		player->setPoints(player->getPoints() + player->getPointsK());
 		if(!ship->getHealths())
 		{
 			compField->placeDotsAroundShip(ship, compShips, dots);
 			(*compField)--;
+			player->incPointsK();
 			if(!compField->getAliveShipsCount())
 			{
 				gameStatus = RESULTS;
@@ -650,7 +643,7 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	
 	resultsTable->addData(0, 0, "NAME");
 	resultsTable->addData(0, 1, "KILLED");
-	resultsTable->addData(0, 2, "STEPS");
+	resultsTable->addData(0, 2, "POINTS");
 	resultsTable->setVisible(true);
 	
 	double count = 0.0;
@@ -659,7 +652,7 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	count = 20.0 - count;
 	resultsTable->addData(1, 0, winner->getName());
 	resultsTable->addData(1, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
-	resultsTable->addData(1, 2, std::to_string(player->getSteps()));
+	resultsTable->addData(1, 2, std::to_string(player->getPoints()));
 
 	count = 0.0;
 	for(auto it = winnerShips.begin(); it != winnerShips.end(); it++)
@@ -667,37 +660,37 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	count = 20.0 - count;
 	resultsTable->addData(2, 0, loser->getName());
 	resultsTable->addData(2, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
-	resultsTable->addData(2, 2, std::to_string(comp->getSteps()));
+	resultsTable->addData(2, 2, std::to_string(comp->getPoints()));
 
 	if(!giveUp)
 	{
 		Player* somePlayer1 = records->findPlayer(winner->getName());
 		if(somePlayer1 == nullptr)
 		{
-			records->addNewUser(winner);
 			winner->incWins();
 			winner->incGames();
+			records->addNewUser(winner);
 		}
 		else
 		{
 			somePlayer1->incWins();
 			somePlayer1->incGames();
-			if(winner->getSteps() < somePlayer1->getSteps())
+			if(winner->getPoints() > somePlayer1->getPoints())
 			{
-				somePlayer1->setSteps(winner->getSteps());
+				somePlayer1->setPoints(winner->getPoints());
 			}
 		}
 		Player* somePlayer2 = records->findPlayer(loser->getName());
 		if(somePlayer2 == nullptr)
 		{
-			records->addNewUser(loser);
 			loser->incGames();
+			records->addNewUser(loser);
 		}
 		else
 		{
 			somePlayer2->incGames();
 		}
-		records->updateRecords();
+		records->sortByPoints();
 		records->writePlayersToFile();
 	}
 
@@ -707,6 +700,12 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	quadShip->setShips(1);
 	playerField->setAliveShipsCount(0);
 	compField->setAliveShipsCount(0);
-	player->setSteps(0);
-	comp->setSteps(0);
+	player->setPoints(0);
+	player->setPointsK(100);
+	player->setWins(0);
+	player->setGames(0);
+	comp->setWins(0);
+	player->setGames(0);
+	comp->setPoints(0);
+	player->setPointsK(100);
 }

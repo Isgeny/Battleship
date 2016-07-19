@@ -5,7 +5,7 @@ class Player
 private:
 	std::string name;
 	int wins, games;
-	int steps;
+	int points, pointsK;
 	double r, g, b, a;
 
 public:
@@ -17,13 +17,16 @@ public:
 	void incWins();
 	void setGames(int games);
 	void incGames();
-	void setSteps(int steps);
+	void setPoints(int points);
+	void setPointsK(int pointsK);
+	void incPointsK();
+	void decPointsK();
 	void setRGBA(double r, double g, double b, double a);
 	const std::string& getName() const;
 	int getWins() const;
 	int getGames() const;
-	int getSteps() const;
-	void operator ++ (int);
+	int getPoints() const;
+	int getPointsK() const;
 	friend std::istream& operator >> (std::istream& in, Player& p);
 	friend std::ostream& operator << (std::ostream& out, Player& p);
 

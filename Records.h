@@ -19,5 +19,6 @@ public:
 	void addNewUser(Player* player);
 	Player* findPlayer(const std::string& name);
 	void updateRecords();
+	void sortByPoints();
 
 };

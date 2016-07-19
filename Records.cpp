@@ -58,8 +58,8 @@ void Records::writePlayersToFile()
 void Records::addNewUser(Player* player)
 {
 	//Добавляем нового игрока в таблицу рекордов
-	players.push_back(player);
-	updateRecords();
+	players.push_back(new Player(*player));
+	sortByPoints();
 }
 
 Player* Records::findPlayer(const std::string& name)
@@ -82,9 +82,9 @@ void Records::updateRecords()
 	//Заполнение шапки
 	this->addData(0, 0, "POS.");
 	this->addData(0, 1, "NAME");
-	this->addData(0, 2, "WINS");
-	this->addData(0, 3, "GAMES");
-	this->addData(0, 4, "STEPS");
+	this->addData(0, 2, "POINTS");
+	this->addData(0, 3, "WINS");
+	this->addData(0, 4, "GAMES");
 	//Расстановка позиций 1..10
 	for(int i = 1; i <= 10; i++)
 	{
@@ -98,20 +98,38 @@ void Records::updateRecords()
 	{
 		Rect temp;
 		//Имена
-		temp.setX(rect.x() + cellWidth + cellWidth / 2 - players[i]->getName().size() * 16 / 2);
+		temp.setX(rect.x() + cellWidth + cellWidth/2 - players[i]->getName().size() * 16/2);
 		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight/2 + 7);
 		cells.push_back(new Label(players[i]->getName(), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
+		//Очки
+		temp.setX(rect.x() + 2*cellWidth + cellWidth/2 - std::to_string(players[i]->getPoints()).size() * 16/2);
+		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight/2 + 7);
+		cells.push_back(new Label(std::to_string(players[i]->getPoints()), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
 		//Победы
-		temp.setX(rect.x() + 2*cellWidth + cellWidth / 2 - std::to_string(players[i]->getWins()).size() * 16 / 2);
-		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight / 2 + 7);
+		temp.setX(rect.x() + 3*cellWidth + cellWidth/2 - std::to_string(players[i]->getWins()).size() * 16/2);
+		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight/2 + 7);
 		cells.push_back(new Label(std::to_string(players[i]->getWins()), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
 		//Игры
-		temp.setX(rect.x() + 3*cellWidth + cellWidth / 2 - std::to_string(players[i]->getGames()).size() * 16 / 2);
-		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight / 2 + 7);
+		temp.setX(rect.x() + 4*cellWidth + cellWidth/2 - std::to_string(players[i]->getGames()).size() * 16/2);
+		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight/2 + 7);
 		cells.push_back(new Label(std::to_string(players[i]->getGames()), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
-		//Шаги
-		temp.setX(rect.x() + 4*cellWidth + cellWidth / 2 - std::to_string(players[i]->getSteps()).size() * 16 / 2);
-		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight / 2 + 7);
-		cells.push_back(new Label(std::to_string(players[i]->getSteps()), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
 	}
+}
+
+void Records::sortByPoints()
+{
+	Player* temp;
+	for(int i = 0; i < players.size() - 1; i++)
+	{
+		for(int j = i + 1; j < players.size(); j++)
+		{
+			if(players[j]->getPoints() > players[i]->getPoints())
+			{
+				temp = players[i];
+				players[i] = players[i+1];
+				players[i+1] = temp;
+			}
+		}
+	}
+	updateRecords();
 }

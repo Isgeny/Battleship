@@ -47,6 +47,7 @@ public:
 	static void keyboardPressed(unsigned char key, int x, int y);
 	static void timerRedisplay(int);
 	static void timerCompStep(int);
+	static void timerTextEditCarriage(int);
 	static void hideAllItems();
 	static void setAlpha(int alpha);
 	static void deleteAllShips(std::vector<Ship*>& ships);
