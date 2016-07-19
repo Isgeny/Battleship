@@ -1,10 +1,12 @@
 #pragma once
 #include "GraphicsItem.h"
 #include "enums.h"
+
 class Ship : public GraphicsItem
 {
 protected:
-	int decks, healths;
+	int decks;
+	int healths;
 	Orientation orientation;
 
 private:
@@ -12,7 +14,7 @@ private:
 
 public:
 	Ship();
-	Ship(int decks, const Rect& areaRect, const Rect& rect, double r = 1.0, double g = 1.0, double b = 1.0, double a = 1.0, bool visible = false, CallbackClicked callbackClicked = NULL, const Orientation& orientation = HORIZONTAL);
+	Ship(int decks, const Rect& areaRect, const Rect& rect, const Orientation& orientation = HORIZONTAL, CallbackClicked callbackClicked = nullptr, bool visible = false, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0);
 	~Ship();
 	void draw();
 	void mousePressed(int button, int state, int mouseX, int mouseY);

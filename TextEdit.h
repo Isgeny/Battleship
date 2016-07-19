@@ -1,7 +1,8 @@
 #pragma once
 #include "GraphicsItem.h"
 #include "Label.h"
-#include <string>
+#include "enums.h"
+
 class TextEdit : public GraphicsItem
 {
 private:
@@ -12,12 +13,12 @@ private:
 
 public:
 	TextEdit();
-	TextEdit(const std::string& text, const Rect& rect, double r = 1.0, double g = 1.0, double b = 1.0, double a = 1.0, bool visible = false, CallbackClicked callbackClicked = NULL, bool focus = false);
+	TextEdit(const std::string& text, const Rect& rect, bool focus = false, bool carriage = false, CallbackClicked callbackClicked = nullptr, bool visible = false, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0);
 	~TextEdit();
 	void draw();
 	void mousePressed(int button, int state, int mouseX, int mouseY);
 	void keyboardPressed(unsigned char key, int x, int y);
-	void sKeyboardPressed(int key, int x, int y);
+	void setVisible(bool visible);
 	void setText(const std::string& text);
 	void setFocus(bool focus);
 	void setCarriage(bool carriage);

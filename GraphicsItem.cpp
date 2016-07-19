@@ -1,13 +1,12 @@
 #include "GraphicsItem.h"
 
-GraphicsItem::GraphicsItem() : 
-	rect(Rect()), r(1.0), g(1.0), b(1.0), a(0.0), visible(false), callbackClicked(NULL)
+GraphicsItem::GraphicsItem() : rect(Rect()), callbackClicked(nullptr), visible(false), r(0.0), g(0.0), b(1.0), a(1.0)
 {
 
 }
 
-GraphicsItem::GraphicsItem(const Rect& _rect, double _r, double _g, double _b, double _a, bool _visible, CallbackClicked _callbackClicked) :
-	rect(_rect), r(_r), g(_g), b(_b), a(_a), visible(_visible), callbackClicked(_callbackClicked)
+GraphicsItem::GraphicsItem(const Rect& _rect, CallbackClicked _callbackClicked, bool _visible, double _r, double _g, double _b, double _a) :
+	rect(_rect), callbackClicked(_callbackClicked), visible(_visible), r(_r), g(_g), b(_b), a(_a)
 {
 
 }
@@ -15,18 +14,6 @@ GraphicsItem::GraphicsItem(const Rect& _rect, double _r, double _g, double _b, d
 GraphicsItem::~GraphicsItem()
 {
 
-}
-
-void GraphicsItem::drawRect()
-{
-	glLineWidth(3.0);
-	glBegin(GL_LINE_LOOP);
-	glColor4d(r, g, b, a);
-	glVertex2d(rect.x() + rect.width(), rect.y() + rect.height());
-	glVertex2d(rect.x() + rect.width(), rect.y());
-	glVertex2d(rect.x(), rect.y());
-	glVertex2d(rect.x(), rect.y() + rect.height());
-	glEnd();
 }
 
 void GraphicsItem::mousePressed(int button, int state, int mouseX, int mouseY)
@@ -53,6 +40,21 @@ void GraphicsItem::setRect(int x, int y, int width, int height)
 void GraphicsItem::setRGBA(double _r, double _g, double _b, double _a)
 {
 	r = _r; g = _g; b = _b; a = _a;
+}
+
+void GraphicsItem::setR(double _r)
+{
+	r = _r;
+}
+
+void GraphicsItem::setG(double _g)
+{
+	g = _g;
+}
+
+void GraphicsItem::setB(double _b)
+{
+	b = _b;
 }
 
 void GraphicsItem::setAlpha(double alpha)
@@ -100,7 +102,21 @@ bool GraphicsItem::isVisible() const
 	return visible;
 }
 
+void GraphicsItem::drawRect()
+{
+	//Отрисовка прямоугольника
+	glLineWidth(3.0);
+	glBegin(GL_LINE_LOOP);
+	glColor4d(r, g, b, a);
+	glVertex2d(rect.x() + rect.width(), rect.y() + rect.height());
+	glVertex2d(rect.x() + rect.width(), rect.y());
+	glVertex2d(rect.x(), rect.y());
+	glVertex2d(rect.x(), rect.y() + rect.height());
+	glEnd();
+}
+
 bool GraphicsItem::contains(int mouseX, int mouseY)
 {
+	//Проверяет координаты нажатия мыши по элементу
 	return (mouseX > rect.x() && mouseX < rect.x() + rect.width() && mouseY > rect.y() && mouseY < rect.y() + rect.height());
 }

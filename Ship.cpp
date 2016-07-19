@@ -1,11 +1,12 @@
 #include "Ship.h"
-Ship::Ship() : decks(0), orientation(HORIZONTAL), GraphicsItem()
+
+Ship::Ship() : decks(0), healths(0), orientation(HORIZONTAL), areaRect(Rect()), GraphicsItem()
 {
 
 }
 
-Ship::Ship(int _decks, const Rect& _areaRect, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked, const Orientation& _orientation) :
-	decks(_decks), orientation(_orientation), areaRect(_areaRect), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
+Ship::Ship(int _decks, const Rect& _areaRect, const Rect& rect, const Orientation& _orientation, CallbackClicked callbackClicked, bool visible, double r, double g, double b, double a) :
+	decks(_decks), healths(_decks), orientation(_orientation), areaRect(_areaRect), GraphicsItem(rect, callbackClicked, visible, r, g, b, a)
 {
 
 }
@@ -18,17 +19,13 @@ Ship::~Ship()
 void Ship::draw()
 {
 	if(visible)
-	{
 		drawRect();
-	}
 }
 
 void Ship::mousePressed(int button, int state, int mouseX, int mouseY)
 {
 	if(mouseX % CELL_SZ != 0 && mouseY % CELL_SZ != 0)
-	{
 		GraphicsItem::mousePressed(button, state, mouseX, mouseY);
-	}
 }
 
 void Ship::setDecks(int _decks)
@@ -89,67 +86,3 @@ void Ship::operator -- (int)
 	if(healths)
 		healths--;
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-/*bool Ship::allPartsKilled() const
-{
-	for(auto it = parts.begin(); it != parts.end(); it++)
-	{
-		if((*it)->getAlive())
-			return false;
-	}
-	return true;
-}
-
-void Ship::updateParts()
-{
-for(int i = 0; i < decks; i++)
-{
-parts.push_back(new ShipPart(0, 0, 0, 0, true, false, NULL, true));
-if(orientation == HORIZONTAL)
-{
-parts[i]->setX(x + i*CELL_SZ);
-parts[i]->setY(y);
-} else
-{
-parts[i]->setX(x);
-parts[i]->setY(y + i*CELL_SZ);
-}
-parts[i]->setWidth(CELL_SZ);
-parts[i]->setHeight(CELL_SZ);
-}
-}*/

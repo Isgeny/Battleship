@@ -5,8 +5,8 @@ Cross::Cross() : GraphicsItem()
 
 }
 
-Cross::Cross(const Rect& rect, double r, double g, double b, double a, bool visible) :
-	GraphicsItem(rect, r, g, b, a, visible)
+Cross::Cross(const Rect& rect, CallbackClicked callbackClicked, bool visible, double r, double g, double b, double a) :
+	GraphicsItem(rect, callbackClicked, visible, r, g, b, a)
 {
 
 }
@@ -20,6 +20,7 @@ void Cross::draw()
 {
 	if(visible)
 	{
+		//Рисование креста
 		glColor4d(r, g, b, a);
 		glLineWidth(4);
 		glBegin(GL_LINES);

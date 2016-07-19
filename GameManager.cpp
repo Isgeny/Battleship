@@ -2,78 +2,78 @@
 
 GameManager::GameManager()
 {
-	lblTitle	= new Label("BATTLESHIP", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(325, 40, 0, 0), 0.0, 0.0, 1.0, 1.0, true);
-	lblPlayer = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), 1.0, 0.5, 0.0);
-	lblComp = new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
-	lblRecords = new Label("Records", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(370, 40, 0, 0));
-	lblWin = new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(325, 55, 0, 0));
+	lblTitle	= new Label("BATTLESHIP", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(325, 40, 0, 0), nullptr, true);
+	lblPlayer	= new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(145, 50, 0, 0), nullptr, false, 1.0, 0.5, 0.0);
+	lblComp		= new Label("Computer", GLUT_BITMAP_HELVETICA_18, 20, Rect(585, 50, 0, 0));
+	lblRecords	= new Label("Records", GLUT_BITMAP_TIMES_ROMAN_24, 20, Rect(370, 40, 0, 0));
+	lblWin		= new Label("", GLUT_BITMAP_HELVETICA_18, 20, Rect(325, 55, 0, 0));
 
-	btnNewGame = new Button("NEW GAME", Rect(300, 60, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonNewGameClicked);
-	btnRecords = new Button("RECORDS", Rect(300, 150, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonRecordsClicked);
-	btnAbout   = new Button("ABOUT", Rect(300, 240, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonAboutClicked);
-	btnExit    = new Button("EXIT",	Rect(300, 330, 240, 60), 0.0, 0.0, 1.0, 1.0, true, onButtonExitClicked);
-	btnMainMenu = new Button("MENU", Rect(0, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuClicked);
-	btnAuto = new Button("AUTO", Rect(390, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonAutoClicked);
-	btnClean = new Button("CLEAN", Rect(540, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonCleanClicked);
-	btnFight = new Button("FIGHT", Rect(690, 330, 120, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonFightClicked);
-	btnGiveUp = new Button("GIVE UP", Rect(0, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onButtonGiveUpClicked);
-	btnNewGameR = new Button("NEW GAME", Rect(180, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonNewGameRClicked);
-	btnRecordsR = new Button("RECORDS", Rect(360, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonRecordsRClicked);
-	btnMainMenuR = new Button("MENU", Rect(540, 300, 150, 60), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuRClicked);
-	btnMainMenuRec = new Button("MENU", Rect(0, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onButtonMainMenuClicked);
+	btnNewGame		= new Button("NEW GAME", Rect(300, 60, 240, 60), onButtonNewGameClicked, true);
+	btnRecords		= new Button("RECORDS", Rect(300, 150, 240, 60), onButtonRecordsClicked, true);
+	btnAbout		= new Button("ABOUT", Rect(300, 240, 240, 60), onButtonAboutClicked, true);
+	btnExit			= new Button("EXIT", Rect(300, 330, 240, 60), onButtonExitClicked, true);
+	btnMainMenu		= new Button("MENU", Rect(0, 0, 150, 30), onButtonMainMenuClicked);
+	btnAuto			= new Button("AUTO", Rect(390, 330, 120, 60), onButtonAutoClicked);
+	btnClean		= new Button("CLEAN", Rect(540, 330, 120, 60), onButtonCleanClicked);
+	btnFight		= new Button("FIGHT", Rect(690, 330, 120, 60), onButtonFightClicked);
+	btnGiveUp		= new Button("GIVE UP", Rect(0, 0, 150, 30), onButtonGiveUpClicked);
+	btnNewGameR		= new Button("NEW GAME", Rect(180, 300, 150, 60), onButtonNewGameRClicked);
+	btnRecordsR		= new Button("RECORDS", Rect(360, 300, 150, 60), onButtonRecordsRClicked);
+	btnMainMenuR	= new Button("MENU", Rect(540, 300, 150, 60), onButtonMainMenuRClicked);
+	btnMainMenuRec	= new Button("MENU", Rect(0, 0, 150, 30), onButtonMainMenuClicked);
 
-	playerField = new Field(0, Rect(60, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onPlayerFieldClicked);
-	compField = new Field(0, Rect(510, 90, 300, 300), 0.0, 0.0, 1.0, 1.0, false, onCompFieldClicked);
+	playerField	= new Field(0, Rect(60, 90, 300, 300), onPlayerFieldClicked);
+	compField	= new Field(0, Rect(510, 90, 300, 300), onCompFieldClicked);
 
-	textEditName = new TextEdit("Player", Rect(690, 0, 150, 30), 0.0, 0.0, 1.0, 1.0, false, onTextEditClicked);
+	textEditName = new TextEdit("Player", Rect(690, 0, 150, 30), onTextEditClicked);
 
-	mouseShip = new Ship(0, Rect(), Rect(), 0.0, 0.0, 1.0, 1.0, false, onShipClicked);
+	mouseShip = new Ship(0, Rect(), Rect(), HORIZONTAL, onShipClicked);
 
-	singleShip = new ShipButton(4, 1, Rect(420, 270, 30, 30), 0.0, 0.0, 1.0, 1.0, false, onSingleShipBtnClicked);
-	doubleShip = new ShipButton(3, 2, Rect(420, 210, 60, 30), 0.0, 0.0, 1.0, 1.0, false, onDoubleShipBtnClicked);
-	tripleShip = new ShipButton(2, 3, Rect(420, 150, 90, 30), 0.0, 0.0, 1.0, 1.0, false, onTripleShipBtnClicked);
-	quadShip = new ShipButton(1, 4, Rect(420, 90, 120, 30), 0.0, 0.0, 1.0, 1.0, false, onQuadShipBtnClicked);
+	singleShip	= new ShipButton(4, 1, Rect(), Rect(420, 270, 30, 30), false, HORIZONTAL, onSingleShipBtnClicked);
+	doubleShip	= new ShipButton(3, 2, Rect(), Rect(420, 210, 60, 30), false, HORIZONTAL, onDoubleShipBtnClicked);
+	tripleShip	= new ShipButton(2, 3, Rect(), Rect(420, 150, 90, 30), false, HORIZONTAL, onTripleShipBtnClicked);
+	quadShip	= new ShipButton(1, 4, Rect(), Rect(420, 90, 120, 30), false, HORIZONTAL, onQuadShipBtnClicked);
 
 	player = new Player();
-	comp = new Player("Computer");
+	comp   = new Player("Computer");
 
-	resultsTable = new Table(3, 3, Rect(150, 90, 540, 180), 0.0, 0.0, 1.0, 1.0, false);
-	records = new Records(11, 5, Rect(60, 60, 750, 330), 0.0, 0.0, 1.0, true);
-
-	items[LblTitle] = lblTitle;
-	items[LblPlayer] = lblPlayer;
-	items[LblComp] = lblComp;
-	items[LblRecords] = lblRecords;
-	items[LblWin] = lblWin;
-	items[BtnNewGame] = btnNewGame;
-	items[BtnAbout] = btnAbout;
-	items[BtnRecords] = btnRecords;
-	items[BtnExit] = btnExit;
-	items[BtnMainMenu] = btnMainMenu;
-	items[BtnAuto] = btnAuto;
-	items[BtnClean] = btnClean;
-	items[BtnFight] = btnFight;
-	items[BtnGiveUp] = btnGiveUp;
-	items[BtnNewGameR] = btnNewGameR;
-	items[BtnRecordsR] = btnRecordsR;
-	items[BtnMainMenuR] = btnMainMenuR;
-	items[BtnMainMenuRec] = btnMainMenuRec;
-	items[PlayerField] = playerField;
-	items[CompField] = compField;
-	items[TextEditName] = textEditName;
-	items[MouseShip] = mouseShip;
-	items[SingleShipBtn] = singleShip;
-	items[DoubleShipBtn] = doubleShip;
-	items[TripleShipBtn] = tripleShip;
-	items[QuadShipBtn] = quadShip;
-	items[ResultsTable] = resultsTable;
-	items[RecordsTable] = records;
+	resultsTable = new Table(3, 3, Rect(150, 90, 540, 180));
+	records		 = new Records(11, 5, Rect(60, 60, 750, 330));
+	
+	items.push_back(lblTitle);
+	items.push_back(lblPlayer);
+	items.push_back(lblComp);
+	items.push_back(lblRecords);
+	items.push_back(lblWin);
+	items.push_back(btnNewGame);
+	items.push_back(btnAbout);
+	items.push_back(btnRecords);
+	items.push_back(btnExit);
+	items.push_back(btnMainMenu);
+	items.push_back(btnAuto);
+	items.push_back(btnClean);
+	items.push_back(btnFight);
+	items.push_back(btnGiveUp);
+	items.push_back(btnNewGameR);
+	items.push_back(btnRecordsR);
+	items.push_back(btnMainMenuR);
+	items.push_back(btnMainMenuRec);
+	items.push_back(playerField);
+	items.push_back(compField);
+	items.push_back(textEditName);
+	items.push_back(mouseShip);
+	items.push_back(singleShip);
+	items.push_back(doubleShip);
+	items.push_back(tripleShip);
+	items.push_back(quadShip);
+	items.push_back(resultsTable);
+	items.push_back(records);
 }
 
 GameManager::~GameManager()
 {
 	for(auto it = items.begin(); it != items.end(); it++)
-		delete it->second;
+		delete *it;
 	items.erase(items.begin(), items.end());
 }
 
@@ -100,25 +100,15 @@ void GameManager::draw()
 	glEnd();
 	//Рисование графических элементов
 	for(auto it = items.begin(); it != items.end(); it++)
-	{
-		it->second->draw();
-	}
+		(*it)->draw();
 	for(auto it = playerShips.begin(); it != playerShips.end(); it++)
-	{
 		(*it)->draw();
-	}
 	for(auto it = compShips.begin(); it != compShips.end(); it++)
-	{
 		(*it)->draw();
-	}
 	for(auto it = dots.begin(); it != dots.end(); it++)
-	{
 		(*it)->draw();
-	}
 	for(auto it = crosses.begin(); it != crosses.end(); it++)
-	{
 		(*it)->draw();
-	}
 	glDisable(GL_BLEND);
 	glDisable(GL_ALPHA);
 	glutSwapBuffers();
@@ -133,9 +123,7 @@ void GameManager::resize(int width, int height)
 void GameManager::mouseClicked(int button, int state, int x, int y)
 {
 	for(auto it = items.begin(); it != items.end(); it++)
-	{
-		it->second->mousePressed(button, state, x, y);
-	}
+		(*it)->mousePressed(button, state, x, y);
 	for(int i = 0; i < playerShips.size(); i++)
 	{
 		if(playerShips[i])
@@ -152,7 +140,7 @@ void GameManager::mouseMove(int x, int y)
 	//Перемещение корабля по полю при перемещении мыши
 	if(gameStatus == PLACING_SHIP && playerField->contains(x, y))
 	{
-		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, mouseDecks = mouseShip->getDecks();
+		int newX = x/CELL_SZ*CELL_SZ, newY = y/CELL_SZ*CELL_SZ, mouseDecks = mouseShip->getDecks();
 		if(mouseShip->getOrientation() == HORIZONTAL && x > playerField->getRect().x() + FIELD_SZ*CELL_SZ - mouseDecks*CELL_SZ)
 			newX = playerField->getRect().x() + FIELD_SZ*CELL_SZ - mouseDecks*CELL_SZ;
 		else if(mouseShip->getOrientation() == VERTICAL && y > playerField->getRect().y() + FIELD_SZ*CELL_SZ - mouseDecks*CELL_SZ)
@@ -203,7 +191,7 @@ void GameManager::timerCompStep(int)
 				{
 					if(playerField->availableToPlaceCross(rX, rY, crosses))
 					{
-						crosses.push_back(new Cross(Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 1.0, 0.0, 0.0, 1.0, true));
+						crosses.push_back(new Cross(Rect(rX/CELL_SZ*CELL_SZ, rY/CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), nullptr, true));
 						(*(*it))--;
 						comp->incPointsK();
 						comp->setPoints(comp->getPoints() + comp->getPointsK());
@@ -225,7 +213,7 @@ void GameManager::timerCompStep(int)
 			}
 			if(playerField->availableToPlaceDot(rX, rY, playerShips, dots))
 			{
-				dots.push_back(new Dot(40, Rect(rX / CELL_SZ*CELL_SZ, rY / CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), 0.0, 0.0, 1.0, 1.0, true));
+				dots.push_back(new Dot(40, Rect(rX/CELL_SZ*CELL_SZ, rY/CELL_SZ*CELL_SZ, CELL_SZ, CELL_SZ), nullptr, true));
 				gameStatus = WAITING_PLAYER_STEP;
 				lblPlayer->setRGBA(1.0, 0.5, 0.0, 1.0);
 				lblComp->setRGBA(0.0, 0.0, 1.0, 1.0);
@@ -249,9 +237,7 @@ void GameManager::timerTextEditCarriage(int)
 void GameManager::hideAllItems()
 {
 	for(auto it = items.begin(); it != items.end(); it++)
-	{
-		it->second->setVisible(false);
-	}
+		(*it)->setVisible(false);
 }
 
 void GameManager::setAlpha(int _alpha)
@@ -259,7 +245,7 @@ void GameManager::setAlpha(int _alpha)
 	alpha = _alpha;
 	for(auto it = items.begin(); it != items.end(); it++)
 	{
-		it->second->setAlpha(_alpha);
+		(*it)->setAlpha(_alpha);
 	}
 	for(auto it = playerShips.begin(); it != playerShips.end(); it++)
 	{
@@ -379,6 +365,8 @@ void GameManager::onButtonMainMenuClicked(GraphicsItem* obj, int button, int sta
 		btnAbout->setVisible(true);
 		btnExit->setVisible(true);
 		mouseShip->setRect(Rect());
+		if(currPressShip)
+			currPressShip->setFocus(false);
 	}
 }
 
@@ -478,7 +466,7 @@ void GameManager::onCompFieldClicked(GraphicsItem* obj, int button, int state, i
 	if(gameStatus == WAITING_PLAYER_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->availableToPlaceDot(x, y, compShips, dots))
 	{
 		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
-		dots.push_back(new Dot(40, Rect(newX, newY, w, h), 0.0, 0.0, 1.0, 1.0, true));
+		dots.push_back(new Dot(40, Rect(newX, newY, w, h), nullptr, true));
 		gameStatus = WAITING_COMP_STEP;
 		lblPlayer->setRGBA(0.0, 0.0, 1.0, 1.0);
 		lblComp->setRGBA(1.0, 0.5, 0.0, 1.0);
@@ -570,15 +558,15 @@ void GameManager::onShipClicked(GraphicsItem* obj, int button, int state, int x,
 				playerShips.erase(it);
 				it = playerShips.end();
 				(*playerField)--;
-				(*(ShipButton*)(items[(ObjName)deck]))++;
+				//(*(ShipButton*)(items[(ObjName)deck]))++;
 				break;
 			}
 		}
 	}
 	if(gameStatus == WAITING_PLAYER_STEP && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN && compField->availableToPlaceCross(x, y, crosses) && compField->contains(x, y))
 	{
-		int newX = x / CELL_SZ * CELL_SZ, newY = y / CELL_SZ * CELL_SZ, w = 30, h = 30;
-		crosses.push_back(new Cross(Rect(newX, newY, w, h), 1.0, 0.0, 0.0, 1.0, true));
+		int newX = x/CELL_SZ*CELL_SZ, newY = y/CELL_SZ*CELL_SZ, w = 30, h = 30;
+		crosses.push_back(new Cross(Rect(newX, newY, w, h), nullptr, true));
 		(*ship)--;
 		player->incPointsK();
 		player->setPoints(player->getPoints() + player->getPointsK());
@@ -622,7 +610,6 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 		(*it)->setAlpha(alpha);
 	for(auto it = crosses.begin(); it != crosses.end(); it++)
 		(*it)->setAlpha(alpha);
-
 	if(giveUp)
 	{
 		lblWin->setText(loser->getName() + "GIVE UP");
@@ -639,8 +626,6 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	resultsTable->addData(0, 0, "NAME");
 	resultsTable->addData(0, 1, "KILLED");
 	resultsTable->addData(0, 2, "POINTS");
-	resultsTable->setVisible(true);
-	
 	double count = 0.0;
 	for(auto it = loserShips.begin(); it != loserShips.end(); it++)
 		count += (*it)->getHealths();
@@ -648,7 +633,6 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	resultsTable->addData(1, 0, winner->getName());
 	resultsTable->addData(1, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
 	resultsTable->addData(1, 2, std::to_string(player->getPoints()));
-
 	count = 0.0;
 	for(auto it = winnerShips.begin(); it != winnerShips.end(); it++)
 		count += (*it)->getHealths();
@@ -656,6 +640,7 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	resultsTable->addData(2, 0, loser->getName());
 	resultsTable->addData(2, 1, std::to_string((int)(count / 20.0 * 100.0)) + "%");
 	resultsTable->addData(2, 2, std::to_string(comp->getPoints()));
+	resultsTable->setVisible(true);
 
 	if(!giveUp)
 	{
@@ -708,3 +693,43 @@ void GameManager::showResults(Player* winner, Field* winnerField, std::vector<Sh
 	comp->setPoints(0);
 	player->setPointsK(100);
 }
+
+//Инициализация статических полей класса
+GameStatus GameManager::gameStatus = MENU;
+std::vector<GraphicsItem*> GameManager::items;
+Label* GameManager::lblTitle;
+Label* GameManager::lblPlayer;
+Label* GameManager::lblComp;
+Label* GameManager::lblRecords;
+Label* GameManager::lblWin;
+Button* GameManager::btnNewGame;
+Button* GameManager::btnRecords;
+Button* GameManager::btnAbout;
+Button* GameManager::btnExit;
+Button* GameManager::btnMainMenu;
+Button* GameManager::btnAuto;
+Button* GameManager::btnClean;
+Button* GameManager::btnFight;
+Button* GameManager::btnGiveUp;
+Button* GameManager::btnNewGameR;
+Button* GameManager::btnRecordsR;
+Button* GameManager::btnMainMenuR;
+Button* GameManager::btnMainMenuRec;
+Field* GameManager::playerField;
+Field* GameManager::compField;
+TextEdit* GameManager::textEditName;
+Ship* GameManager::mouseShip;
+ShipButton* GameManager::singleShip;
+ShipButton* GameManager::doubleShip;
+ShipButton* GameManager::tripleShip;
+ShipButton* GameManager::quadShip;
+ShipButton* GameManager::currPressShip;
+Player* GameManager::player;
+Player* GameManager::comp;
+std::vector<Ship*> GameManager::playerShips, GameManager::compShips;
+std::vector<Ship*>::iterator GameManager::it;
+std::vector<Dot*> GameManager::dots;
+std::vector<Cross*> GameManager::crosses;
+double GameManager::alpha = 1.0;
+Table* GameManager::resultsTable;
+Records* GameManager::records;

@@ -1,5 +1,4 @@
 #pragma once
-#include "freeglut.h"
 #include "Ship.h"
 #include "Label.h"
 #include "enums.h"
@@ -13,10 +12,10 @@ private:
 
 public:
 	ShipButton();
-	ShipButton(int ships, int decks, const Rect& rect, double r = 1.0, double g = 1.0, double b = 1.0, double a = 1.0, bool visible = false, CallbackClicked callbackClicked = NULL, const Orientation& orientation = HORIZONTAL, bool alive = true, bool focus = false);
+	ShipButton(int ships, int decks, const Rect& areaRect, const Rect& rect, bool focus = false, const Orientation& orientation = HORIZONTAL, CallbackClicked callbackClicked = nullptr, bool visible = false, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0);
 	~ShipButton();
 	void draw();
-	void mousePressed(int button, int state, int mouseX, int mouseY);
+	void setVisible(bool visible);
 	void setShips(int ships);
 	void setFocus(bool focus);
 	int getShips() const;

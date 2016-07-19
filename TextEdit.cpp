@@ -1,14 +1,14 @@
 #include "TextEdit.h"
 
-TextEdit::TextEdit() : text(""), focus(false), carriage(false), yourName(NULL), GraphicsItem()
+TextEdit::TextEdit() : text(""), focus(false), carriage(false), yourName(nullptr), GraphicsItem()
 {
 
 }
 
-TextEdit::TextEdit(const std::string& _text, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked, bool _focus) :
-	text(_text), focus(_focus), carriage(false), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
+TextEdit::TextEdit(const std::string& _text, const Rect& rect, bool _focus, bool _carriage, CallbackClicked callbackClicked, bool visible, double r, double g, double b, double a) :
+	text(_text), focus(_focus), carriage(false), GraphicsItem(rect, callbackClicked, visible, r, g, b, a)
 {
-	yourName = new Label("Your name:", GLUT_BITMAP_HELVETICA_18, 15, Rect(rect.x() - 142, rect.y() + 20, 0, 0), r, g, b, a, true);
+	yourName = new Label("Your name:", GLUT_BITMAP_HELVETICA_18, 15, Rect(rect.x() - 142, rect.y() + 20, 0, 0));
 	carriageX = rect.x() + text.size()*17 + 3;
 }
 
@@ -21,22 +21,18 @@ void TextEdit::draw()
 {
 	if(visible)
 	{
+		//Рисование метки "Your name"
 		yourName->draw();
 		//Рисование прямоугольника
-		glLineWidth(3.0);
-		glBegin(GL_LINE_LOOP);
-		glColor4d(r, g, b, a);
-		glVertex2d(rect.x() + rect.width(), rect.y() + rect.height());
-		glVertex2d(rect.x() + rect.width(), rect.y());
-		glVertex2d(rect.x(), rect.y());
-		glVertex2d(rect.x(), rect.y() + rect.height());
-		glEnd();
+		this->drawRect();
+		//Рисование текста в текстовом поле
 		for(int i = 0; i < text.size(); i++)
 		{
 			glColor4d(r, g, b, a);
 			glRasterPos2d(rect.x() + 5 + i*17, rect.y() + 20);
 			glutBitmapCharacter(GLUT_BITMAP_HELVETICA_18, text[i]);
 		}
+		//Рисование каретки
 		if(focus && carriage)
 		{
 			glLineWidth(1.5);
@@ -75,9 +71,6 @@ void TextEdit::keyboardPressed(unsigned char key, int x, int y)
 			carriageX -= 17;
 		}
 		break;
-	case 127:	//delete
-
-	break;
 	case 13: //Enter
 		this->setFocus(false);
 		break;
@@ -90,6 +83,12 @@ void TextEdit::keyboardPressed(unsigned char key, int x, int y)
 		}
 		break;
 	}
+}
+
+void TextEdit::setVisible(bool visible)
+{
+	GraphicsItem::setVisible(visible);
+	yourName->setVisible(true);
 }
 
 void TextEdit::setText(const std::string& _text)

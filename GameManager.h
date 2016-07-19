@@ -1,13 +1,11 @@
 #pragma once
-#include <string>
-#include <map>
-#include "freeglut.h"
+#include "Rect.h"
+#include "GraphicsItem.h"
 #include "Button.h"
 #include "Field.h"
 #include "Ship.h"
 #include "ShipButton.h"
 #include "TextEdit.h"
-#include "Records.h"
 #include "Player.h"
 #include "Dot.h"
 #include "Cross.h"
@@ -19,7 +17,7 @@ class GameManager
 {
 private:
 	static GameStatus gameStatus;
-	static std::map<ObjName, GraphicsItem*> items;
+	static std::vector<GraphicsItem*> items;
 	static Label *lblTitle, *lblPlayer, *lblComp, *lblRecords, *lblWin;
 	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR, *btnMainMenuRec;
 	static Field *playerField, *compField;

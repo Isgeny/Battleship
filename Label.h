@@ -1,6 +1,7 @@
 #pragma once
 #include "GraphicsItem.h"
-#include <string>
+#include "enums.h"
+
 class Label : public GraphicsItem
 {
 private:
@@ -10,7 +11,7 @@ private:
 
 public:
 	Label();
-	Label(const std::string& text, void* font, int space, const Rect& rect, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0, bool visible = false);
+	Label(const std::string& text, void* font, int space, const Rect& rect, CallbackClicked callbackClicked = nullptr, bool visible = false, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0);
 	~Label();
 	void draw();
 	void setText(const std::string& text);

@@ -1,7 +1,7 @@
 #include "Records.h"
 
-Records::Records(int rows, int columns, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked) :
-	Table(rows, columns, rect, r, g, b, a, visible, callbackClicked)
+Records::Records(int rows, int columns, const Rect& rect, CallbackClicked callbackClicked, bool visible, double r, double g, double b, double a) :
+	Table(rows, columns, rect, callbackClicked, visible, r, g, b, a)
 {
 	readPlayersFromFile();
 	updateRecords();
@@ -12,14 +12,13 @@ Records::~Records()
 	writePlayersToFile();
 	for(auto it = players.begin(); it != players.end(); it++)
 		delete (*it);
+	players.erase(players.begin(), players.end());
 }
 
 void Records::draw()
 {
 	if(visible)
-	{
 		Table::draw();
-	}
 }
 
 void Records::readPlayersFromFile()
@@ -27,11 +26,13 @@ void Records::readPlayersFromFile()
 	//Чтение игроков из файла
 	std::ifstream input;
 	input.open("Records.txt", std::ios::in);
+	//Если файл пуст то выходим из метода
 	std::string temp;
 	std::getline(input, temp);
 	if(temp.empty())
 		return;
 	input.seekg(0);
+	//Чтение игроков
 	while(!input.eof())
 	{
 		Player *temp = new Player;
@@ -45,7 +46,7 @@ void Records::writePlayersToFile()
 {
 	//Запись игроков в файл
 	std::ofstream output;
-	output.open("Records.txt");
+	output.open("Records.txt", std::ios::out);
 	for(int i = 0; i < players.size(); i++)
 	{
 		output << *players[i];
@@ -59,7 +60,7 @@ void Records::addNewUser(Player* player)
 {
 	//Добавляем нового игрока в таблицу рекордов
 	players.push_back(new Player(*player));
-	sortByPoints();
+	this->sortByPoints();
 }
 
 Player* Records::findPlayer(const std::string& name)
@@ -91,7 +92,7 @@ void Records::updateRecords()
 		Rect r;
 		r.setX(rect.x() + cellWidth/2 - std::to_string(i).size()*16/2);
 		r.setY(rect.y() + i*cellHeight + cellHeight/2 + 7);
-		cells.push_back(new Label(std::to_string(i), GLUT_BITMAP_HELVETICA_18, 17, r, 0.0, 0.0, 1.0, 1.0, true));
+		cells.push_back(new Label(std::to_string(i), GLUT_BITMAP_HELVETICA_18, 17, r, nullptr, true));
 	}
 	//Расстановка текста
 	for(int i = 0; i < players.size(); i++)
@@ -100,24 +101,25 @@ void Records::updateRecords()
 		//Имена
 		temp.setX(rect.x() + cellWidth + cellWidth/2 - players[i]->getName().size() * 16/2);
 		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight/2 + 7);
-		cells.push_back(new Label(players[i]->getName(), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
+		cells.push_back(new Label(players[i]->getName(), GLUT_BITMAP_HELVETICA_18, 17, temp, nullptr, true));
 		//Очки
 		temp.setX(rect.x() + 2*cellWidth + cellWidth/2 - std::to_string(players[i]->getPoints()).size() * 16/2);
 		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight/2 + 7);
-		cells.push_back(new Label(std::to_string(players[i]->getPoints()), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
+		cells.push_back(new Label(std::to_string(players[i]->getPoints()), GLUT_BITMAP_HELVETICA_18, 17, temp, nullptr, true));
 		//Победы
 		temp.setX(rect.x() + 3*cellWidth + cellWidth/2 - std::to_string(players[i]->getWins()).size() * 16/2);
 		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight/2 + 7);
-		cells.push_back(new Label(std::to_string(players[i]->getWins()), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
+		cells.push_back(new Label(std::to_string(players[i]->getWins()), GLUT_BITMAP_HELVETICA_18, 17, temp, nullptr, true));
 		//Игры
 		temp.setX(rect.x() + 4*cellWidth + cellWidth/2 - std::to_string(players[i]->getGames()).size() * 16/2);
 		temp.setY(rect.y() + cellHeight + i*cellHeight + cellHeight/2 + 7);
-		cells.push_back(new Label(std::to_string(players[i]->getGames()), GLUT_BITMAP_HELVETICA_18, 17, temp, 0.0, 0.0, 1.0, 1.0, true));
+		cells.push_back(new Label(std::to_string(players[i]->getGames()), GLUT_BITMAP_HELVETICA_18, 17, temp, nullptr, true));
 	}
 }
 
 void Records::sortByPoints()
 {
+	//Сортировка игроков пузырьком по убыванию очков
 	Player* temp;
 	for(int i = 0; i < players.size() - 1; i++)
 	{

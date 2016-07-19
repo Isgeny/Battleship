@@ -1,7 +1,7 @@
 #pragma once
-#include <vector>
 #include "GraphicsItem.h"
 #include "Label.h"
+#include "enums.h"
 
 class Table : public GraphicsItem
 {
@@ -11,9 +11,10 @@ protected:
 	std::vector<Label*> cells;
 
 public:
-	Table(int rows, int columns, const Rect& rect, double r = 1.0, double g = 1.0, double b = 1.0, double a = 1.0, bool visible = false, CallbackClicked callbackClicked = NULL);
+	Table(int rows, int columns, const Rect& rect, CallbackClicked callbackClicked = nullptr, bool visible = false, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0);
 	~Table();
 	void draw();
+	void setVisible(bool visible);
 	void addData(int row, int column, const std::string& text);
 	void deleteData();
 

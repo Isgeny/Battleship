@@ -1,5 +1,4 @@
 #pragma once
-#include <vector>
 #include "GraphicsItem.h"
 #include "Label.h"
 #include "Ship.h"
@@ -15,7 +14,7 @@ private:
 
 public:
 	Field();
-	Field(int aliveShipsCount, const Rect& rect, double r = 1.0, double g = 1.0, double b = 1.0, double a = 1.0, bool visible = false, CallbackClicked callbackClicked = NULL);
+	Field(int aliveShipsCount, const Rect& rect, CallbackClicked callbackClicked = nullptr, bool visible = false, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0);
 	~Field();
 	void draw();
 	void mousePressed(int button, int state, int mouseX, int mouseY);
@@ -29,21 +28,5 @@ public:
 	void setRandomShips(std::vector<Ship*>& ships);
 	void hideShips(std::vector<Ship*>& ships);
 	void placeDotsAroundShip(Ship* killedShip, std::vector<Ship*>& ships, std::vector<Dot*>& dots);
-
-	/*void setPlacedShipsCount(int placedShipsCount);
-	void setPlayerName(const std::string& playerName);
-	void setPlayerNameRGB(double r, double g, double b);
-	void setWins(int wins);
-	int getPlacedShipsCount() const;
-	
-	
-	void setShip(Ship *mouseShip);
-	void cleanField();
-	
-	
-	
-	void makeHit(int mX, int mY);
-	
-	bool allShipsKilled() const;*/
 	
 };

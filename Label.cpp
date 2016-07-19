@@ -1,12 +1,12 @@
 #include "Label.h"
 
-Label::Label() : text(""), font(NULL), space(0), GraphicsItem()
+Label::Label() : text(""), font(nullptr), space(0), GraphicsItem()
 {
 
 }
 
-Label::Label(const std::string& _text, void* _font, int _space, const Rect& rect, double r, double g, double b, double a, bool visible) :
-	text(_text), font(_font), space(_space), GraphicsItem(rect, r, g, b, a, visible)
+Label::Label(const std::string& _text, void* _font, int _space, const Rect& rect, CallbackClicked callbackClicked, bool visible, double r, double g, double b, double a) :
+	text(_text), font(_font), space(_space), GraphicsItem(rect, callbackClicked, visible, r, g, b, a)
 {
 
 }
@@ -20,6 +20,7 @@ void Label::draw()
 {
 	if(visible)
 	{
+		//Рисование текста
 		for(int i = 0; i < text.size(); i++)
 		{
 			glColor4d(r, g, b, a);

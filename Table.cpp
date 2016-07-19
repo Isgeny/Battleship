@@ -1,7 +1,9 @@
 #include "Table.h"
-Table::Table(int _rows, int _columns, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked) :
-	rows(_rows), columns(_columns), GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
+
+Table::Table(int _rows, int _columns, const Rect& rect, CallbackClicked callbackClicked, bool visible, double r, double g, double b, double a) :
+	rows(_rows), columns(_columns), GraphicsItem(rect, callbackClicked, visible, r, g, b, a)
 {
+	//Вычисление ширины и высоты ячеек
 	cellWidth = rect.width() / columns;
 	cellHeight = rect.height() / rows;
 }
@@ -30,17 +32,26 @@ void Table::draw()
 			glVertex2d(rect.x() + cellWidth + i*cellWidth, rect.y() + rect.height());
 		}
 		glEnd();
+		//Отрисовка текста
 		for(auto it = cells.begin(); it != cells.end(); it++)
 			(*it)->draw();
 	}
 }
 
+void Table::setVisible(bool visible)
+{
+	GraphicsItem::setVisible(visible);
+	for(auto it = cells.begin(); it != cells.end(); it++)
+		(*it)->setVisible(visible);
+}
+
 void Table::addData(int row, int column, const std::string& text)
 {
-	Rect r;
-	r.setX(rect.x() + column*cellWidth + cellWidth/2 - text.size()*16/2);
-	r.setY(rect.y() + row*cellHeight + cellHeight/2 + 7);
-	cells.push_back(new Label(text, GLUT_BITMAP_HELVETICA_18, 17, r, 0.0, 0.0, 1.0, 1.0, true));
+	Rect temp;
+	//Вычисление координат текста
+	temp.setX(rect.x() + column*cellWidth + cellWidth/2 - text.size()*16/2);
+	temp.setY(rect.y() + row*cellHeight + cellHeight/2 + 7);
+	cells.push_back(new Label(text, GLUT_BITMAP_HELVETICA_18, 17, temp));
 }
 
 void Table::deleteData()

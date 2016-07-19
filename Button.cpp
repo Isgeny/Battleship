@@ -1,13 +1,14 @@
 #include "Button.h"
-Button::Button() : text(NULL), GraphicsItem()
+
+Button::Button() : text(nullptr), GraphicsItem()
 {
 
 }
 
-Button::Button(const std::string& _text, const Rect& rect, double r, double g, double b, double a, bool visible, CallbackClicked callbackClicked) :
-	GraphicsItem(rect, r, g, b, a, visible, callbackClicked)
+Button::Button(const std::string& _text, const Rect& rect, CallbackClicked callbackClicked, bool visible, double r, double g, double b, double a) :
+	GraphicsItem(rect, callbackClicked, visible, r, g, b, a)
 {
-	text = new Label(_text, GLUT_BITMAP_HELVETICA_18, 16, Rect(rect.x() + rect.width()/2 - _text.size()*15/2, rect.y() + rect.height()/2 + 6, 0, 0), r, g, b, a, true);
+	text = new Label(_text, GLUT_BITMAP_HELVETICA_18, 16, Rect(rect.x() + rect.width()/2 - _text.size()*15/2, rect.y() + rect.height()/2 + 6, 0, 0), nullptr, visible);
 }
 
 Button::~Button()
@@ -24,14 +25,20 @@ void Button::draw()
 	}
 }
 
-void Button::mousePressed(int button, int state, int mouseX, int mouseY)
+void Button::setVisible(bool visible)
 {
-	GraphicsItem::mousePressed(button, state, mouseX, mouseY);
+	GraphicsItem::setVisible(visible);
+	text->setVisible(visible);
 }
 
 void Button::setText(Label* _text)
 {
 	text = _text;
+}
+
+void Button::setText(const std::string& _text)
+{
+	text->setText(_text);
 }
 
 void Button::setAlpha(double alpha)

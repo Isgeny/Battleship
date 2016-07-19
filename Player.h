@@ -1,17 +1,17 @@
 #pragma once
-#include <string>
+#include "enums.h"
+
 class Player
 {
 private:
 	std::string name;
 	int wins, games;
 	int points, pointsK;
-	double r, g, b, a;
 
 public:
 	Player();
 	~Player();
-	Player(const std::string& name, int wins = 0, int games = 0, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0);
+	Player(const std::string& name, int wins = 0, int games = 0, int points = 0, int pointsK = 100);
 	void setName(const std::string& name);
 	void setWins(int wins);
 	void incWins();
@@ -20,7 +20,6 @@ public:
 	void setPoints(int points);
 	void setPointsK(int pointsK);
 	void incPointsK();
-	void setRGBA(double r, double g, double b, double a);
 	const std::string& getName() const;
 	int getWins() const;
 	int getGames() const;

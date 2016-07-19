@@ -1,50 +1,10 @@
 #include "freeglut.h"
 #include <time.h>
-#include <string>
 #include "GameManager.h"
-
-GameStatus GameManager::gameStatus = MENU;
-std::map<ObjName, GraphicsItem*> GameManager::items;
-Label* GameManager::lblTitle;
-Label* GameManager::lblPlayer;
-Label* GameManager::lblComp;
-Label* GameManager::lblRecords;
-Label* GameManager::lblWin;
-Button* GameManager::btnNewGame;
-Button* GameManager::btnRecords;
-Button* GameManager::btnAbout;
-Button* GameManager::btnExit;
-Button* GameManager::btnMainMenu;
-Button* GameManager::btnAuto;
-Button* GameManager::btnClean;
-Button* GameManager::btnFight;
-Button* GameManager::btnGiveUp;
-Button* GameManager::btnNewGameR;
-Button* GameManager::btnRecordsR;
-Button* GameManager::btnMainMenuR;
-Button* GameManager::btnMainMenuRec;
-Field* GameManager::playerField;
-Field* GameManager::compField;
-TextEdit* GameManager::textEditName;
-Ship* GameManager::mouseShip;
-ShipButton* GameManager::singleShip;
-ShipButton* GameManager::doubleShip;
-ShipButton* GameManager::tripleShip;
-ShipButton* GameManager::quadShip;
-ShipButton* GameManager::currPressShip;
-Player* GameManager::player;
-Player* GameManager::comp;
-std::vector<Ship*> GameManager::playerShips, GameManager::compShips;
-std::vector<Ship*>::iterator GameManager::it;
-std::vector<Dot*> GameManager::dots;
-std::vector<Cross*> GameManager::crosses;
-double GameManager::alpha = 1.0;
-Table* GameManager::resultsTable;
-Records* GameManager::records;
-GameManager game;
 
 int main(int argc, char** argv)
 {
+	GameManager game;
 	srand(time(NULL));
 	glutInit(&argc, argv);
 	glutInitDisplayMode(GLUT_RGB | GLUT_DOUBLE);
