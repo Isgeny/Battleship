@@ -13,9 +13,9 @@ GameManager::GameManager()
 	btnAbout		= new Button("ABOUT", Rect(300, 240, 240, 60), onButtonAboutClicked, true);
 	btnExit			= new Button("EXIT", Rect(300, 330, 240, 60), onButtonExitClicked, true);
 	btnMainMenu		= new Button("MENU", Rect(0, 0, 150, 30), onButtonMainMenuClicked);
-	btnAuto			= new Button("AUTO", Rect(390, 330, 120, 60), onButtonAutoClicked);
-	btnClean		= new Button("CLEAN", Rect(540, 330, 120, 60), onButtonCleanClicked);
-	btnFight		= new Button("FIGHT", Rect(690, 330, 120, 60), onButtonFightClicked);
+	btnAuto			= new Button("AUTO", Rect(420, 330, 120, 60), onButtonAutoClicked);
+	btnClean		= new Button("CLEAN", Rect(570, 330, 120, 60), onButtonCleanClicked);
+	btnFight		= new Button("FIGHT", Rect(720, 330, 120, 60), onButtonFightClicked);
 	btnGiveUp		= new Button("GIVE UP", Rect(0, 0, 150, 30), onButtonGiveUpClicked);
 	btnNewGameR		= new Button("NEW GAME", Rect(180, 300, 150, 60), onButtonNewGameRClicked);
 	btnRecordsR		= new Button("RECORDS", Rect(360, 300, 150, 60), onButtonRecordsRClicked);
@@ -25,20 +25,22 @@ GameManager::GameManager()
 	playerField	= new Field(0, Rect(60, 90, 300, 300), onPlayerFieldClicked);
 	compField	= new Field(0, Rect(510, 90, 300, 300), onCompFieldClicked);
 
-	textEditName = new TextEdit("Player", Rect(690, 0, 150, 30), onTextEditClicked);
+	textEditName = new TextEdit("Player", Rect(720, 0, 150, 30), onTextEditClicked);
 
 	mouseShip = new Ship(0, Rect(), Rect(), HORIZONTAL, onShipClicked);
 
-	singleShip	= new ShipButton(4, 1, Rect(), Rect(420, 270, 30, 30), false, HORIZONTAL, onSingleShipBtnClicked);
-	doubleShip	= new ShipButton(3, 2, Rect(), Rect(420, 210, 60, 30), false, HORIZONTAL, onDoubleShipBtnClicked);
-	tripleShip	= new ShipButton(2, 3, Rect(), Rect(420, 150, 90, 30), false, HORIZONTAL, onTripleShipBtnClicked);
-	quadShip	= new ShipButton(1, 4, Rect(), Rect(420, 90, 120, 30), false, HORIZONTAL, onQuadShipBtnClicked);
+	singleShip	= new ShipButton(4, 1, Rect(), Rect(450, 270, 30, 30), false, HORIZONTAL, onSingleShipBtnClicked);
+	doubleShip	= new ShipButton(3, 2, Rect(), Rect(450, 210, 60, 30), false, HORIZONTAL, onDoubleShipBtnClicked);
+	tripleShip	= new ShipButton(2, 3, Rect(), Rect(450, 150, 90, 30), false, HORIZONTAL, onTripleShipBtnClicked);
+	quadShip	= new ShipButton(1, 4, Rect(), Rect(450, 90, 120, 30), false, HORIZONTAL, onQuadShipBtnClicked);
 
 	player = new Player();
 	comp   = new Player("Computer");
 
 	resultsTable = new Table(3, 3, Rect(150, 90, 540, 180));
 	records		 = new Records(11, 5, Rect(60, 60, 750, 330));
+
+	mouseHint = new HintIcon(Rect(690, 150, 60, 90));
 	
 	items.push_back(lblTitle);
 	items.push_back(lblPlayer);
@@ -68,6 +70,7 @@ GameManager::GameManager()
 	items.push_back(quadShip);
 	items.push_back(resultsTable);
 	items.push_back(records);
+	items.push_back(mouseHint);
 }
 
 GameManager::~GameManager()
@@ -303,6 +306,7 @@ void GameManager::onButtonNewGameClicked(GraphicsItem* obj, int button, int stat
 		quadShip->setVisible(true);
 		mouseShip->setVisible(true);
 		textEditName->setVisible(true);
+		mouseHint->setVisible(true);
 		for(auto it = playerShips.begin(); it != playerShips.end(); it++)
 			(*it)->setVisible(true);
 	}
@@ -735,6 +739,7 @@ Player* GameManager::player;
 Player* GameManager::comp;
 Table* GameManager::resultsTable;
 Records* GameManager::records;
+HintIcon* GameManager::mouseHint;
 
 std::vector<Ship*> GameManager::playerShips, GameManager::compShips;
 std::vector<Ship*>::iterator GameManager::it;

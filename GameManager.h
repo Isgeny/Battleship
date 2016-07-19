@@ -11,6 +11,7 @@
 #include "Cross.h"
 #include "Table.h"
 #include "Records.h"
+#include "HintIcon.h"
 #include "enums.h"
 
 class GameManager
@@ -29,6 +30,7 @@ private:
 	static Player *player, *comp;
 	static Table* resultsTable;
 	static Records* records;
+	static HintIcon* mouseHint;
 
 	static std::vector<Ship*> playerShips, compShips;
 	static std::vector<Ship*>::iterator it;
