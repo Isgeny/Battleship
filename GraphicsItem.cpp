@@ -18,7 +18,7 @@ GraphicsItem::~GraphicsItem()
 
 void GraphicsItem::mousePressed(int button, int state, int mouseX, int mouseY)
 {
-	if(contains(mouseX, mouseY) && visible && callbackClicked)
+	if(contains(mouseX, mouseY) && callbackClicked)
 	{
 		callbackClicked(this, button, state, mouseX, mouseY);
 	}

@@ -37,6 +37,12 @@ void ShipButton::draw()
 	}
 }
 
+void ShipButton::mousePressed(int button, int state, int x, int y)
+{
+	if(visible && button == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
+		GraphicsItem::mousePressed(button, state, x, y);
+}
+
 void ShipButton::setVisible(bool visible)
 {
 	GraphicsItem::setVisible(visible);

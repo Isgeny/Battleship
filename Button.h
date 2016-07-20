@@ -13,6 +13,7 @@ public:
 	Button(const std::string& text, const Rect& rect, CallbackClicked callbackClicked = nullptr, bool visible = false, double r = 0.0, double g = 0.0, double b = 1.0, double a = 1.0);
 	~Button();
 	void draw();
+	void mousePressed(int button, int state, int x, int y);
 	void setVisible(bool visible);
 	void setText(Label* text);
 	void setText(const std::string& text);

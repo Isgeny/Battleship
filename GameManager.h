@@ -12,6 +12,7 @@
 #include "Table.h"
 #include "Records.h"
 #include "HintIcon.h"
+#include "About.h"
 #include "enums.h"
 
 class GameManager
@@ -21,7 +22,7 @@ private:
 	static double alpha;
 	static std::vector<GraphicsItem*> items;
 	static Label *lblTitle, *lblPlayer, *lblComp, *lblRecords, *lblWin;
-	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR, *btnMainMenuRec;
+	static Button *btnNewGame, *btnRecords, *btnAbout, *btnExit, *btnMainMenu, *btnAuto, *btnClean, *btnFight, *btnGiveUp, *btnNewGameR, *btnRecordsR, *btnMainMenuR, *btnMainMenuRec, *btnMainMenuA;
 	static Field *playerField, *compField;
 	static TextEdit *textEditName;
 	static Ship *mouseShip;
@@ -31,6 +32,7 @@ private:
 	static Table* resultsTable;
 	static Records* records;
 	static HintIcon* mouseHint;
+	static About* about;
 
 	static std::vector<Ship*> playerShips, compShips;
 	static std::vector<Ship*>::iterator it;

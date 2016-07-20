@@ -25,6 +25,12 @@ void Button::draw()
 	}
 }
 
+void Button::mousePressed(int button, int state, int x, int y)
+{
+	if(visible && button == GLUT_LEFT_BUTTON && state == GLUT_UP)
+		GraphicsItem::mousePressed(button, state, x, y);
+}
+
 void Button::setVisible(bool visible)
 {
 	GraphicsItem::setVisible(visible);
