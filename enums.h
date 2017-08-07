@@ -9,6 +9,7 @@
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <time.h>
 
 #define WIN_WIDTH 871
 #define WIN_HEIGHT 421

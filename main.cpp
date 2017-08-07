@@ -1,5 +1,3 @@
-#include "freeglut.h"
-#include <time.h>
 #include "GameManager.h"
 
 int main(int argc, char** argv)
